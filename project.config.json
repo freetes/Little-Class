@@ -14,5 +14,6 @@
 	"appid": "wx46cf1f82f22ec635",
 	"projectname": "little-class",
 	"miniprogramRoot": "dist/",
+	"cloudfunctionRoot": "src/functions/",
 	"condition": {}
 }
