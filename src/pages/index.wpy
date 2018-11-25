@@ -89,19 +89,20 @@
     onLoad() {
       let self = this
 
-      // this.$parent.getUserInfo(function (userInfo) {
-      //   if (userInfo) {
-      //     self.userInfo = userInfo
+      var x = this.$parent
+      x.globalData.userInfo = 'hahaha'
+      console.log(x.globalData)
+      // wx.cloud.callFunction({
+      //   // 云函数名称
+      //   name: 'add',
+      //   // 传给云函数的参数
+      //   data: {
+      //     a: 1,
+      //     b: 2,
       //   }
-      //   self.normalTitle = '标题已被修改'
-
-      //   self.setTimeoutTitle = '标题三秒后会被修改'
-      //   setTimeout(() => {
-      //     self.setTimeoutTitle = '到三秒了'
-      //     self.$apply()
-      //   }, 3000)
-
-      //   self.$apply()
+      // })
+      // .then(res=>{
+      //   console.log(res)
       // })
     }
   }
