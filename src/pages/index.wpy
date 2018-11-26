@@ -27,7 +27,7 @@
 
   export default class Index extends wepy.page {
     config = {
-      navigationBarTitleText: 'test'
+      navigationBarTitleText: '灰度签到'
     }
     components = {
       panel: Panel,
