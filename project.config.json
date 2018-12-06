@@ -15,5 +15,38 @@
 	"projectname": "little-class",
 	"miniprogramRoot": "dist/",
 	"cloudfunctionRoot": "src/functions/",
-	"condition": {}
+	"condition": {
+		"search": {
+			"current": -1,
+			"list": []
+		},
+		"conversation": {
+			"current": -1,
+			"list": []
+		},
+		"plugin": {
+			"current": -1,
+			"list": []
+		},
+		"game": {
+			"list": []
+		},
+		"miniprogram": {
+			"current": 1,
+			"list": [
+				{
+					"id": -1,
+					"name": "user",
+					"pathName": "pages/user",
+					"query": ""
+				},
+				{
+					"id": 1,
+					"name": "createUser",
+					"pathName": "pages/editUserInfo",
+					"query": ""
+				}
+			]
+		}
+	}
 }

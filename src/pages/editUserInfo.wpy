@@ -1,0 +1,251 @@
+<style lang="less">
+page{
+  background-color: white;
+}
+
+.container{
+
+  >.header{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 10px 0;
+
+    >image{
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin-bottom: 10px;
+    }
+    >text{
+
+    }
+  }
+  >.inputs{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin: 10px 7%;
+    padding-top: 10px;
+    width: 86%;
+
+    >text{
+      color: gray;
+      font-size: 12px;
+    }
+
+    >.input-container{
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+      width: 100%;
+      border-bottom: 1px solid #fafafa;
+
+      >text{
+        flex: 0 1 auto;
+        color: black;
+        font-size: 16px;
+        padding-right: 20px;
+      }
+      >input, >picker{
+        flex: 1 0 auto;
+        color: gray;
+        font-size: 16px;
+        text-align: right;
+      }
+    }
+  }
+  >button{
+    padding: 10px 7%;
+    width: 86%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-color: white;
+    border-top: 1px solid #fafafa;
+    border-bottom: 1px solid #fafafa;
+  }
+  >button::after{
+    border: none;
+  }
+}
+</style>
+<template>
+  <view class="container">
+    <view class="header">
+      <image src="{{ wxInfo.avatarUrl }}"></image>
+      <text>{{ wxInfo.nickName }}</text>
+    </view>
+
+    <view class="inputs">
+      <text>基本信息</text>
+      <view class="input-container">
+        <text>姓名</text>
+        <input placeholder="请输入姓名" data-key="userInfo.name" value="{{ userInfo.name }}" bindchange="inputChange" />
+      </view>
+      <view class="input-container">
+        <text>性别</text>
+        <picker mode="selector" data-key="userInfo.gender" bindchange="inputChange" value="{{ userInfo.gender }}" range="{{ sexArray }}">
+          <view class="picker">
+            {{ sexArray[userInfo.gender] }}
+          </view>
+        </picker>
+      </view>
+      <view class="input-container">
+        <text>用户类型</text>
+        <picker mode="selector" data-key="userInfo.level" bindchange="inputChange" value="{{ userInfo.level }}" range="{{ kindArray }}">
+          <view class="picker">
+            {{ kindArray[userInfo.level] }}
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <view class="inputs">
+      <text>学校信息</text>
+      <view class="input-container">
+        <text>学校名</text>
+        <input placeholder="" data-key="userInfo.schoolInfo.name" bindchange="inputChange" value="{{ userInfo.schoolInfo.name }}" />
+      </view>
+      <view class="input-container">
+        <text>{{ userInfo.level==0?'学号':'工号' }}</text>
+        <input placeholder="" data-key="userInfo.schoolInfo.id" bindchange="inputChange" value="{{ userInfo.schoolInfo.id }}" />
+      </view>
+      <!-- <view class="input-container">
+        <text>学院</text>
+        <input placeholder="难道">
+      </view>
+      <view class="input-container">
+        <text>专业</text>
+        <input placeholder="难道">
+      </view>
+      <view class="input-container">
+        <text>班级</text>
+        <input placeholder="难道">
+      </view> -->
+    </view>
+    
+    <!-- <view class="inputs">
+      <text>联系信息</text>
+      <view class="input-container">
+        <text>手机</text>
+        <input placeholder="请输入手机号">
+      </view>
+      <view class="input-container">
+        <text>邮箱</text>
+        <input placeholder="请输入邮箱">
+      </view>
+    </view> -->
+
+    <button bindtap="updateUserInfo">提交修改</button>
+
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '个人信息'
+    }
+
+    data = {
+      wxInfo: {
+        nickName: '登入',
+        avatarUrl: '../static/imgs/用户.png'
+      },
+      sexArray: ['男', '女'],
+      kindArray: ['学生', '教师'],
+      userInfo: {
+        name: '',
+        gender: 0,
+        level: 0,
+        schoolInfo: {
+          name: '',
+          id: ''
+        }
+      },
+      openid: '',
+      _id: ''
+    }
+
+    computed = {
+      now () {
+        return +new Date()
+      }
+    }
+
+    methods = {
+      inputChange(e){
+        let self = this
+        const keyArr = e.currentTarget.dataset.key.split('.')
+
+        if(keyArr.length == 2){
+          this[keyArr[0]][keyArr[1]] = e.detail.value
+        }
+        else if(keyArr.length == 3){
+          this[keyArr[0]][keyArr[1]][keyArr[2]] = e.detail.value
+        }
+      },
+      updateUserInfo(){
+        let self = this
+        
+        const db = wx.cloud.database()
+        
+        db.collection('users').doc(self._id)
+        .update({
+          data: self.userInfo,
+          success: function(res) {
+            console.log(res)
+            // 更新成功
+            if(res.stats.updated == 1){
+              wx.setStorage({
+                key:"level",
+                data: self.level
+              })
+            }
+          }
+        })
+      }
+    }
+
+    events = {
+      'index-emit': (...args) => {
+        let $event = args[args.length - 1]
+        console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`)
+      }
+    }
+
+    onShow() {
+      let self = this, wxInfo = wx.getStorageSync('wxInfo'), openid = wx.getStorageSync('openid'), _id = wx.getStorageSync('_id')
+
+      if(wxInfo){
+        self.wxInfo = wxInfo
+      }
+      if(openid){
+        self.openid = openid
+      }
+      if(_id){
+        self._id = _id
+      }
+      
+      const db = wx.cloud.database()
+
+      db.collection('users').doc(_id)
+      .get({
+        success: function(res) {
+          delete res.data._openid
+          delete res.data._id
+          
+          self.userInfo = res.data
+          self.$apply()
+        }
+      })
+    }
+  }
+</script>

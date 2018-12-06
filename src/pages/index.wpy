@@ -1,19 +1,5 @@
 <style lang="less">
-  .userinfo {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
 
-  .userinfo-avatar {
-    width: 80rpx;
-    height: 80rpx;
-    border-radius: 50%;
-  }
-
-  .userinfo-nickname {
-    color: #aaa;
-  }
 </style>
 <template>
   <view class="container">
@@ -23,20 +9,18 @@
 
 <script>
   import wepy from 'wepy'
-  import Panel from '@/components/panel' // alias example
 
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '灰度签到'
-    }
-    components = {
-      panel: Panel,
     }
 
     data = {
       userInfo: {
         nickName: '加载中...'
       },
+      _id: '',
+      level: 0
     }
 
     computed = {
@@ -46,64 +30,21 @@
     }
 
     methods = {
-      plus () {
-        this.mynum++
-      },
-      toast () {
-        let promise = this.$invoke('toast', 'show', {
-          title: '自定义标题',
-          img: 'https://raw.githubusercontent.com/kiinlam/wetoast/master/images/star.png'
-        })
-
-        promise.then((d) => {
-          console.log('toast done')
-        })
-      },
-      request () {
-        let self = this
-        let i = 10
-        let map = ['MA==', 'MQo=', 'Mg==', 'Mw==', 'NA==', 'NQ==', 'Ng==', 'Nw==', 'OA==', 'OQ==']
-        while (i--) {
-          wepy.request({
-            url: 'https://www.madcoder.cn/tests/sleep.php?time=1&t=css&c=' + map[i] + '&i=' + i,
-            success: function (d) {
-              self.netrst += d.data + '.'
-              self.$apply()
-            }
-          })
-        }
-      },
-      counterEmit (...args) {
-        let $event = args[args.length - 1]
-        console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`)
-      }
-    }
-
-    events = {
-      'index-emit': (...args) => {
-        let $event = args[args.length - 1]
-        console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`)
-      }
     }
 
     onLoad() {
       let self = this
 
-      var x = this.$parent
-      x.globalData.userInfo = 'hahaha'
-      console.log(x.globalData)
-      // wx.cloud.callFunction({
-      //   // 云函数名称
-      //   name: 'add',
-      //   // 传给云函数的参数
-      //   data: {
-      //     a: 1,
-      //     b: 2,
-      //   }
-      // })
-      // .then(res=>{
-      //   console.log(res)
-      // })
+      var _id = wx.getStorageSync('_id'), level = wx.getStorageSync('level')
+
+      if(_id){
+        self._id = _id
+      }
+      if(level){
+        self.level = level
+      }
+
+      self.$apply()
     }
   }
 </script>

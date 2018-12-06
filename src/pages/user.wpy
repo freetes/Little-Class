@@ -1,23 +1,105 @@
 <style lang="less">
-  .userinfo {
+page{
+  background-image: linear-gradient(#efefef, #fafafa);
+}
+
+.container{
+  >.header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+    padding: 10px 5%;
+    border: none;
+
+    >.left{
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+
+      >.wxName{
+        font-weight: bold;
+        color: black;
+        font-size: 22px;
+      }
+    }
+
+    >.right{
+      background-color: lightgray;
+      // padding: 10px 10px;
+      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+
+      >image{
+        width: 80px;
+        height: 80px;
+      }
+    }
+  }
+  >.header::after{
+    border: none;
+  }
+
+  >.btns{
     display: flex;
     flex-direction: column;
-    align-items: center;
-  }
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin: 10px 5%;
+    padding-top: 10px;
+    width: 90%;
+    background-color: white;
+    border-radius: 5px;
 
-  .userinfo-avatar {
-    width: 80rpx;
-    height: 80rpx;
-    border-radius: 50%;
-  }
+    >.btn-container{
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 0 20px;
+      padding-bottom: 10px;
 
-  .userinfo-nickname {
-    color: #aaa;
+      >image{
+        width: 40px;
+        height: 40px;
+      }
+      >text{
+        font-weight: bold;
+
+      }
+    }
   }
+}
 </style>
 <template>
   <view class="container">
-    <text>User page</text>
+    <button class="header" plain="true" hover-class="none" open-type="getUserInfo" bindgetuserinfo="getWxInfo">
+      <view class="left">
+        <text class="wxName">{{ wxInfo.nickName }}</text>
+      </view>
+      <view class="right">
+        <image src="{{ wxInfo.avatarUrl }}"></image>
+      </view>
+    </button>
+
+    <view class="btns">
+      <view class="btn-container" bindtap="goto('../pages/editUserInfo')">
+        <image src=""></image>
+        <text>个人信息</text>
+      </view>
+      <view class="btn-container" bindtap="signout">
+        <image src=""></image>
+        <text>退出登入</text>
+      </view>
+    </view>
   </view>
 </template>
 
@@ -28,13 +110,13 @@
     config = {
       navigationBarTitleText: '我的'
     }
-    components = {
-    }
 
     data = {
-      userInfo: {
-        nickName: '加载中...'
+      wxInfo: {
+        nickName: '登入',
+        avatarUrl: '../static/imgs/用户.png'
       },
+      userInfo: {}
     }
 
     computed = {
@@ -44,12 +126,77 @@
     }
 
     methods = {
-      plus () {
-        this.mynum++
+      getWxInfo(e){
+        let self = this
+        this.wxInfo = e.detail.userInfo
+
+        wx.setStorage({
+          key:"wxInfo",
+          data: e.detail.userInfo
+        })
+
+        wx.cloud.callFunction({name: 'getOpenid'})
+        .then(res=>{
+          let openid = res.result.openid
+
+          wx.setStorage({
+            key:"openid",
+            data: openid
+          })
+
+          const db = wx.cloud.database()
+          db.collection('users').where({
+            _openid: openid,
+          })
+          .get({
+            success: function (res){
+              console.log(res)
+              // new user
+              if(res.data.length == 0){
+                db.collection('users').add({
+                  data: {
+                  }
+                })
+                .then(res=>{
+                  console.log(res)
+                  wx.setStorage({
+                    key:"_id",
+                    data: res._id
+                  })
+                })
+              }
+              else{
+                self.userInfo = res.data[0]
+                wx.setStorage({
+                  key:"_id",
+                  data: res.data[0]._id
+                })
+                wx.setStorage({
+                  key:"level",
+                  data: res.data[0].level
+                })
+                self.$apply()
+              }
+            }
+          })
+        })
+        this.$apply()
       },
-      counterEmit (...args) {
-        let $event = args[args.length - 1]
-        console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`)
+      goto(url){
+        wx.navigateTo({
+          url
+        })
+      },
+      signout(){
+        this.wxInfo = {
+          nickName: '登入',
+          avatarUrl: '../static/imgs/用户.png'
+        }
+
+        this.$apply()
+        wx.removeStorageSync('wxInfo')
+        wx.removeStorageSync('openid')
+        wx.removeStorageSync('_id')
       }
     }
 
@@ -63,18 +210,13 @@
     onLoad() {
       let self = this
 
-      wx.cloud.callFunction({
-        // 云函数名称
-        name: 'add',
-        // 传给云函数的参数
-        data: {
-          a: 1,
-          b: 2,
-        }
-      })
-      .then(res=>{
-        console.log(res)
-      })
+      var wxInfo = wx.getStorageSync('wxInfo')
+
+      if(wxInfo){
+        self.wxInfo = wxInfo
+      }
+      self.$apply()
+
     }
   }
 </script>
