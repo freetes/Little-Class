@@ -4,7 +4,6 @@ page{
 }
 
 .container{
-
   >.header{
     display: flex;
     flex-direction: column;
@@ -95,17 +94,17 @@ page{
           </view>
         </picker>
       </view>
-      <view class="input-container">
+      <!-- <view class="input-container">
         <text>用户类型</text>
         <picker mode="selector" data-key="userInfo.level" bindchange="inputChange" value="{{ userInfo.level }}" range="{{ kindArray }}">
           <view class="picker">
             {{ kindArray[userInfo.level] }}
           </view>
         </picker>
-      </view>
+      </view> -->
     </view>
 
-    <view class="inputs">
+    <!-- <view class="inputs">
       <text>学校信息</text>
       <view class="input-container">
         <text>学校名</text>
@@ -115,7 +114,7 @@ page{
         <text>{{ userInfo.level==0?'学号':'工号' }}</text>
         <input placeholder="" data-key="userInfo.schoolInfo.id" bindchange="inputChange" value="{{ userInfo.schoolInfo.id }}" />
       </view>
-      <!-- <view class="input-container">
+      <view class="input-container">
         <text>学院</text>
         <input placeholder="难道">
       </view>
@@ -126,8 +125,8 @@ page{
       <view class="input-container">
         <text>班级</text>
         <input placeholder="难道">
-      </view> -->
-    </view>
+      </view>
+    </view> -->
     
     <!-- <view class="inputs">
       <text>联系信息</text>
@@ -159,16 +158,12 @@ page{
         nickName: '登入',
         avatarUrl: '../static/imgs/用户.png'
       },
-      sexArray: ['男', '女'],
+      sexArray: ['保密', '男', '女'],
       kindArray: ['学生', '教师'],
       userInfo: {
         name: '',
         gender: 0,
         level: 0,
-        schoolInfo: {
-          name: '',
-          id: ''
-        }
       },
       openid: '',
       _id: ''
@@ -204,10 +199,7 @@ page{
             console.log(res)
             // 更新成功
             if(res.stats.updated == 1){
-              wx.setStorage({
-                key:"level",
-                data: self.level
-              })
+
             }
           }
         })

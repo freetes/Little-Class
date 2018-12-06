@@ -26,7 +26,7 @@
 </tr>
 <tr>
   <td>二级标题</td>
-  <td>40rpx</td>
+  <td>42rpx</td>
   <td>#363636</td>
 </tr>
 <tr>
@@ -41,12 +41,12 @@
 </tr>
 <tr>
   <td>普通正文</td>
-  <td>28rpx</td>
+  <td>32rpx</td>
   <td>#6B6B6B</td>
 </tr>
 <tr>
   <td>辅助正文</td>
-  <td>24rpx</td>
+  <td>28rpx</td>
   <td>#AEAEAE</td>
 </tr>
 </table>

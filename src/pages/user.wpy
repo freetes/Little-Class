@@ -81,7 +81,7 @@ page{
 </style>
 <template>
   <view class="container">
-    <button class="header" plain="true" hover-class="none" open-type="getUserInfo" bindgetuserinfo="getWxInfo">
+    <button class="header" plain="true" hover-class="none" open-type="getUserInfo" bindgetuserinfo="login">
       <view class="left">
         <text class="wxName">{{ wxInfo.nickName }}</text>
       </view>
@@ -126,15 +126,18 @@ page{
     }
 
     methods = {
-      getWxInfo(e){
+      login(e){
         let self = this
+        // 微信信息，头像、昵称
         this.wxInfo = e.detail.userInfo
 
+        // 保存缓存
         wx.setStorage({
           key:"wxInfo",
           data: e.detail.userInfo
         })
 
+        // 获取openid
         wx.cloud.callFunction({name: 'getOpenid'})
         .then(res=>{
           let openid = res.result.openid
@@ -144,6 +147,7 @@ page{
             data: openid
           })
 
+          // 通过 openid 获取用户信息
           const db = wx.cloud.database()
           db.collection('users').where({
             _openid: openid,
@@ -155,32 +159,30 @@ page{
               if(res.data.length == 0){
                 db.collection('users').add({
                   data: {
+                    name: e.detail.userInfo.nickName,
+                    gender: e.detail.userInfo.gender,
+                    level: 0,
                   }
                 })
                 .then(res=>{
                   console.log(res)
                   wx.setStorage({
-                    key:"_id",
+                    key: "_id",
                     data: res._id
                   })
                 })
               }
               else{
-                self.userInfo = res.data[0]
                 wx.setStorage({
-                  key:"_id",
+                  key: "_id",
                   data: res.data[0]._id
                 })
-                wx.setStorage({
-                  key:"level",
-                  data: res.data[0].level
-                })
+                self.userInfo = res.data[0]
                 self.$apply()
               }
             }
           })
         })
-        this.$apply()
       },
       goto(url){
         wx.navigateTo({
@@ -200,13 +202,6 @@ page{
       }
     }
 
-    events = {
-      'index-emit': (...args) => {
-        let $event = args[args.length - 1]
-        console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`)
-      }
-    }
-
     onLoad() {
       let self = this
 
@@ -216,7 +211,6 @@ page{
         self.wxInfo = wxInfo
       }
       self.$apply()
-
     }
   }
 </script>

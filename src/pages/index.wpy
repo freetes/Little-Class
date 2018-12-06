@@ -1,10 +1,93 @@
 <style lang="less">
+.container{
+  
+  .buttons{
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  .modal-container{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.7);
 
+    >.modal-main{
+      background-color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      padding: 10px 10px;
+      padding-bottom: 0;
+
+      >.modal-title{
+        border-bottom: 1px solid lightgray;
+      }
+      >.modal-message{
+        text-align: right;
+        font-size: 14px;
+        color: #555;
+        width: 100%;
+      }
+      >input{
+        width: 100%;
+        margin: 10px 0;
+        padding: 10px 0;
+        text-align: center;
+        border: 1px solid gray;
+      }
+      >button{
+        background-color: white;
+        border-top: 1px solid #fafafa;
+        border-bottom: 1px solid #fafafa;
+      }
+      >button::after{
+        border: none;
+      }
+    }
+  }
+  // >button{
+  //   padding: 10px 7%;
+  //   width: 86%;
+  //   margin-top: 20px;
+  //   margin-bottom: 20px;
+  //   background-color: white;
+  //   border-top: 1px solid #fafafa;
+  //   border-bottom: 1px solid #fafafa;
+  // }
+  // >button::after{
+  //   border: none;
+  // }
+}
 </style>
 <template>
   <view class="container">
-    <text>Index page</text>
-    <text>Hello world</text>
+    <cover-view class="buttons">
+      <button bindtap="goto('../pages/createGroup')">新建群组</button>
+      <button bindtap="showJoinView">加入群组</button>
+      <button>更多</button>
+    </cover-view>
+
+    <!-- 加入群组弹出框 -->
+    <view wx:if="{{ joinView.showJoinView }}" bindtap="hideJoinView" class="modal-container">
+      <view class="modal-main" catchtap>
+        <text class="modal-title">加入群组</text>
+        <input data-key="joinView.groupCode" bindchange="inputChange" value="{{ joinView.groupCode }}" type="number" focus="{{ joinView.showJoinView }}" maxlength="5" />
+        <text wx:hidden="{{ joinView.message!='' }}" class="modal-message">{{ joinView.message }}</text>
+        <button bindtap="joinGroup">加入</button>
+      </view>
+    </view>
   </view>
 </template>
 
@@ -21,7 +104,12 @@
         nickName: '加载中...'
       },
       _id: '',
-      level: 0
+      level: 0,
+      joinView: {
+        groupCode: undefined,
+        showJoinView: false,
+        message: ''
+      }
     }
 
     computed = {
@@ -31,18 +119,65 @@
     }
 
     methods = {
+      joinGroup(){
+        var self = this
+        const db = wx.cloud.database()
+        console.log(self.joinView.groupCode)
+
+        db.collection('groups').where({groupCode: parseInt(self.joinView.groupCode)})
+        .get({
+          success: function(res) {
+            console.log(res)
+            // db.collection('groups').add({
+            //   // data 字段表示需新增的 JSON 数据
+            //   data: {
+            //     name: self.groupInfo.name,
+            //     description: self.groupInfo.description,
+            //     owner: self._id,
+            //     createTime: Date.now(),
+            //     members: [],
+            //     status: 0,
+            //     groupCode: 10000 + res.data.length,
+            //   },
+            //   success: function(res) {
+            //     // res 是一个对象，其中有 _id 字段标记刚创建的记录的 id
+            //     console.log(res)
+            //   }
+            // })
+          }
+        })
+      },
+      goto(url){
+        wx.navigateTo({
+          url
+        })
+      },
+      showJoinView(){
+        this.joinView.showJoinView = true
+      },
+      hideJoinView(){
+        this.joinView.showJoinView = false
+      },
+      inputChange(e){
+        let self = this
+        const keyArr = e.currentTarget.dataset.key.split('.')
+
+        if(keyArr.length == 2){
+          this[keyArr[0]][keyArr[1]] = e.detail.value
+        }
+        else if(keyArr.length == 3){
+          this[keyArr[0]][keyArr[1]][keyArr[2]] = e.detail.value
+        }
+      },
     }
 
     onLoad() {
       let self = this
 
-      var _id = wx.getStorageSync('_id'), level = wx.getStorageSync('level')
+      var _id = wx.getStorageSync('_id')
 
       if(_id){
         self._id = _id
-      }
-      if(level){
-        self.level = level
       }
 
       self.$apply()
