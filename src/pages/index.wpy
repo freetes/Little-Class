@@ -4,6 +4,7 @@
 <template>
   <view class="container">
     <text>Index page</text>
+    <text>Hello world</text>
   </view>
 </template>
 
