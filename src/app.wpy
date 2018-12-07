@@ -29,6 +29,8 @@ export default class extends wepy.app {
       'pages/user',
       'pages/editUserInfo',
       'pages/createGroup',
+      'pages/groupInfo',
+      'pages/createCheck',
     ],
     window: {
       backgroundTextStyle: 'light',

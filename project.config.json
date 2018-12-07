@@ -32,7 +32,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 2,
+			"current": 4,
 			"list": [
 				{
 					"id": -1,
@@ -49,7 +49,20 @@
 				{
 					"id": -1,
 					"name": "createGroup",
-					"pathName": "pages/createGroup"
+					"pathName": "pages/createGroup",
+					"query": ""
+				},
+				{
+					"id": 3,
+					"name": "groupInfo",
+					"pathName": "pages/groupInfo",
+					"query": "_id=XAnvA5T75u22WmuJ"
+				},
+				{
+					"id": -1,
+					"name": "createCheck",
+					"pathName": "pages/createCheck",
+					"query": "_id=XAnvA5T75u22WmuJ"
 				}
 			]
 		}

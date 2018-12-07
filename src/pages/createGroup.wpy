@@ -94,7 +94,7 @@ page{
     <view class="header">
       <text>基本信息</text>
       <input placeholder="群名称" data-key="groupInfo.name" value="{{ groupInfo.name }}" bindchange="inputChange" />
-      <textarea bindblur="" data-key="groupInfo.description" value="{{ groupInfo.description }}" bindblur="inputChange" auto-height placeholder="描述" />
+      <textarea data-key="groupInfo.description" value="{{ groupInfo.description }}" bindblur="inputChange" auto-height placeholder="描述" />
     </view>
 
     <view class="inputs">
@@ -165,18 +165,16 @@ page{
         .get({
           success: function(res) {
             db.collection('groups').add({
-              // data 字段表示需新增的 JSON 数据
               data: {
                 name: self.groupInfo.name,
                 description: self.groupInfo.description,
                 owner: self._id,
                 createTime: Date.now(),
                 members: [],
-                status: 0,
+                status: 0,  // 0 表示可以加入，-1 表示不能加入
                 groupCode: 10000 + res.data.length,
               },
               success: function(res) {
-                // res 是一个对象，其中有 _id 字段标记刚创建的记录的 id
                 console.log(res)
               }
             })

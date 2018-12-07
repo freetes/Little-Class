@@ -33,7 +33,7 @@ page{
 
     >text{
       color: gray;
-      font-size: 12px;
+      font-size: 14px;
     }
 
     >.input-container{
@@ -53,8 +53,9 @@ page{
       }
       >input, >picker{
         flex: 1 0 auto;
-        color: gray;
+        color: black;
         font-size: 16px;
+        font-weight: bold;
         text-align: right;
       }
     }

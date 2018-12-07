@@ -75,17 +75,17 @@
   <view class="container">
     <cover-view class="buttons">
       <button bindtap="goto('../pages/createGroup')">新建群组</button>
-      <button bindtap="showJoinView">加入群组</button>
+      <button bindtap="showJoinView">搜索群组</button>
       <button>更多</button>
     </cover-view>
 
     <!-- 加入群组弹出框 -->
     <view wx:if="{{ joinView.showJoinView }}" bindtap="hideJoinView" class="modal-container">
       <view class="modal-main" catchtap>
-        <text class="modal-title">加入群组</text>
+        <text class="modal-title">搜索群组</text>
         <input data-key="joinView.groupCode" bindchange="inputChange" value="{{ joinView.groupCode }}" type="number" focus="{{ joinView.showJoinView }}" maxlength="5" />
         <text wx:hidden="{{ joinView.message!='' }}" class="modal-message">{{ joinView.message }}</text>
-        <button bindtap="joinGroup">加入</button>
+        <button bindtap="searchGroup">搜索</button>
       </view>
     </view>
   </view>
@@ -119,15 +119,24 @@
     }
 
     methods = {
-      joinGroup(){
+      searchGroup(){
         var self = this
         const db = wx.cloud.database()
-        console.log(self.joinView.groupCode)
 
         db.collection('groups').where({groupCode: parseInt(self.joinView.groupCode)})
         .get({
           success: function(res) {
-            console.log(res)
+            console.log(res.data)
+            // 搜索错误
+            if(res.data.length == 0){
+              self.joinView.message = '找不到'
+              self.$apply()
+            }
+            else{
+              wx.navigateTo({
+                url: '../pages/groupInfo?_id=' + res.data[0]._id
+              })
+            }
             // db.collection('groups').add({
             //   // data 字段表示需新增的 JSON 数据
             //   data: {
@@ -148,9 +157,7 @@
         })
       },
       goto(url){
-        wx.navigateTo({
-          url
-        })
+        wx.navigateTo({url})
       },
       showJoinView(){
         this.joinView.showJoinView = true
