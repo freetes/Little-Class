@@ -85,7 +85,7 @@ page{
     </view>
 
     <button wx:if="{{ !isJoined }}" bindtap="joinGroup">申请加群</button>
-    <button wx:if="{{ userInfo._id == groupInfo.owner }}" bindtap="gotoCreateCheck">设置</button>
+    <button wx:if="{{ userInfo._id == groupInfo.owner }}" bindtap="gotoEditGroupInfo">设置</button>
     <button wx:if="{{ userInfo._id == groupInfo.owner }}" bindtap="gotoCreateCheck">开启签到</button>
     <button wx:if="{{ userInfo._id != groupInfo.owner && canCheck }}" bindtap="getChecked">签到</button>
 
@@ -130,11 +130,13 @@ page{
           self.isJoined = true
         }
         else{
+          if(newValue.members.length == 0){
+            self.isJoined = false
+          }
           for(let item of newValue.members){
-            if(item.userId == self.userInfo._id){
-                self.userInfo.name = item.userInfo.name
-                self.isJoined = true
-                break
+            if(item.user_id == self.userInfo._id){
+              self.isJoined = true
+              break
             }
             else{
               self.isJoined = false
@@ -160,15 +162,16 @@ page{
               console.log(newValue.members)
               console.log(res.data.members)
               for(let member of newValue.members){
-                member.status == 0  // 未签到
+                member.status = 0  // 未签到
                 for(let checkedUser of res.data.members){
                   if(checkedUser.user_id == member.user_id){
-                    member.status == checkedUser.status
+                    member.status = checkedUser.status
                     break
                   }
                 }
               }
 
+              console.log(newValue)
               self.groupInfo = newValue
               self.$apply()
             }
@@ -219,6 +222,9 @@ page{
       },
       gotoCreateCheck(){
         wx.navigateTo({url: '../pages/createCheck?_id='+this._id})
+      },
+      gotoEditGroupInfo(){
+        wx.navigateTo({url: '../pages/editGroupInfo?_id='+this._id})
       },
       getChecked(){
         let self = this
