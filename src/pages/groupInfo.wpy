@@ -33,6 +33,28 @@ page{
       color: gray;
     }
   }
+
+  >.members{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+    padding: 10px 10px;
+    
+    >text{
+      font-size: 14px;
+      color: black;
+      font-weight: bold;
+    }
+
+    >image{
+      width: 40px;
+      height: 40px;
+      margin-right: 10px;
+      border-radius: 50%;
+    }
+  }
   
   >button{
     padding: 10px 7%;
@@ -53,14 +75,19 @@ page{
     <view class="header">
       <text class="title">{{ groupInfo.name }}</text>
       <view>
-        <text>1天</text>
-        <text>共{{ groupInfo.members.length + 1 }}人参与</text>
+        <text></text>
+        <text>{{ groupInfo.members.length==0?'还没有人参与，快去邀请吧':'一共' + groupInfo.members.length + '个人参与'}}</text>
       </view>
     </view>
 
-    <button bindtap="updateUserInfo">提交修改</button>
+    <view wx:if="{{ groupInfo.members.length!=0 }}" class="members">
+      <image mode="aspectFit" wx:for="{{ groupInfo.members }}" src="{{ item.user_info.avatarUrl }}"></image>
+    </view>
+
     <button wx:if="{{ !isJoined }}" bindtap="joinGroup">申请加群</button>
+    <button wx:if="{{ userInfo._id == groupInfo.owner }}" bindtap="gotoCreateCheck">设置</button>
     <button wx:if="{{ userInfo._id == groupInfo.owner }}" bindtap="gotoCreateCheck">开启签到</button>
+    <button wx:if="{{ userInfo._id != groupInfo.owner && canCheck }}" bindtap="getChecked">签到</button>
 
   </view>
 </template>
@@ -74,11 +101,18 @@ page{
     }
 
     data = {
-      groupInfo: {},
+      groupInfo: {
+        checkForm: [],
+        members: []
+      },
       userInfo: {},
-      openid: '',
+      check: {
+
+      },
+      wxInfo: {},
       _id: '',
       isJoined: true,
+      canCheck: false
     }
 
     computed = {
@@ -91,7 +125,7 @@ page{
       groupInfo (newValue, oldValue) {
         let self = this
 
-        // 判断
+        // 判断能否加入
         if(self.userInfo._id == newValue.owner){
           self.isJoined = true
         }
@@ -106,6 +140,39 @@ page{
               self.isJoined = false
             }
           }
+        }
+
+        // 判断能否签到
+        if(newValue.checkForm && newValue.checkForm.length == 0){
+          self.canCheck = false
+        }
+        else{
+          const db = wx.cloud.database()
+
+          db.collection('checks').doc(newValue.checkForm[newValue.checkForm.length-1])
+          .get({
+            success: function(res) {
+              // 最近的签到信息
+              self.check = res.data
+
+              res.data.endTime >= new Date()? self.canCheck=true : self.canCheck=false
+
+              console.log(newValue.members)
+              console.log(res.data.members)
+              for(let member of newValue.members){
+                member.status == 0  // 未签到
+                for(let checkedUser of res.data.members){
+                  if(checkedUser.user_id == member.user_id){
+                    member.status == checkedUser.status
+                    break
+                  }
+                }
+              }
+
+              self.groupInfo = newValue
+              self.$apply()
+            }
+          })
         }
       }
     }
@@ -130,36 +197,102 @@ page{
           console.log('无法加入')
           return
         }
-        const db = wx.cloud.database(), _ = db.command
-        
-        db.collection('groups').doc(self._id).update({
-          data: {
-            members: _.push({
-              'userId': self.userInfo._id,
-              'userInfo': {
-                'name': self.userInfo.name,
-                'gender': self.userInfo.gender,
-              },
-            })
-          },
-          success: function(res) {
-            console.log(res)
-          },
-          fail: function(res){
-            console.log(res)
+
+        // 请求参数
+        let data = {
+          group_id: self._id,
+          user_id: self.userInfo._id,
+          user_info: {
+            avatarUrl: self.wxInfo.avatarUrl,
+            name: self.userInfo.name,
+            gender: self.userInfo.gender,
           }
+        }
+
+        // 调用云函数
+        wx.cloud.callFunction({
+          name: 'joinGroup',
+          data: data
+        }).then(res=>{
+          console.log(res)
         })
       },
       gotoCreateCheck(){
         wx.navigateTo({url: '../pages/createCheck?_id='+this._id})
+      },
+      getChecked(){
+        let self = this
+        
+        const db = wx.cloud.database(), _ = db.command
+
+        let ownerPosition = self.check.position.split('-')
+        // 获取经纬度坐标
+        wx.getLocation({
+          type: 'wgs84',
+          success (res) {
+            let now = new Date()
+            /*
+              time: Date,
+              user_id: ,
+              position: String,
+              status: Number,     1 to success, -1 to fail because of the position
+            */
+            
+            let data = {
+              time: Date.now(),
+              user_id: self.userInfo._id,
+              position: res.latitude + '-' + res.longitude
+            }
+
+            if(self.check.distance == -1){
+              data.status = 1
+            }
+            else{
+              let distance = getGreatCircleDistance(res.latitude, res.longitude, ownerPosition[0], ownerPosition[1])
+              data.status = distance <= self.check.distance?1:-1
+            }
+
+            // 调用云函数
+            wx.cloud.callFunction({
+              name: 'getChecked',
+              data: {
+                check_id: self.check._id,
+                check_info: data
+              }
+            }).then(res=>{
+              console.log(res)
+            })
+            
+            // 通过经纬度获取距离（单位：米）
+            function getGreatCircleDistance(lat1,lng1,lat2,lng2){
+              var EARTH_RADIUS = 6378137.0;
+
+              var radLat1 = lat1*Math.PI/180.0;
+              var radLat2 = lat2*Math.PI/180.0;
+              
+              var a = radLat1 - radLat2;
+              var b = lng1*Math.PI/180.0 - lng2*Math.PI/180.0;
+              
+              var s = 2*Math.asin(Math.sqrt(Math.pow(Math.sin(a/2),2) + Math.cos(radLat1)*Math.cos(radLat2)*Math.pow(Math.sin(b/2),2)));
+              s = s*EARTH_RADIUS;
+              s = Math.round(s*10000)/10000.0;
+                      
+              return s;
+            }
+          },
+          fail (res){
+            console.log(res)
+          }
+        })
       }
     }
 
     onLoad(option) {
-      let self = this, openid = wx.getStorageSync('openid'), _id = wx.getStorageSync('_id')
+      console.log('groupInfo onload')
+      let self = this, wxInfo = wx.getStorageSync('wxInfo'), _id = wx.getStorageSync('_id')
 
-      if(openid){
-        self.openid = openid
+      if(wxInfo){
+        self.wxInfo = wxInfo
       }
       if(_id){
         self.userInfo._id = _id
@@ -168,15 +301,13 @@ page{
       
       const db = wx.cloud.database()
 
-      db.collection('groups').doc(option._id)
-      .get({
-        success: function(res) {
-          self.groupInfo = res.data
-          self.$apply()
-        },
-        fail: function(res){
-          console.log(res)
-        }
+      wx.cloud.callFunction({
+        name: 'getGroupById',
+        data: {group_id: option._id}
+      }).then(res=>{
+        console.log(res)
+        self.groupInfo = res.result.data
+        self.$apply()
       })
 
       db.collection('users').doc(_id)

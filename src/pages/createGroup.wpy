@@ -50,8 +50,6 @@ page{
       font-size: 12px;
     }
 
-    
-
     >.input-container{
       display: flex;
       flex-direction: row;
@@ -97,7 +95,7 @@ page{
       <textarea data-key="groupInfo.description" value="{{ groupInfo.description }}" bindblur="inputChange" auto-height placeholder="描述" />
     </view>
 
-    <view class="inputs">
+    <!-- <view class="inputs">
       <text>基本信息</text>
 
       <view class="input-container">
@@ -112,7 +110,7 @@ page{
           </view>
         </picker>
       </view>
-    </view>
+    </view> -->
 
     <button bindtap="createGroup">确定创建</button>
 
@@ -171,6 +169,7 @@ page{
                 owner: self._id,
                 createTime: Date.now(),
                 members: [],
+                checkForm: [],
                 status: 0,  // 0 表示可以加入，-1 表示不能加入
                 groupCode: 10000 + res.data.length,
               },

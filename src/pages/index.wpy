@@ -6,9 +6,17 @@
     right: 20px;
     bottom: 20px;
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     justify-content: flex-start;
     align-items: center;
+
+    >image{
+      width: 20px;
+      height: 20px;
+      background-color: white;
+      border-radius: 50%;
+      padding: 10px 10px;
+    }
   }
   .modal-container{
     position: absolute;
@@ -57,33 +65,70 @@
       }
     }
   }
-  // >button{
-  //   padding: 10px 7%;
-  //   width: 86%;
-  //   margin-top: 20px;
-  //   margin-bottom: 20px;
-  //   background-color: white;
-  //   border-top: 1px solid #fafafa;
-  //   border-bottom: 1px solid #fafafa;
-  // }
-  // >button::after{
-  //   border: none;
-  // }
+  .group-list{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+    padding: 20px 4%;
+
+    >.group-item{
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      width: 100%;
+      border: none;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      background-color: white;
+      box-shadow: 0 5px 5px lightgray;
+      
+      >.title{
+        font-size: 14px;
+        color: black;
+        font-weight: bold;
+        padding: 0 10px;
+        padding-top: 10px;
+      }
+      >view{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        padding: 10px 10px;
+        font-size: 12px;
+        color: gray;
+      }
+    }
+  }
 }
 </style>
 <template>
   <view class="container">
-    <cover-view class="buttons">
-      <button bindtap="goto('../pages/createGroup')">新建群组</button>
-      <button bindtap="showJoinView">搜索群组</button>
-      <button>更多</button>
-    </cover-view>
+    <view class="buttons">
+      <image src="../static/icons/more.png" bindtap="toggleBtns"></image>
+      <image wx:if="{{ showBtns }}" src="../static/icons/search_group.png" bindtap="showJoinView"></image>
+      <image wx:if="{{ showBtns }}" src="../static/icons/create_group.png" data-url="../pages/createGroup" bindtap="goto"></image>
+    </view>
+
+    <view class="group-list">
+      <view class="group-item" data-url="{{ '../pages/groupInfo?_id='+item._id }}" wx:for="{{ groups }}" bindtap="goto">
+        <text class="title">{{ item.name }}</text>
+        <view>
+          <text>一共{{ item.members.length }}人</text>
+          <text>{{ item.belong == 1?'创建者':'' }}</text>
+        </view>
+      </view>
+    </view>
 
     <!-- 加入群组弹出框 -->
     <view wx:if="{{ joinView.showJoinView }}" bindtap="hideJoinView" class="modal-container">
       <view class="modal-main" catchtap>
         <text class="modal-title">搜索群组</text>
-        <input data-key="joinView.groupCode" bindchange="inputChange" value="{{ joinView.groupCode }}" type="number" focus="{{ joinView.showJoinView }}" maxlength="5" />
+        <input data-key="joinView.groupCode" bindinput="inputChange" value="{{ joinView.groupCode }}" type="number" focus="{{ joinView.showJoinView }}" maxlength="5" />
         <text wx:hidden="{{ joinView.message!='' }}" class="modal-message">{{ joinView.message }}</text>
         <button bindtap="searchGroup">搜索</button>
       </view>
@@ -103,13 +148,14 @@
       userInfo: {
         nickName: '加载中...'
       },
-      _id: '',
-      level: 0,
+      user_id: '',
       joinView: {
         groupCode: undefined,
         showJoinView: false,
         message: ''
-      }
+      },
+      groups: [],
+      showBtns: false,
     }
 
     computed = {
@@ -120,50 +166,36 @@
 
     methods = {
       searchGroup(){
-        var self = this
-        const db = wx.cloud.database()
-
-        db.collection('groups').where({groupCode: parseInt(self.joinView.groupCode)})
-        .get({
-          success: function(res) {
-            console.log(res.data)
-            // 搜索错误
-            if(res.data.length == 0){
-              self.joinView.message = '找不到'
-              self.$apply()
-            }
-            else{
-              wx.navigateTo({
-                url: '../pages/groupInfo?_id=' + res.data[0]._id
-              })
-            }
-            // db.collection('groups').add({
-            //   // data 字段表示需新增的 JSON 数据
-            //   data: {
-            //     name: self.groupInfo.name,
-            //     description: self.groupInfo.description,
-            //     owner: self._id,
-            //     createTime: Date.now(),
-            //     members: [],
-            //     status: 0,
-            //     groupCode: 10000 + res.data.length,
-            //   },
-            //   success: function(res) {
-            //     // res 是一个对象，其中有 _id 字段标记刚创建的记录的 id
-            //     console.log(res)
-            //   }
-            // })
+        let self = this
+        
+        // 调用云函数
+        wx.cloud.callFunction({
+          name: 'getGroupByCode',
+          data: {groupCode: self.joinView.groupCode}
+        }).then(res=>{
+          // 无记录
+          if(res.result.data.length == 0){
+            self.joinView.message = '找不到'
+            self.$apply()
+          }
+          else{
+            wx.navigateTo({
+              url: '../pages/groupInfo?_id=' + res.result.data[0]._id
+            })
           }
         })
       },
-      goto(url){
-        wx.navigateTo({url})
+      goto(e){
+        wx.navigateTo({url: e.currentTarget.dataset.url})
       },
       showJoinView(){
         this.joinView.showJoinView = true
       },
       hideJoinView(){
         this.joinView.showJoinView = false
+      },
+      toggleBtns(){
+        this.showBtns = !this.showBtns
       },
       inputChange(e){
         let self = this
@@ -178,16 +210,40 @@
       },
     }
 
-    onLoad() {
+    onShow() {
       let self = this
 
-      var _id = wx.getStorageSync('_id')
+      let user_id = wx.getStorageSync('_id')
 
-      if(_id){
-        self._id = _id
+      if(user_id){
+        self.user_id = user_id
       }
 
-      self.$apply()
+      // 找到群组
+      const db = wx.cloud.database()
+
+      db.collection('groups').where({}).get()
+      .then(res=>{
+        let data = []
+
+        for(let group of res.data){
+          if(group.owner == user_id){
+            group.belong = 1
+            data.push(group)
+          }
+          else{
+            for(let item of group.members){
+              if(item.user_id == user_id){
+                data.push(group)
+                break
+              }
+            }
+          }
+        }
+
+        self.groups = data
+        self.$apply()
+      })
     }
   }
 </script>

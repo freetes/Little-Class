@@ -115,8 +115,7 @@ page{
       wxInfo: {
         nickName: '登入',
         avatarUrl: '../static/imgs/用户.png'
-      },
-      userInfo: {}
+      }
     }
 
     computed = {
@@ -140,21 +139,14 @@ page{
         // 获取openid
         wx.cloud.callFunction({name: 'getOpenid'})
         .then(res=>{
-          let openid = res.result.openid
-
-          wx.setStorage({
-            key:"openid",
-            data: openid
-          })
-
           // 通过 openid 获取用户信息
           const db = wx.cloud.database()
+          
           db.collection('users').where({
-            _openid: openid,
+            _openid: res.result.openid,
           })
           .get({
             success: function (res){
-              console.log(res)
               // new user
               if(res.data.length == 0){
                 db.collection('users').add({
@@ -177,8 +169,6 @@ page{
                   key: "_id",
                   data: res.data[0]._id
                 })
-                self.userInfo = res.data[0]
-                self.$apply()
               }
             }
           })
@@ -195,10 +185,7 @@ page{
           avatarUrl: '../static/imgs/用户.png'
         }
 
-        this.$apply()
-        wx.removeStorageSync('wxInfo')
-        wx.removeStorageSync('openid')
-        wx.removeStorageSync('_id')
+        wx.clearStorageSync()
       }
     }
 
@@ -209,6 +196,12 @@ page{
 
       if(wxInfo){
         self.wxInfo = wxInfo
+      }
+      else{
+        self.wxInfo = {
+          nickName: '登入',
+          avatarUrl: '../static/imgs/用户.png'
+        }
       }
       self.$apply()
     }

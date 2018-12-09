@@ -166,7 +166,6 @@ page{
         gender: 0,
         level: 0,
       },
-      openid: '',
       _id: ''
     }
 
@@ -207,21 +206,11 @@ page{
       }
     }
 
-    events = {
-      'index-emit': (...args) => {
-        let $event = args[args.length - 1]
-        console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`)
-      }
-    }
-
     onShow() {
-      let self = this, wxInfo = wx.getStorageSync('wxInfo'), openid = wx.getStorageSync('openid'), _id = wx.getStorageSync('_id')
+      let self = this, wxInfo = wx.getStorageSync('wxInfo'), _id = wx.getStorageSync('_id')
 
       if(wxInfo){
         self.wxInfo = wxInfo
-      }
-      if(openid){
-        self.openid = openid
       }
       if(_id){
         self._id = _id
