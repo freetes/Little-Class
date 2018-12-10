@@ -3,6 +3,7 @@ page{
   width: 100%;
   min-height: 100%;
   background-color: #efefef;
+  // background-image: linear-gradient(#efefef, #fafafa);
 }
 text{
   font-family: "-apple-system","BlinkMacSystemFont","PingFang SC",Helvetica,Tahoma,Arial,"Microsoft YaHei","微软雅黑","黑体","Heiti",sans-serif,"SimSun","宋体",serif;
@@ -44,6 +45,7 @@ export default class extends wepy.app {
     tabBar: {
       color: '#8a8a8a',
       selectedColor: '#000000',
+      borderStyle: 'white',
       list: [
         {
           pagePath: 'pages/index',

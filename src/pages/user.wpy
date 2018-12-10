@@ -1,8 +1,4 @@
 <style lang="less">
-page{
-  background-image: linear-gradient(#efefef, #fafafa);
-}
-
 .container{
   >.header{
     display: flex;

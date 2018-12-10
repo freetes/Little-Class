@@ -1,8 +1,4 @@
 <style lang="less">
-page{
-  background-color: white;
-}
-
 .container{
   >.groupInfo{
     display: flex;
@@ -12,7 +8,6 @@ page{
     width: 100%;
     height: 150px;
     margin: 10px 0;
-    background-color: #efefef;
 
     >.title{
       padding: 0 20px;
@@ -39,8 +34,11 @@ page{
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    width: 100%;
-    padding: 5px 20px;
+    width: 92%;
+    margin: 5px 4%;
+    padding: 10px 10px;
+    background-color: white;
+    border-radius: 10px;
 
     >view.title{
       display: flex;
@@ -48,6 +46,7 @@ page{
       justify-content: space-between;
       align-items: center;
       width: 100%;
+      margin-bottom: 10px;
 
       >text{
         font-size: 14px;
@@ -70,26 +69,36 @@ page{
       width: 100%;
 
       >image{
-        width: 60px;
-        height: 60px;
-        margin-right: 10px;
+        display: inline-block;
+        width: 20%;
+        margin-left: 4%;
+        margin-bottom: 5px;
         border-radius: 50%;
       }
     }
   }
   
-  >button{
-    padding: 10px 7%;
-    width: 86%;
-    margin-top: 20px;
-    margin-bottom: 20px;
+  >.btns{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 92%;
+    margin: 5px 4%;
+    padding: 10px 10px;
     background-color: white;
-    border-top: 1px solid #fafafa;
-    border-bottom: 1px solid #fafafa;
+    border-radius: 10px;
+
+    >button{
+      padding: 10px 0%;
+      width: 100%;
+      background-color: white;
+    }
+    >button::after{
+      border: none;
+    }
   }
-  >button::after{
-    border: none;
-  }
+  
 }
 </style>
 <template>
@@ -110,21 +119,30 @@ page{
         <text class="assist">{{ groupInfo.members.length==0?'空空无人':'共' + groupInfo.members.length + '人'}}</text>
       </view>
       <view wx:if="{{ groupInfo.members.length!=0 }}">
-        <image mode="aspectFit" wx:for="{{ groupInfo.members }}" src="{{ item.user_info.avatarUrl }}"></image>
+        <image mode="widthFix" wx:for="{{ groupInfo.members }}" src="{{ item.user_info.avatarUrl }}"></image>
       </view>
     </view>
 
     <!-- 签到表 信息 -->
+    <view wx:if="{{ check!=undefined }}">
+      <text>最近一次签到中</text>
+      <view>
 
-    <!-- 普通用户 功能 -->
-    <button wx:if="{{ !isJoined }}" bindtap="joinGroup">申请加群</button>
-    <button wx:if="{{ userInfo._id != groupInfo.owner && canCheck }}" bindtap="getChecked">签到</button>
-    <button wx:if="{{ userInfo._id != groupInfo.owner}}">退出</button>
+      </view>
+    </view>
 
-    <!-- 拥有者 功能 -->
-    <button wx:if="{{ userInfo._id == groupInfo.owner }}" bindtap="gotoCreateCheck">开启签到</button>
-    <button wx:if="{{ userInfo._id == groupInfo.owner }}" bindtap="gotoEditGroupInfo">修改信息</button>
-    <button wx:if="{{ userInfo._id == groupInfo.owner }}" bindtap="">解散</button>
+    <view class="btns">
+      <!-- 普通用户 功能 -->
+      <button hover-class="none" wx:if="{{ !isJoined }}" bindtap="joinGroup">申请加群</button>
+      <button hover-class="none" wx:if="{{ userInfo._id != groupInfo.owner && canCheck }}" bindtap="getChecked">签到</button>
+      <button hover-class="none" wx:if="{{ userInfo._id != groupInfo.owner && isJoined}}">退出</button>
+
+      <!-- 拥有者 功能 -->
+      <button hover-class="none" wx:if="{{ userInfo._id == groupInfo.owner }}" bindtap="gotoCreateCheck">开启签到</button>
+      <button hover-class="none" wx:if="{{ userInfo._id == groupInfo.owner }}" bindtap="gotoEditGroupInfo">修改信息</button>
+      <button hover-class="none" wx:if="{{ userInfo._id == groupInfo.owner }}" bindtap="">解散</button>
+
+    </view>
 
   </view>
 </template>
@@ -143,9 +161,7 @@ page{
         members: []
       },
       userInfo: {},
-      check: {
-
-      },
+      check: undefined,
       wxInfo: {},
       _id: '',
       isJoined: true,
@@ -196,8 +212,6 @@ page{
 
               res.data.endTime >= new Date()? self.canCheck=true : self.canCheck=false
 
-              console.log(newValue.members)
-              console.log(res.data.members)
               for(let member of newValue.members){
                 member.status = 0  // 未签到
                 for(let checkedUser of res.data.members){
@@ -208,7 +222,6 @@ page{
                 }
               }
 
-              console.log(newValue)
               self.groupInfo = newValue
               self.$apply()
             }
@@ -234,7 +247,12 @@ page{
         
         // 判断是否可以加入
         if(self.groupInfo.status == -1){
-          console.log('无法加入')
+          wx.showToast({
+            title: '无法加入',
+            icon: 'success',
+            duration: 2000,
+            mask: true
+          })
           return
         }
 
