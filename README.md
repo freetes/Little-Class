@@ -41,13 +41,13 @@
 </tr>
 <tr>
   <td>普通正文</td>
-  <td>32rpx</td>
-  <td>#6B6B6B</td>
+  <td>16/14px</td>
+  <td>#000000</td>
 </tr>
 <tr>
   <td>辅助正文</td>
-  <td>28rpx</td>
-  <td>#AEAEAE</td>
+  <td>14/12px</td>
+  <td>#8A8A8A</td>
 </tr>
 </table>
 

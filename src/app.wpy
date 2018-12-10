@@ -3,6 +3,8 @@ page{
   width: 100%;
   min-height: 100%;
   background-color: #efefef;
+}
+text{
   font-family: "-apple-system","BlinkMacSystemFont","PingFang SC",Helvetica,Tahoma,Arial,"Microsoft YaHei","微软雅黑","黑体","Heiti",sans-serif,"SimSun","宋体",serif;
 }
 .container {
@@ -40,14 +42,20 @@ export default class extends wepy.app {
       navigationBarTextStyle: 'black'
     },
     tabBar: {
+      color: '#8a8a8a',
+      selectedColor: '#000000',
       list: [
         {
           pagePath: 'pages/index',
-          text: '首页'
+          text: '首页',
+          iconPath: './static/icons/index.png',
+          selectedIconPath: './static/icons/index-s.png',
         }, 
         {
           pagePath: 'pages/user',
-          text: '我的'
+          text: '我的',
+          iconPath: './static/icons/user.png',
+          selectedIconPath: './static/icons/user-s.png',
         }
       ]
     }

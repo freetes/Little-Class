@@ -4,7 +4,7 @@ page{
 }
 
 .container{
-  >.header{
+  >.groupInfo{
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -12,10 +12,10 @@ page{
     width: 100%;
     height: 150px;
     margin: 10px 0;
-    background-color: lightblue;
+    background-color: #efefef;
 
     >.title{
-      padding: 0 10px;
+      padding: 0 20px;
       padding-bottom: 10px;
       font-size: 16px;
       font-weight: bold;      
@@ -23,7 +23,7 @@ page{
     }
     >view{
       width: 100%;
-      padding: 0 10px;
+      padding: 0 20px;
       padding-bottom: 10px;
       display: flex;
       flex-direction: row;
@@ -36,23 +36,45 @@ page{
 
   >.members{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
     width: 100%;
-    padding: 10px 10px;
-    
-    >text{
-      font-size: 14px;
-      color: black;
-      font-weight: bold;
+    padding: 5px 20px;
+
+    >view.title{
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+
+      >text{
+        font-size: 14px;
+        color: black;
+        font-weight: bold;
+      }
+      >text.assist{
+        font-size: 12px;
+        color: gray;
+        font-weight: normal;
+      }
     }
 
-    >image{
-      width: 40px;
-      height: 40px;
-      margin-right: 10px;
-      border-radius: 50%;
+    >view{
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      width: 100%;
+
+      >image{
+        width: 60px;
+        height: 60px;
+        margin-right: 10px;
+        border-radius: 50%;
+      }
     }
   }
   
@@ -72,22 +94,37 @@ page{
 </style>
 <template>
   <view class="container">
-    <view class="header">
+
+    <!-- 群组 信息 -->
+    <view class="groupInfo">
       <text class="title">{{ groupInfo.name }}</text>
       <view>
-        <text></text>
-        <text>{{ groupInfo.members.length==0?'还没有人参与，快去邀请吧':'一共' + groupInfo.members.length + '个人参与'}}</text>
+        <text>{{ groupInfo.groupCode }}</text>
       </view>
     </view>
 
-    <view wx:if="{{ groupInfo.members.length!=0 }}" class="members">
-      <image mode="aspectFit" wx:for="{{ groupInfo.members }}" src="{{ item.user_info.avatarUrl }}"></image>
+    <!-- 成员 信息 -->
+    <view class="members">
+      <view class="title">
+        <text>成员</text>
+        <text class="assist">{{ groupInfo.members.length==0?'空空无人':'共' + groupInfo.members.length + '人'}}</text>
+      </view>
+      <view wx:if="{{ groupInfo.members.length!=0 }}">
+        <image mode="aspectFit" wx:for="{{ groupInfo.members }}" src="{{ item.user_info.avatarUrl }}"></image>
+      </view>
     </view>
 
+    <!-- 签到表 信息 -->
+
+    <!-- 普通用户 功能 -->
     <button wx:if="{{ !isJoined }}" bindtap="joinGroup">申请加群</button>
-    <button wx:if="{{ userInfo._id == groupInfo.owner }}" bindtap="gotoEditGroupInfo">设置</button>
-    <button wx:if="{{ userInfo._id == groupInfo.owner }}" bindtap="gotoCreateCheck">开启签到</button>
     <button wx:if="{{ userInfo._id != groupInfo.owner && canCheck }}" bindtap="getChecked">签到</button>
+    <button wx:if="{{ userInfo._id != groupInfo.owner}}">退出</button>
+
+    <!-- 拥有者 功能 -->
+    <button wx:if="{{ userInfo._id == groupInfo.owner }}" bindtap="gotoCreateCheck">开启签到</button>
+    <button wx:if="{{ userInfo._id == groupInfo.owner }}" bindtap="gotoEditGroupInfo">修改信息</button>
+    <button wx:if="{{ userInfo._id == groupInfo.owner }}" bindtap="">解散</button>
 
   </view>
 </template>
@@ -217,7 +254,19 @@ page{
           name: 'joinGroup',
           data: data
         }).then(res=>{
-          console.log(res)
+          delete data.group_id
+
+          self.groupInfo.members.push(data)
+          self.isJoined = true
+
+          self.$apply()
+          
+          wx.showToast({
+            title: '加入成功',
+            icon: 'success',
+            duration: 2000,
+            mask: true
+          })
         })
       },
       gotoCreateCheck(){
@@ -266,7 +315,16 @@ page{
                 check_info: data
               }
             }).then(res=>{
-              console.log(res)
+              self.canCheck = false
+
+              self.$apply()
+              
+              wx.showToast({
+                title: '签到成功',
+                icon: 'success',
+                duration: 2000,
+                mask: true
+              })
             })
             
             // 通过经纬度获取距离（单位：米）
