@@ -32,7 +32,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 4,
+			"current": 3,
 			"list": [
 				{
 					"id": -1,
@@ -56,7 +56,7 @@
 					"id": 3,
 					"name": "groupInfo",
 					"pathName": "pages/groupInfo",
-					"query": "_id=XAnvA5T75u22WmuJ"
+					"query": "_id=XAy-NJT75u22ZW8E"
 				},
 				{
 					"id": -1,

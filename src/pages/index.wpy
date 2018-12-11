@@ -239,10 +239,9 @@
               }
             }
           }
-
-          self.groups = data
-          self.$apply()
         }
+        self.groups = data
+        self.$apply()
       })
     }
   }

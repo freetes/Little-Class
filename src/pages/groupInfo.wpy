@@ -77,6 +77,52 @@
       }
     }
   }
+
+  >.check-form{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 92%;
+    margin: 5px 4%;
+    padding: 10px 10px;
+    background-color: white;
+    border-radius: 10px;
+
+    >view.title{
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      margin-bottom: 10px;
+
+      >text{
+        font-size: 14px;
+        color: black;
+        font-weight: bold;
+      }
+      >text.assist{
+        font-size: 12px;
+        color: gray;
+        font-weight: normal;
+      }
+    }
+
+    >view.info{
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      width: 100%;
+      font-size: 14px;
+
+      >text.title{
+        font-weight: bold;
+      }
+    }
+  }
   
   >.btns{
     display: flex;
@@ -118,16 +164,26 @@
         <text>成员</text>
         <text class="assist">{{ groupInfo.members.length==0?'空空无人':'共' + groupInfo.members.length + '人'}}</text>
       </view>
-      <view wx:if="{{ groupInfo.members.length!=0 }}">
+      <view wx:if="{{ groupInfo.members.length!=0 }}" wx:key="user_id">
         <image mode="widthFix" wx:for="{{ groupInfo.members }}" src="{{ item.user_info.avatarUrl }}"></image>
       </view>
     </view>
 
     <!-- 签到表 信息 -->
-    <view wx:if="{{ check!=undefined }}">
-      <text>最近一次签到中</text>
-      <view>
-
+    <view class="check-form" wx:if="{{ userInfo._id == groupInfo.owner && check }}">
+      <view class="title">
+        <text>签到表</text>
+      </view>
+      <view class="info">
+        <text class="title">{{ check.title }}</text>
+        <text>开启时间：{{ check.createAt }}</text>
+        <text>结束时间：{{ check.endTime }}</text>
+      </view>
+      <view class="member">
+        <view wx:for="{{ sortCheckedGroupMembers }}" wx:key="user_id">
+          <text>{{ item.user_info.name }}</text>
+          <text>{{ item.status == 1?'签到成功':item.status == -1?'距离太远':'未签到' }}</text>
+        </view>
       </view>
     </view>
 
@@ -136,14 +192,19 @@
       <button hover-class="none" wx:if="{{ !isJoined }}" bindtap="joinGroup">申请加群</button>
       <button hover-class="none" wx:if="{{ userInfo._id != groupInfo.owner && canCheck }}" bindtap="getChecked">签到</button>
       <button hover-class="none" wx:if="{{ userInfo._id != groupInfo.owner && isJoined}}">退出</button>
-
       <!-- 拥有者 功能 -->
       <button hover-class="none" wx:if="{{ userInfo._id == groupInfo.owner }}" bindtap="gotoCreateCheck">开启签到</button>
       <button hover-class="none" wx:if="{{ userInfo._id == groupInfo.owner }}" bindtap="gotoEditGroupInfo">修改信息</button>
       <button hover-class="none" wx:if="{{ userInfo._id == groupInfo.owner }}" bindtap="">解散</button>
-
     </view>
 
+    <!-- 签到表 信息 -->
+    <view class="check-history" wx:if="{{ userInfo._id != groupInfo.owner }}">
+      <text>历史签到记录</text>
+      <view>
+
+      </view>
+    </view>
   </view>
 </template>
 
@@ -169,8 +230,29 @@
     }
 
     computed = {
-      now () {
-        return +new Date()
+      sortCheckedGroupMembers(){
+        let self = this
+
+        if(self.userInfo._id == self.groupInfo.owner){
+          let success = [], fail = [], none = []
+
+          for(let item of self.groupInfo.members){
+            if(item.status == 0){
+              none.push(item)
+            }
+            else if(item.status == 1){
+              success.push(item)
+            }
+            else if(item.status == -1){
+              fail.push(item)
+            }
+          }
+
+          return success.concat(fail).concat(none)
+        }
+        else{
+          return undefined
+        }
       }
     }
 
@@ -370,7 +452,6 @@
     }
 
     onLoad(option) {
-      console.log('groupInfo onload')
       let self = this, wxInfo = wx.getStorageSync('wxInfo'), _id = wx.getStorageSync('_id')
 
       if(wxInfo){
