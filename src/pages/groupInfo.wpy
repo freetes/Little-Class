@@ -71,6 +71,7 @@
       >image{
         display: inline-block;
         width: 20%;
+        max-height: 70px;
         margin-left: 4%;
         margin-bottom: 5px;
         border-radius: 50%;
@@ -122,6 +123,117 @@
         font-weight: bold;
       }
     }
+
+    >view.member{
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      width: 100%;
+      margin: 10px 0;
+
+      >view.title{
+        font-size: 14px;
+        color: black;
+        font-weight: bold;
+
+        >text.assist{
+          background-color: lightgray;
+          color: black;
+          padding: 5px 10px;
+          border-radius: 10px;
+          line-height: 20px;
+          text-align: center;
+          margin-left: 10px;
+        }
+      }
+
+      >view.status{
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        width: 100%;
+        margin-bottom: 10px;
+
+        >view{
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+          width: 100%;
+          margin: 5px 0;
+          font-size: 14px;
+        }
+      }
+    }
+  }
+
+  >.check-history{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 92%;
+    margin: 5px 4%;
+    padding: 10px 10px;
+    background-color: white;
+    border-radius: 10px;
+
+    >view.title{
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      margin-bottom: 10px;
+
+      >text{
+        font-size: 14px;
+        color: black;
+        font-weight: bold;
+      }
+      >text.assist{
+        font-size: 12px;
+        color: gray;
+        font-weight: normal;
+      }
+    }
+
+    >view.history{
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      width: 100%;
+      margin: 10px 0;
+
+      >view.title{
+        font-size: 14px;
+        color: black;
+        font-weight: bold;
+
+        >text.assist{
+          background-color: lightgray;
+          color: black;
+          padding: 5px 10px;
+          border-radius: 10px;
+          line-height: 20px;
+          text-align: center;
+          margin-left: 10px;
+        }
+      }
+
+      >view.status{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 10px;
+        font-size: 14px;
+      }
+    }
   }
   
   >.btns{
@@ -144,7 +256,6 @@
       border: none;
     }
   }
-  
 }
 </style>
 <template>
@@ -154,12 +265,12 @@
     <view class="groupInfo">
       <text class="title">{{ groupInfo.name }}</text>
       <view>
-        <text>{{ groupInfo.groupCode }}</text>
+        <text>ID：{{ groupInfo.groupCode }}</text>
       </view>
     </view>
 
     <!-- 成员 信息 -->
-    <view class="members">
+    <view class="members" wx:if="{{ userInfo._id == groupInfo.owner}}">
       <view class="title">
         <text>成员</text>
         <text class="assist">{{ groupInfo.members.length==0?'空空无人':'共' + groupInfo.members.length + '人'}}</text>
@@ -172,17 +283,63 @@
     <!-- 签到表 信息 -->
     <view class="check-form" wx:if="{{ userInfo._id == groupInfo.owner && check }}">
       <view class="title">
-        <text>签到表</text>
+        <text>最近签到记录</text>
       </view>
       <view class="info">
         <text class="title">{{ check.title }}</text>
-        <text>开启时间：{{ check.createAt }}</text>
-        <text>结束时间：{{ check.endTime }}</text>
+        <text>{{ check.createAt }} - {{ check.endTime }}</text>
       </view>
       <view class="member">
-        <view wx:for="{{ sortCheckedGroupMembers }}" wx:key="user_id">
-          <text>{{ item.user_info.name }}</text>
-          <text>{{ item.status == 1?'签到成功':item.status == -1?'距离太远':'未签到' }}</text>
+        <!-- 成功签到 -->
+        <view class="title">
+          <text>签到成功</text>
+          <text class="assist">{{ check.success.length }}</text>
+        </view>
+        <view class="status">
+          <view wx:for="{{ check.success }}" wx:key="user_id">
+            <text>{{ item.user_info.name }}</text>
+            <text>{{ '签到成功' }}</text>
+          </view>
+        </view>
+
+        <!-- 签到失败。不在有效范围 -->
+        <view wx:if="{{ check.fail.length!=0 }}" class="title">
+          <text>签到失败，不在有效范围内</text>
+          <text class="assist">{{ check.fail.length }}</text>
+        </view>
+        <view class="status">
+          <view wx:if="{{ check.fail.length!=0 }}" wx:for="{{ check.fail }}" wx:key="user_id">
+            <text>{{ item.user_info.name }}</text>
+            <text>{{ '距离太远' }}</text>
+          </view>
+        </view>
+        <!-- 未签到 -->
+        <view class="title">
+          <text>未签到</text>
+          <text class="assist">{{ check.none.length }}</text>
+        </view>
+        <view class="status">
+          <view wx:for="{{ check.none }}" wx:key="user_id">
+            <text>{{ item.user_info.name }}</text>
+            <text>{{ '未签到' }}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 签到表 信息 -->
+    <view class="check-history">
+      <view class="title">
+        <text>历史签到记录</text>
+      </view>
+      <view class="history" wx:for="{{groupInfo.checkForm}}">
+        <view class="title">
+          <text>{{ item.title }}</text>
+        </view>
+        <view class="status">
+          <text>{{ item.createAt }}</text>
+          <text wx:if="{{ userInfo._id != groupInfo.owner}}">{{item.userStatus == 1?'签到成功':item.userStatus == -1?'签到失败，距离':'未签到'}}</text>
+          <text wx:else>{{ item.success + '/' + groupInfo.members.length }}</text>
         </view>
       </view>
     </view>
@@ -196,14 +353,6 @@
       <button hover-class="none" wx:if="{{ userInfo._id == groupInfo.owner }}" bindtap="gotoCreateCheck">开启签到</button>
       <button hover-class="none" wx:if="{{ userInfo._id == groupInfo.owner }}" bindtap="gotoEditGroupInfo">修改信息</button>
       <button hover-class="none" wx:if="{{ userInfo._id == groupInfo.owner }}" bindtap="">解散</button>
-    </view>
-
-    <!-- 签到表 信息 -->
-    <view class="check-history" wx:if="{{ userInfo._id != groupInfo.owner }}">
-      <text>历史签到记录</text>
-      <view>
-
-      </view>
     </view>
   </view>
 </template>
@@ -230,30 +379,12 @@
     }
 
     computed = {
-      sortCheckedGroupMembers(){
-        let self = this
+      getDate(date){
+        let newDate = new Date(date)
 
-        if(self.userInfo._id == self.groupInfo.owner){
-          let success = [], fail = [], none = []
-
-          for(let item of self.groupInfo.members){
-            if(item.status == 0){
-              none.push(item)
-            }
-            else if(item.status == 1){
-              success.push(item)
-            }
-            else if(item.status == -1){
-              fail.push(item)
-            }
-          }
-
-          return success.concat(fail).concat(none)
-        }
-        else{
-          return undefined
-        }
+        return newDate.getFullYear()
       }
+
     }
 
     watch = {
@@ -280,7 +411,7 @@
         }
 
         // 判断能否签到
-        if(newValue.checkForm && newValue.checkForm.length == 0){
+        if(self.userInfo._id != newValue.owner && newValue.checkForm && newValue.checkForm.length == 0){
           self.canCheck = false
         }
         else{
@@ -290,10 +421,12 @@
           .get({
             success: function(res) {
               // 最近的签到信息
-              self.check = res.data
 
               res.data.endTime >= new Date()? self.canCheck=true : self.canCheck=false
 
+              res.data.success = []
+              res.data.fail = []
+              res.data.none = []
               for(let member of newValue.members){
                 member.status = 0  // 未签到
                 for(let checkedUser of res.data.members){
@@ -302,14 +435,31 @@
                     break
                   }
                 }
+
+                if(member.status == 0){
+                  res.data.none.push(member)
+                }
+                else if(member.status == 1){
+                  res.data.success.push(member)
+                }
+                else if(member.status == -1){
+                  res.data.fail.push(member)
+                }
               }
 
+              self.check = res.data
               self.groupInfo = newValue
               self.$apply()
             }
           })
         }
-      }
+      },
+      check(val){
+        let createTime = new Date(val.createAt), endTime = new Date(val.endTime)
+
+        val.createAt = `${createTime.getFullYear()}/${createTime.getMonth()+1}/${createTime.getDate()} ${createTime.getHours()}:${createTime.getMinutes()}`
+        val.endTime = `${endTime.getFullYear()}/${endTime.getMonth()+1}/${endTime.getDate()} ${endTime.getHours()}:${endTime.getMinutes()}`
+      },
     }
 
     methods = {
@@ -462,7 +612,7 @@
       }
       self._id = option._id
       
-      const db = wx.cloud.database()
+      const db = wx.cloud.database(), _ = db.command
 
       wx.cloud.callFunction({
         name: 'getGroupById',
@@ -471,6 +621,32 @@
         console.log(res)
         self.groupInfo = res.result.data
         self.$apply()
+
+        // 获得签到历史表
+        db.collection('checks').where(_.or(res.result.data.checkForm.map(item=>{return {_id: item}})))
+        .get({
+          success(res) {
+            for(let item of res.data){
+              let createTime = new Date(item.createAt), endTime = new Date(item.endTime)
+              item.success = 0
+              item.createAt = `${createTime.getFullYear()}/${createTime.getMonth()+1}/${createTime.getDate()} ${createTime.getHours()}:${createTime.getMinutes()}`
+              item.endTime = `${endTime.getFullYear()}/${endTime.getMonth()+1}/${endTime.getDate()} ${endTime.getHours()}:${endTime.getMinutes()}`
+
+              for(let member of item.members){
+                if(member.status == 1){
+                  item.success = item.success + 1
+                }
+                if(member.user_id == self.userInfo._id){
+                  item.userStatus = member.status
+                }
+              }
+            }
+
+            res.data.sort((a, b)=>new Date(b.endTime) - new Date(a.endTime))
+            self.groupInfo.checkForm = res.data
+            self.$apply()
+          }
+        })
       })
 
       db.collection('users').doc(_id)
@@ -480,6 +656,7 @@
           self.$apply()
         }
       })
+
     }
   }
 </script>

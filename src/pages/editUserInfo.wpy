@@ -60,6 +60,11 @@ page{
       }
     }
   }
+  >.message{
+    align-self: center;
+    font-size: 14px;
+    color: gray;
+  }
   >button{
     padding: 10px 7%;
     width: 86%;
@@ -104,6 +109,7 @@ page{
         </picker>
       </view> -->
     </view>
+    <text class="message">{{message}}</text>
 
     <!-- <view class="inputs">
       <text>学校信息</text>
@@ -141,7 +147,7 @@ page{
       </view>
     </view> -->
 
-    <button bindtap="updateUserInfo">提交修改</button>
+    <!-- <button bindtap="updateUserInfo">提交修改</button> -->
 
   </view>
 </template>
@@ -166,12 +172,38 @@ page{
         gender: 0,
         level: 0,
       },
+      message: '',
       _id: ''
     }
 
     computed = {
       now () {
         return +new Date()
+      }
+    }
+
+    watch = {
+      userInfo (newValue, oldValue) {
+        let self = this
+        
+        const db = wx.cloud.database()
+        
+        db.collection('users').doc(self._id)
+        .update({
+          data: newValue,
+          success: function(res) {
+            console.log(res)
+            // 更新成功
+            if(res.stats.updated == 1){
+              self.message = '更新成功！'
+              self.$apply()
+              setTimeout(() => {
+                self.message = ''
+                self.$apply()
+              }, 2000);
+            }
+          }
+        })
       }
     }
 
