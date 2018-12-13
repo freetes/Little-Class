@@ -77,10 +77,31 @@ page{
 <template>
   <view class="container">
     <view class="header">
-      <image src="{{ wxInfo.avatarUrl }}"></image>
-      <text>{{ wxInfo.nickName }}</text>
+      <text>基本信息</text>
+      <input placeholder="群名称" data-key="groupInfo.name" value="{{ groupInfo.name }}" bindchange="inputChange" />
+      <textarea data-key="groupInfo.description" value="{{ groupInfo.description }}" bindblur="inputChange" auto-height placeholder="描述" />
     </view>
 
+    <view class="">
+      <text>权限设置</text>
+      <view>
+        <text>能否加入</text>
+        
+      </view>
+      <input placeholder="群名称" data-key="groupInfo.name" value="{{ groupInfo.name }}" bindchange="inputChange" />
+      <textarea data-key="groupInfo.description" value="{{ groupInfo.description }}" bindblur="inputChange" auto-height placeholder="描述" />
+    </view>
+    
+    <!-- 成员 信息 -->
+    <view class="members" wx:if="{{ userInfo._id == groupInfo.owner}}">
+      <view class="title">
+        <text>成员</text>
+        <text class="assist">{{ groupInfo.members.length==0?'空空无人':'共' + groupInfo.members.length + '人'}}</text>
+      </view>
+      <view wx:if="{{ groupInfo.members.length!=0 }}" wx:key="user_id">
+        <image mode="widthFix" wx:for="{{ groupInfo.members }}" src="{{ item.user_info.avatarUrl }}"></image>
+      </view>
+    </view>
     <view class="inputs">
       <text>基本信息</text>
       <view class="input-container">
@@ -123,24 +144,17 @@ page{
     }
 
     data = {
+      groupInfo: {},
       wxInfo: {
         nickName: '登入',
         avatarUrl: '../static/imgs/用户.png'
       },
       sexArray: ['保密', '男', '女'],
       kindArray: ['学生', '教师'],
-      userInfo: {
-        name: '',
-        gender: 0,
-        level: 0,
-      },
       _id: ''
     }
 
     computed = {
-      now () {
-        return +new Date()
-      }
     }
 
     methods = {
