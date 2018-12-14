@@ -7,16 +7,29 @@ page{
   >.header{
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    margin: 10px 0;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin: 10px 7%;
+    width: 86%;
 
-    >image{
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      margin-bottom: 10px;
+    >text{
+      color: #8a8a8a;
+      font-size: 12px;
+    }
+    >input{
+      width: 100%;
+      padding: 10px 0;
+      border-bottom: 1px solid lightgray;
+      font-size: 18px;
+      font-weight: bold;
+      color: black;
+    }
+    >textarea{
+      width: 100%;
+      padding: 10px 0;
+      min-height: 100px;
+      font-size: 16px;
+      color: gray;
     }
     >text{
 
@@ -82,18 +95,22 @@ page{
       <textarea data-key="groupInfo.description" value="{{ groupInfo.description }}" bindblur="inputChange" auto-height placeholder="描述" />
     </view>
 
-    <view class="">
-      <text>权限设置</text>
-      <view>
-        <text>能否加入</text>
-        
+    <view class="inputs">
+      <text>其它设置</text>
+      <view class="input-container">
+        <text>加群方式</text>
+        <picker mode="selector" data-key="groupInfo.status" bindchange="inputChange" value="{{ groupInfo.status }}" range="{{ joinGroupArray }}">
+          <view class="picker">
+            {{ joinGroupArray[groupInfo.status] }}
+          </view>
+        </picker>
       </view>
       <input placeholder="群名称" data-key="groupInfo.name" value="{{ groupInfo.name }}" bindchange="inputChange" />
       <textarea data-key="groupInfo.description" value="{{ groupInfo.description }}" bindblur="inputChange" auto-height placeholder="描述" />
     </view>
     
     <!-- 成员 信息 -->
-    <view class="members" wx:if="{{ userInfo._id == groupInfo.owner}}">
+    <view class="members">
       <view class="title">
         <text>成员</text>
         <text class="assist">{{ groupInfo.members.length==0?'空空无人':'共' + groupInfo.members.length + '人'}}</text>
@@ -102,35 +119,8 @@ page{
         <image mode="widthFix" wx:for="{{ groupInfo.members }}" src="{{ item.user_info.avatarUrl }}"></image>
       </view>
     </view>
-    <view class="inputs">
-      <text>基本信息</text>
-      <view class="input-container">
-        <text>名称</text>
-        <input placeholder="请输入姓名" data-key="userInfo.name" value="{{ userInfo.name }}" bindchange="inputChange" />
-      </view>
-      <view class="input-container">
-        <text>简介</text>
-        <input placeholder="请输入姓名" data-key="userInfo.name" value="{{ userInfo.name }}" bindchange="inputChange" />
-      </view>
-      <view class="input-container">
-        <text>性别</text>
-        <picker mode="selector" data-key="userInfo.gender" bindchange="inputChange" value="{{ userInfo.gender }}" range="{{ sexArray }}">
-          <view class="picker">
-            {{ sexArray[userInfo.gender] }}
-          </view>
-        </picker>
-      </view>
-      <!-- <view class="input-container">
-        <text>用户类型</text>
-        <picker mode="selector" data-key="userInfo.level" bindchange="inputChange" value="{{ userInfo.level }}" range="{{ kindArray }}">
-          <view class="picker">
-            {{ kindArray[userInfo.level] }}
-          </view>
-        </picker>
-      </view> -->
-    </view>
 
-    <button bindtap="updateUserInfo">提交修改</button>
+    <button bindtap="">解散</button>
 
   </view>
 </template>
@@ -149,8 +139,7 @@ page{
         nickName: '登入',
         avatarUrl: '../static/imgs/用户.png'
       },
-      sexArray: ['保密', '男', '女'],
-      kindArray: ['学生', '教师'],
+      joinGroupArray: ['任何人都可以加入', '不允许加入'],
       _id: ''
     }
 
@@ -192,12 +181,11 @@ page{
       let self = this
 
       self._id = option._id
-      
+
       wx.cloud.callFunction({
         name: 'getGroupById',
         data: {group_id: option._id}
       }).then(res=>{
-        console.log(res)
         self.groupInfo = res.result.data
         self.$apply()
       })

@@ -33,8 +33,10 @@ export default class extends wepy.app {
       'pages/user',
       'pages/editUserInfo',
       'pages/createGroup',
+      'pages/editGroupInfo',
       'pages/groupInfo',
       'pages/createCheck',
+      'pages/about',
     ],
     window: {
       backgroundTextStyle: 'light',

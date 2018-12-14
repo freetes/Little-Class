@@ -1,0 +1,32 @@
+<style lang="less">
+.container{
+
+}
+</style>
+<template>
+  <view class="container">
+    <text>关于</text>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '关于'
+    }
+
+    data = {
+
+    }
+
+    methods = {
+
+    }
+
+    onLoad() {
+
+    }
+  }
+</script>

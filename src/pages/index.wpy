@@ -9,13 +9,15 @@
     flex-direction: column-reverse;
     justify-content: flex-start;
     align-items: center;
+    z-index: 20;
 
     >image{
       width: 25px;
       height: 25px;
       background-color: white;
+      padding: 10px 10px;
+      border: 5px solid gray;
       border-radius: 50%;
-      padding: 15px 15px;
     }
   }
   .modal-container{
@@ -103,6 +105,31 @@
       }
     }
   }
+
+  .blank{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+
+    >text{
+      font-size: 14px;
+      font-weight: bold;
+      color: black;
+      border: 1px dashed black;
+      padding: 5px 5px;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+      text-align: center;
+    }
+  }
 }
 </style>
 <template>
@@ -123,6 +150,10 @@
       </view>
     </view>
 
+    <!-- 为空时 -->
+    <view class="blank" wx:if="{{ groups.length == 0 }}">
+      <text>空</text>
+    </view>
     <!-- 加入群组弹出框 -->
     <view wx:if="{{ joinView.showJoinView }}" bindtap="hideJoinView" class="modal-container">
       <view class="modal-main" catchtap>
@@ -216,32 +247,35 @@
 
       if(user_id){
         self.user_id = user_id
-      }
 
-      // 找到群组
-      const db = wx.cloud.database()
+        // 找到群组
+        wx.cloud.callFunction({
+          name: 'getAllGroups'
+        }).then(res=>{
+          console.log(res)
+          let data = []
 
-      db.collection('groups').where({}).get()
-      .then(res=>{
-        let data = []
-
-        for(let group of res.data){
-          if(group.owner == user_id){
-            group.belong = 1
-            data.push(group)
-          }
-          else{
-            for(let item of group.members){
-              if(item.user_id == user_id){
-                data.push(group)
-                break
+          for(let group of res.result.data){
+            if(group.owner == user_id){
+              group.belong = 1
+              data.push(group)
+            }
+            else{
+              for(let item of group.members){
+                if(item.user_id == user_id){
+                  data.push(group)
+                  break
+                }
               }
             }
           }
-        }
-        self.groups = data
-        self.$apply()
-      })
+          self.groups = data
+          self.$apply()
+        })
+      }
+      else{
+        self.groups = []
+      }
     }
   }
 </script>

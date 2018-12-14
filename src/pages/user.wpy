@@ -50,10 +50,10 @@
     justify-content: flex-start;
     align-items: flex-start;
     margin: 10px 5%;
-    padding: 10px 0;
+    padding: 5px 0;
     width: 90%;
     background-color: white;
-    border-radius: 5px;
+    border-radius: 10px;
 
     >.btn-container{
       display: flex;
@@ -70,7 +70,7 @@
       }
       >text{
         font-weight: bold;
-        font-size: 16px;
+        font-size: 14px;
       }
     }
   }
@@ -95,6 +95,13 @@
       <view class="btn-container" bindtap="signout">
         <image src="../static/icons/signout.png"></image>
         <text>退出登入</text>
+      </view>
+    </view>
+
+    <view class="btns">
+      <view class="btn-container" bindtap="goto('../pages/about')">
+        <image src="../static/icons/about.png"></image>
+        <text>关于</text>
       </view>
     </view>
   </view>
