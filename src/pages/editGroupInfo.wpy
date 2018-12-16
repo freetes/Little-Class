@@ -13,26 +13,41 @@ page{
     width: 86%;
 
     >text{
-      color: #8a8a8a;
-      font-size: 12px;
+      color: gray;
+      font-size: 14px;
+      padding-top: 10px;
     }
-    >input{
-      width: 100%;
+
+    >.input-container{
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
       padding: 10px 0;
-      border-bottom: 1px solid lightgray;
-      font-size: 18px;
-      font-weight: bold;
-      color: black;
+      width: 100%;
+      border-bottom: 1px solid #fafafa;
+
+      >text{
+        flex: 0 1 auto;
+        color: black;
+        font-size: 16px;
+        padding-right: 20px;
+      }
+      >input, >picker, >textarea{
+        flex: 1 0 auto;
+        color: black;
+        font-size: 16px;
+        font-weight: bold;
+        text-align: right;
+      }
     }
+
     >textarea{
       width: 100%;
       padding: 10px 0;
       min-height: 100px;
       font-size: 16px;
-      color: gray;
-    }
-    >text{
-
+      color: black;
     }
   }
   >.inputs{
@@ -54,7 +69,7 @@ page{
       flex-direction: row;
       justify-content: space-between;
       align-items: center;
-      padding: 20px 0;
+      padding: 10px 0;
       width: 100%;
       border-bottom: 1px solid #fafafa;
 
@@ -64,7 +79,7 @@ page{
         font-size: 16px;
         padding-right: 20px;
       }
-      >input, >picker{
+      >input, >picker, >textarea{
         flex: 1 0 auto;
         color: black;
         font-size: 16px;
@@ -73,17 +88,120 @@ page{
       }
     }
   }
-  >button{
-    padding: 10px 7%;
+  >.members{
+    display: flex;
+    flex-direction: column;;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin: 10px 7%;
+    padding-top: 10px;
     width: 86%;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    background-color: white;
-    border-top: 1px solid #fafafa;
-    border-bottom: 1px solid #fafafa;
+
+    >.title{
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      color: gray;
+      font-size: 14px;
+    }
+    >.member-container{
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 0;
+
+      >.userInfo{
+        >image{
+          width: 30px;
+          height: 30px;
+        }
+        >text{
+          font-size: 14px;
+          color: black;
+          font-weight: bold;
+        }
+      }
+      >.btns{
+        >button{
+          padding: 10px 0;
+          background-color: white;
+          border-top: 1px solid #fafafa;
+          border-bottom: 1px solid #fafafa;
+        }
+        >button::after{
+          border: none;
+        }
+      }
+    }
   }
-  >button::after{
-    border: none;
+  >.btns{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px 7%;
+    width: 100%;
+
+    >button{
+      padding: 10px 0;
+      background-color: white;
+      border-top: 1px solid #fafafa;
+      border-bottom: 1px solid #fafafa;
+    }
+    >button::after{
+      border: none;
+    }
+  }
+  .modal-container{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.7);
+
+    >.modal-main{
+      background-color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      padding: 0 10px;
+      width: 60%;
+      padding-bottom: 0;
+
+      >.modal-title{
+        border-bottom: 1px solid lightgray;
+        margin: 10px 0;
+        font-size: 12px;
+        color: gray;
+      }
+      >button{
+        padding: 5px 10px;
+        margin: 20px 0;
+        align-self: center;
+        border: 1px solid #8a8a8a;
+        background-color: white;
+        font-size: 14px;
+        color: black;
+        font-weight: bold;
+      }
+      >button::after{
+        border: none;
+      }
+    }
+  }
+  >.message{
+    align-self: center;
+    font-size: 14px;
+    color: gray;
   }
 }
 </style>
@@ -91,10 +209,19 @@ page{
   <view class="container">
     <view class="header">
       <text>基本信息</text>
-      <input placeholder="群名称" data-key="groupInfo.name" value="{{ groupInfo.name }}" bindchange="inputChange" />
+      <view class="input-container">
+        <text>群名称</text>
+        <input placeholder="群名称" data-key="groupInfo.name" value="{{ groupInfo.name }}" bindchange="inputChange" />
+      </view>
+      <view class="input-container">
+        <text>群ID</text>
+        <input value="{{ groupInfo.groupCode }}" disabled="true"/>
+      </view>
+      <text>群简介</text>
       <textarea data-key="groupInfo.description" value="{{ groupInfo.description }}" bindblur="inputChange" auto-height placeholder="描述" />
     </view>
 
+    <!-- 其它设置 -->
     <view class="inputs">
       <text>其它设置</text>
       <view class="input-container">
@@ -105,22 +232,40 @@ page{
           </view>
         </picker>
       </view>
-      <input placeholder="群名称" data-key="groupInfo.name" value="{{ groupInfo.name }}" bindchange="inputChange" />
-      <textarea data-key="groupInfo.description" value="{{ groupInfo.description }}" bindblur="inputChange" auto-height placeholder="描述" />
     </view>
-    
+
+    <text class="message">{{message}}</text>
+
+
     <!-- 成员 信息 -->
     <view class="members">
       <view class="title">
-        <text>成员</text>
+        <text>成员管理</text>
         <text class="assist">{{ groupInfo.members.length==0?'空空无人':'共' + groupInfo.members.length + '人'}}</text>
       </view>
-      <view wx:if="{{ groupInfo.members.length!=0 }}" wx:key="user_id">
-        <image mode="widthFix" wx:for="{{ groupInfo.members }}" src="{{ item.user_info.avatarUrl }}"></image>
+      <view class="member-container" wx:if="{{ groupInfo.members.length!=0 }}" wx:key="user_id">
+        <view class="userInfo">
+          <image mode="widthFix" wx:for="{{ groupInfo.members }}" src="{{ item.user_info.avatarUrl }}"></image>
+          <text>{{ item.user_info.name }}</text>
+        </view>
+        <!-- <view class="btns">
+          <button>踢出</button>
+        </view> -->
       </view>
     </view>
 
-    <button bindtap="">解散</button>
+    <view class="btns">
+      <!-- <button bindtap="">保存修改</button> -->
+      <button bindtap="showDisbandView">解散</button>
+    </view>
+
+    <!-- 解散群组弹出框 -->
+    <view wx:if="{{ showDisbandView }}" bindtap="hideDisbandView" class="modal-container">
+      <view class="modal-main" catchtap>
+        <text class="modal-title">解散群组</text>
+        <button bindtap="disbandGroup">确定解散！</button>
+      </view>
+    </view>
 
   </view>
 </template>
@@ -135,18 +280,51 @@ page{
 
     data = {
       groupInfo: {},
-      wxInfo: {
-        nickName: '登入',
-        avatarUrl: '../static/imgs/用户.png'
-      },
+      message: '',
       joinGroupArray: ['任何人都可以加入', '不允许加入'],
-      _id: ''
+      _id: '',
+      showDisbandView: false
+    }
+
+    watch = {
+      groupInfo (newValue, oldValue) {
+        let self = this
+
+        console.log('should update')
+        const db = wx.cloud.database()
+        
+        let data = JSON.parse(JSON.stringify(newValue))
+        delete data._id
+        delete data._openid
+
+        db.collection('groups').doc(self._id)
+        .update({
+          data
+        }).then(res=>{
+          console.log(res)
+          // 更新成功
+          if(res.stats.updated == 1){
+            self.message = '更新成功！'
+            self.$apply()
+            setTimeout(() => {
+              self.message = ''
+              self.$apply()
+            }, 1500);
+          }
+        })
+      },
     }
 
     computed = {
     }
 
     methods = {
+      showDisbandView(){
+        this.showDisbandView = true
+      },
+      hideDisbandView(){
+        this.showDisbandView = false
+      },
       inputChange(e){
         let self = this
         const keyArr = e.currentTarget.dataset.key.split('.')
@@ -174,6 +352,23 @@ page{
             }
           }
         })
+      },
+      disbandGroup(){
+        let self = this
+        
+        const db = wx.cloud.database()
+
+        db.collection('groups').doc(self._id).remove()
+        .then(res=>{
+            wx.showToast({
+              title: '解散成功！',
+              icon: 'success',
+              duration: 1500
+            })
+            setTimeout(() => {
+              wx.switchTab({url: '/pages/index'})
+            }, 1500);
+          })
       }
     }
 

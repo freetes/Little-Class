@@ -125,8 +125,16 @@
       width: 100%;
       font-size: 14px;
 
-      >text.title{
-        font-weight: bold;
+      >view{
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+
+        >text.title{
+          font-weight: bold;
+        }
       }
     }
 
@@ -245,8 +253,8 @@
   >.btns{
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
+    justify-content: center;
+    align-items: center;
     width: 92%;
     margin: 5px 4%;
     margin-bottom: 20px;
@@ -256,13 +264,15 @@
 
     >button{
       padding: 5px 0%;
-      width: 100%;
       background-color: white;
       font-size: 14px;
       font-weight: bold;
     }
     >button::after{
       border: none;
+    }
+    >.disable{
+      color: gray;
     }
   }
 }
@@ -301,7 +311,7 @@
     </view>
 
     <view style="margin-top: 180px;"></view>
-
+    
     <!-- 成员 信息 -->
     <view class="members" wx:if="{{ userInfo._id == groupInfo.owner}}">
       <view class="title">
@@ -314,7 +324,7 @@
     </view>
 
     <!-- 签到表 信息 -->
-    <view class="check-form" wx:if="{{ userInfo._id == groupInfo.owner }}">
+    <view class="check-form">
       <view class="title">
         <text>最近签到记录</text>
       </view>
@@ -322,7 +332,10 @@
         <text>空</text>
       </view>
       <view class="info" wx:if="{{ !!check }}">
-        <text class="title">{{ check.title }}</text>
+        <view>
+          <text class="title">{{ check.title }}</text>
+          <text class="status">{{ check.statusWords }}</text>
+        </view>
         <text>{{ check.createAt }} - {{ check.endTime }}</text>
       </view>
       <view class="member" wx:if="{{ !!check }}">
@@ -366,7 +379,7 @@
     <!-- 签到表 信息 -->
     <view class="check-history">
       <view class="title">
-        <text>历史签到记录</text>
+        <text>历史签到</text>
       </view>
       <view class="blank" wx:if="{{groupInfo.checkForm.length == 0}}">
         <text>空</text>
@@ -383,15 +396,18 @@
       </view>
     </view>
 
+    <!--  -->
+
+
     <view class="btns">
       <!-- 普通用户 功能 -->
-      <button hover-class="none" wx:if="{{ !isJoined }}" bindtap="joinGroup">申请加群</button>
-      <button hover-class="none" wx:if="{{ userInfo._id != groupInfo.owner && canCheck }}" bindtap="getChecked">签到</button>
+      <button hover-class="none" wx:if="{{ !isJoined && groupInfo.status != -1 }}" bindtap="joinGroup">申请加群</button>
+      <text class="disable" disabled="{{ true }}" hover-class="none" wx:if="{{ !isJoined && groupInfo.status == -1 }}">加入已关闭，无法加入</text>
+      <button hover-class="none" wx:if="{{ userInfo._id != groupInfo.owner && canCheck }}" bindtap="getChecked">立即签到</button>
       <button hover-class="none" wx:if="{{ userInfo._id != groupInfo.owner && isJoined}}">退出</button>
       <!-- 拥有者 功能 -->
       <button hover-class="none" wx:if="{{ userInfo._id == groupInfo.owner }}" bindtap="gotoCreateCheck">开启签到</button>
       <button hover-class="none" wx:if="{{ userInfo._id == groupInfo.owner }}" bindtap="gotoEditGroupInfo">修改信息</button>
-      <button hover-class="none" wx:if="{{ userInfo._id == groupInfo.owner }}" bindtap="">解散</button>
     </view>
   </view>
 </template>
@@ -410,20 +426,13 @@
         members: []
       },
       userInfo: {},
-      check: undefined,
-      wxInfo: {},
       _id: '',
+      check: undefined,
       isJoined: true,
       canCheck: false
     }
 
     computed = {
-      getDate(date){
-        let newDate = new Date(date)
-
-        return newDate.getFullYear()
-      }
-
     }
 
     watch = {
@@ -462,7 +471,7 @@
               success: function(res) {
                 // 最近的签到信息
 
-                res.data.endTime >= new Date()? self.canCheck=true : self.canCheck=false
+                res.data.endTime >= new Date() ? self.canCheck=true : self.canCheck=false
 
                 res.data.success = []
                 res.data.fail = []
@@ -498,6 +507,8 @@
       check(val){
         let createTime = new Date(val.createAt), endTime = new Date(val.endTime)
 
+        val.status = (new Date(val.endTime))<(new Date())?'1':'0'
+        val.statusWords = val.status==1?'已结束':'进行中'
         val.createAt = `${createTime.getFullYear()}/${createTime.getMonth()+1}/${createTime.getDate()} ${createTime.getHours()}:${createTime.getMinutes()}`
         val.endTime = `${endTime.getFullYear()}/${endTime.getMonth()+1}/${endTime.getDate()} ${endTime.getHours()}:${endTime.getMinutes()}`
       },
@@ -516,13 +527,13 @@
         }
       },
       joinGroup(){
-        let self = this
+        let self = this, wxInfo = wx.getStorageSync('wxInfo')
         
         // 判断是否可以加入
         if(self.groupInfo.status == -1){
           wx.showToast({
             title: '无法加入',
-            icon: 'success',
+            icon: 'none',
             duration: 2000,
             mask: true
           })
@@ -534,7 +545,7 @@
           group_id: self._id,
           user_id: self.userInfo._id,
           user_info: {
-            avatarUrl: self.wxInfo.avatarUrl,
+            avatarUrl: wxInfo.avatarUrl,
             name: self.userInfo.name,
             gender: self.userInfo.gender,
           }
@@ -553,18 +564,18 @@
           self.$apply()
           
           wx.showToast({
-            title: '加入成功',
+            title: '加入成功！',
             icon: 'success',
-            duration: 2000,
+            duration: 1500,
             mask: true
           })
         })
       },
       gotoCreateCheck(){
-        wx.navigateTo({url: '../pages/createCheck?_id='+this._id})
+        wx.navigateTo({url: '/pages/createCheck?_id='+this._id})
       },
       gotoEditGroupInfo(){
-        wx.navigateTo({url: '../pages/editGroupInfo?_id='+this._id})
+        wx.navigateTo({url: '/pages/editGroupInfo?_id='+this._id})
       },
       getChecked(){
         let self = this
@@ -611,9 +622,9 @@
               self.$apply()
               
               wx.showToast({
-                title: '签到成功',
+                title: '签到成功！',
                 icon: 'success',
-                duration: 2000,
+                duration: 1500,
                 mask: true
               })
             })
@@ -643,11 +654,8 @@
     }
 
     onLoad(option) {
-      let self = this, wxInfo = wx.getStorageSync('wxInfo'), _id = wx.getStorageSync('_id')
+      let self = this, _id = wx.getStorageSync('_id')
 
-      if(wxInfo){
-        self.wxInfo = wxInfo
-      }
       if(_id){
         self.userInfo._id = _id
       }
@@ -699,7 +707,6 @@
           self.$apply()
         }
       })
-
     }
   }
 </script>

@@ -4,6 +4,11 @@ page{
 }
 
 .container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 
   >.header{
     display: flex;
@@ -30,7 +35,7 @@ page{
       padding: 10px 0;
       min-height: 100px;
       font-size: 16px;
-      color: gray;
+      color: black;
     }
     >text{
 
@@ -155,6 +160,14 @@ page{
       },
       createGroup(){
         let self = this
+
+        if(self.groupInfo.name == ''){
+          return wx.showToast({
+            title: '群名称不能为空！',
+            icon: 'none',
+            duration: 1000
+          })
+        }
         
         const db = wx.cloud.database()
         
@@ -169,18 +182,20 @@ page{
                 createTime: Date.now(),
                 members: [],
                 checkForm: [],
-                status: 0,  // 0 表示可以加入，-1 表示不能加入
+                status: 0,  // 0 表示可以加入，1 表示不能加入
                 groupCode: 10000 + res.total,
               },
               success: function(res) {
                 wx.showToast({
-                  title: '创建成功',
+                  title: '创建成功！',
                   icon: 'success',
                   duration: 1500
                 })
                 setTimeout(() => {
-                  wx.navigateTo({url: '../pages/groupInfo?_id='+res._id})
-                }, (1500));
+                  wx.redirectTo({
+                    url: 'groupInfo?_id=' + res._id
+                  })
+                }, 1500);
               }
             })
           }

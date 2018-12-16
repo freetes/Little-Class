@@ -220,6 +220,16 @@ page{
                       checkForm: _.push(res._id)
                     },
                     success: function(res) {
+                      wx.showToast({
+                        title: '开启签到成功！',
+                        icon: 'success',
+                        duration: 1500
+                      })
+                      setTimeout(() => {
+                        wx.redirectTo({
+                          url: 'groupInfo?_id=' + self._id
+                        })
+                      }, 1500);
                     }
                   })
                 }

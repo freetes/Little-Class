@@ -23,8 +23,6 @@
     }
 
     >.right{
-      background-color: lightgray;
-      // padding: 10px 10px;
       border-radius: 50%;
       width: 80px;
       height: 80px;
@@ -54,6 +52,18 @@
     width: 90%;
     background-color: white;
     border-radius: 10px;
+    animation: showIn 0.8s ease;
+
+    @keyframes showIn {
+      from {
+        margin-top: 40px;
+        opacity: 0;
+      }
+      to {
+        margin-top: 10px;
+        opacity: 1;
+      }
+    }
 
     >.btn-container{
       display: flex;
@@ -88,7 +98,7 @@
     </button>
 
     <view class="btns">
-      <view class="btn-container" bindtap="goto('../pages/editUserInfo')">
+      <view class="btn-container" bindtap="goto('/pages/editUserInfo')">
         <image src="../static/icons/userinfo.png"></image>
         <text>个人信息</text>
       </view>
@@ -99,7 +109,7 @@
     </view>
 
     <view class="btns">
-      <view class="btn-container" bindtap="goto('../pages/about')">
+      <view class="btn-container" bindtap="goto('/pages/about')">
         <image src="../static/icons/about.png"></image>
         <text>关于</text>
       </view>
@@ -118,7 +128,7 @@
     data = {
       wxInfo: {
         nickName: '登入',
-        avatarUrl: '../static/imgs/用户.png'
+        avatarUrl: '../static/imgs/user.png'
       }
     }
 
@@ -157,6 +167,7 @@
                   data: {
                     name: e.detail.userInfo.nickName,
                     gender: e.detail.userInfo.gender,
+                    createAt: new Date(),
                     level: 0,
                   }
                 })
@@ -186,28 +197,28 @@
       signout(){
         this.wxInfo = {
           nickName: '登入',
-          avatarUrl: '../static/imgs/用户.png'
+          avatarUrl: '../static/imgs/user.png'
         }
 
         wx.clearStorageSync()
       }
     }
 
-    onLoad() {
+    onShow() {
       let self = this
 
-      var wxInfo = wx.getStorageSync('wxInfo')
+      let wxInfo = wx.getStorageSync('wxInfo')
 
       if(wxInfo){
         self.wxInfo = wxInfo
       }
       else{
+        console.log(wxInfo == true)
         self.wxInfo = {
           nickName: '登入',
-          avatarUrl: '../static/imgs/用户.png'
+          avatarUrl: '../static/imgs/user.png'
         }
       }
-      self.$apply()
     }
   }
 </script>
