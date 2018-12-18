@@ -109,17 +109,30 @@ page{
     >.member-container{
       display: flex;
       flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
+      justify-content: flex-start;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      align-content: flex-start;
       padding: 5px 0;
+      width: 100%;
 
       >.userInfo{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        width: 20%;
+        height: auto;
+        padding: 5px 0;
+
         >image{
-          width: 30px;
-          height: 30px;
+          width: 50px;
+          height: 50px;
         }
         >text{
-          font-size: 14px;
+          font-size: 12px;
+          overflow: hidden;
+          text-wrap: none;
           color: black;
           font-weight: bold;
         }
@@ -207,6 +220,8 @@ page{
 </style>
 <template>
   <view class="container">
+    <nav></nav>
+
     <view class="header">
       <text>基本信息</text>
       <view class="input-container">
@@ -236,7 +251,6 @@ page{
 
     <text class="message">{{message}}</text>
 
-
     <!-- 成员 信息 -->
     <view class="members">
       <view class="title">
@@ -244,13 +258,10 @@ page{
         <text class="assist">{{ groupInfo.members.length==0?'空空无人':'共' + groupInfo.members.length + '人'}}</text>
       </view>
       <view class="member-container" wx:if="{{ groupInfo.members.length!=0 }}" wx:key="user_id">
-        <view class="userInfo">
-          <image mode="widthFix" wx:for="{{ groupInfo.members }}" src="{{ item.user_info.avatarUrl }}"></image>
+        <view class="userInfo" wx:for="{{ groupInfo.members }}" bindlongpress="showDeleteView" data-index="{{ index }}">
+          <image mode="widthFix" src="{{ item.user_info.avatarUrl }}"></image>
           <text>{{ item.user_info.name }}</text>
         </view>
-        <!-- <view class="btns">
-          <button>踢出</button>
-        </view> -->
       </view>
     </view>
 
@@ -266,15 +277,27 @@ page{
         <button bindtap="disbandGroup">确定解散！</button>
       </view>
     </view>
+    <!-- 删除群员弹出框 -->
+    <view wx:if="{{ showDeleteView }}" bindtap="hideDeleteView" class="modal-container">
+      <view class="modal-main" catchtap>
+        <text class="modal-title">删除群员</text>
+        <button bindtap="deleteMember">确定删除 {{ groupInfo.members[deleteIndex].user_info.name }}?</button>
+      </view>
+    </view>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
+  import Nav from '../components/nav';
 
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '群组信息'
+    }
+
+    components = {
+      nav: Nav
     }
 
     data = {
@@ -282,41 +305,42 @@ page{
       message: '',
       joinGroupArray: ['任何人都可以加入', '不允许加入'],
       _id: '',
-      showDisbandView: false
-    }
-
-    watch = {
-      groupInfo (newValue, oldValue) {
-        let self = this
-
-        const db = wx.cloud.database()
-        
-        let data = JSON.parse(JSON.stringify(newValue))
-        delete data._id
-        delete data._openid
-
-        db.collection('groups').doc(self._id)
-        .update({
-          data
-        }).then(res=>{
-          console.log(res)
-          // 更新成功
-          if(res.stats.updated == 1){
-            self.message = '更新成功！'
-            self.$apply()
-            setTimeout(() => {
-              self.message = ''
-              self.$apply()
-            }, 1500);
-          }
-        })
-      },
-    }
-
-    computed = {
+      showDisbandView: false,
+      showDeleteView: false,
+      deleteIndex: ''
     }
 
     methods = {
+      deleteMember(){
+        let self = this
+
+        wx.cloud.callFunction({
+          name: 'exitGroup',
+          data: {group_id: self._id, user_id: self.groupInfo.members[self.deleteIndex].user_id}
+        }).then(res=>{
+          console.log(res)
+          if(res.result.stats.updated == 1){
+            wx.showToast({
+              title: '删除成功！',
+              icon: 'success',
+              duration: 1000
+            })
+            setTimeout(() => {
+              self.deleteIndex = ''
+              self.showDeleteView = false
+              self.$apply()
+              self.onShow()
+            }, 1000);
+          }
+        })
+      },
+      showDeleteView(e){
+        this.deleteIndex = e.currentTarget.dataset.index
+        this.showDeleteView = true
+      },
+      hideDeleteView(){
+        this.showDeleteView = false
+      },
       showDisbandView(){
         this.showDisbandView = true
       },
@@ -375,9 +399,14 @@ page{
 
       self._id = option._id
 
+    }
+
+    onShow(){
+      let self = this
+      
       wx.cloud.callFunction({
         name: 'getGroupById',
-        data: {group_id: option._id}
+        data: {group_id: self._id}
       }).then(res=>{
         self.groupInfo = res.result.data
         self.$apply()

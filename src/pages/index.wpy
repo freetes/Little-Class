@@ -1,6 +1,10 @@
 <style lang="less">
+page{
+}
+
 .container{
-  
+  background-image: linear-gradient(to bottom, white, #ddd);
+
   .buttons{
     position: fixed;
     right: 20px;
@@ -179,6 +183,10 @@
       width: 80px;
       height: 80px;
     }
+  }
+
+  .time{
+    margin-top: 60px;
   }
 }
 </style>

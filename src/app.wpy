@@ -1,16 +1,20 @@
 <style lang="less">
 page{
   width: 100%;
+  height: auto;
   min-height: 100%;
-  background-color: #dedede;
-  // background-image: linear-gradient(#efefef, #fafafa);
+  background-color: white;
 }
 text{
   font-family: "-apple-system","BlinkMacSystemFont","PingFang SC",Helvetica,Tahoma,Arial,"Microsoft YaHei","微软雅黑","黑体","Heiti",sans-serif,"SimSun","宋体",serif;
 }
 .container {
+  position: absolute;
+  left: 0;
+  top: 0;
   width: 100%;
-  height: 100%;
+  min-height: 100%;
+  padding-top: 60px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -35,6 +39,7 @@ export default class extends wepy.app {
       'pages/createGroup',
       'pages/editGroupInfo',
       'pages/groupInfo',
+      'pages/checkInfo',
       'pages/createCheck',
       'pages/about',
     ],
@@ -42,7 +47,8 @@ export default class extends wepy.app {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',
       navigationBarTitleText: '灰度签到',
-      navigationBarTextStyle: 'black'
+      navigationBarTextStyle: 'white',
+      navigationStyle: 'custom'
     },
     tabBar: {
       color: '#8a8a8a',

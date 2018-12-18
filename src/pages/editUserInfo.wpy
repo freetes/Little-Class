@@ -81,6 +81,8 @@ page{
 </style>
 <template>
   <view class="container">
+    <nav></nav>
+
     <view class="header">
       <image src="{{ wxInfo.avatarUrl }}"></image>
       <text>{{ wxInfo.nickName }}</text>
@@ -154,10 +156,15 @@ page{
 
 <script>
   import wepy from 'wepy'
+  import Nav from '../components/nav'
 
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '个人信息'
+    }
+
+    components = {
+      nav: Nav
     }
 
     data = {

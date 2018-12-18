@@ -1,5 +1,10 @@
 <style lang="less">
+page{
+  background-color: #ddd;
+}
 .container{
+  padding-bottom: 20px;
+  
   >.groupInfo{
     position: fixed;
     top: 0;
@@ -257,7 +262,7 @@
     align-items: center;
     width: 92%;
     margin: 5px 4%;
-    margin-bottom: 20px;
+    padding-bottom: 20px;
     padding: 5px 0;
     background-color: white;
     border-radius: 10px;
@@ -345,6 +350,7 @@
 </style>
 <template>
   <view class="container">
+    <nav></nav>
 
     <!-- 群组 信息 -->
     <view class="groupInfo">
@@ -378,7 +384,7 @@
       <view class="info" wx:if="{{ !!check }}">
         <view>
           <text class="title">{{ check.title }}</text>
-          <text class="status">{{ check.statusWords }}</text>
+          <text class="status" data-key="{{ '/pages/checkInfo?_id='+check._id }}" bindtap="gotoCheckInfo">{{ check.statusWords }}</text>
         </view>
         <text>{{ check.createAt }} - {{ check.endTime }}</text>
       </view>
@@ -428,7 +434,7 @@
       <view class="blank" wx:if="{{groupInfo.checkForm.length == 0}}">
         <text>空</text>
       </view>
-      <view class="history" wx:for="{{groupInfo.checkForm}}">
+      <view class="history" wx:for="{{groupInfo.checkForm}}" data-key="{{ '/pages/checkInfo?group_id='+_id+'&check_id='+item._id }}" bindtap="gotoCheckInfo">
         <view class="title">
           <text>{{ item.title }}</text>
         </view>
@@ -466,10 +472,15 @@
 
 <script>
   import wepy from 'wepy'
+  import Nav from '../components/nav'
 
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '群组信息'
+    }
+
+    components = {
+      nav: Nav
     }
 
     data = {
@@ -491,6 +502,9 @@
     }
 
     methods = {
+      gotoCheckInfo(e){
+        wx.navigateTo({url: e.currentTarget.dataset.key})
+      },
       inputChange(e){
         let self = this
         const keyArr = e.currentTarget.dataset.key.split('.')

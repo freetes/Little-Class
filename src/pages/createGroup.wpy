@@ -93,6 +93,8 @@ page{
 </style>
 <template>
   <view class="container">
+    <nav></nav>
+
     <view class="header">
       <text>基本信息</text>
       <input placeholder="群名称" data-key="groupInfo.name" value="{{ groupInfo.name }}" bindchange="inputChange" />
@@ -123,10 +125,15 @@ page{
 
 <script>
   import wepy from 'wepy'
+  import Nav from '../components/nav'
 
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '创建群组'
+    }
+
+    components = {
+      nav: Nav
     }
 
     data = {

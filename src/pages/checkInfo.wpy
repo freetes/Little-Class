@@ -212,6 +212,7 @@
 </style>
 <template>
   <view class="container">
+    <nav></nav>
 
     <!-- 群组 信息 -->
     <view class="groupInfo">
@@ -222,34 +223,20 @@
     </view>
 
     <view style="margin-top: 180px;"></view>
-    
-    <!-- 成员 信息 -->
-    <view class="members" wx:if="{{ userInfo._id == groupInfo.owner}}">
-      <view class="title">
-        <text>成员</text>
-        <text class="assist">{{ groupInfo.members.length==0?'空空无人':'共' + groupInfo.members.length + '人'}}</text>
-      </view>
-      <view wx:if="{{ groupInfo.members.length != 0 }}" wx:key="user_id">
-        <image mode="widthFix" wx:for="{{ groupInfo.members }}" src="{{ item.user_info.avatarUrl }}"></image>
-      </view>
-    </view>
 
     <!-- 签到表 信息 -->
     <view class="check-form">
       <view class="title">
         <text>最近签到记录</text>
       </view>
-      <view class="blank" wx:if="{{ !check }}">
-        <text>空</text>
-      </view>
-      <view class="info" wx:if="{{ !!check }}">
+      <view class="info">
         <view>
           <text class="title">{{ check.title }}</text>
           <text class="status">{{ check.statusWords }}</text>
         </view>
         <text>{{ check.createAt }} - {{ check.endTime }}</text>
       </view>
-      <view class="member" wx:if="{{ !!check }}">
+      <view class="member">
         <!-- 成功签到 -->
         <view class="title">
           <text>签到成功</text>
@@ -286,16 +273,22 @@
         </view>
       </view>
     </view>
-    
+
+    <text wx:if="{{updating}}">更新中</text>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
+  import Nav from '../components/nav'
 
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '群组信息'
+    }
+
+    components = {
+      nav: Nav
     }
 
     data = {
@@ -303,367 +296,89 @@
         checkForm: [],
         members: []
       },
-      userInfo: {
-        _id: ''
-      },
-      _id: '',
-      check: undefined,
-      isJoined: true,
-      canCheck: false,
-      showExitView: false
+      check: {},
+      user_id: '',
+      group_id: '',
+      check_id: '',
+      updating: false
     }
 
     computed = {
     }
 
     methods = {
-      inputChange(e){
-        let self = this
-        const keyArr = e.currentTarget.dataset.key.split('.')
-
-        if(keyArr.length == 2){
-          this[keyArr[0]][keyArr[1]] = e.detail.value
-        }
-        else if(keyArr.length == 3){
-          this[keyArr[0]][keyArr[1]][keyArr[2]] = e.detail.value
-        }
-      },
-      joinGroup(){
-        if(this.userInfo._id == ''){
-          wx.showToast({
-            title: '请先登录',
-            icon: 'none',
-            duration: 1000
-          })
-          return 
-        }
-
-        let self = this, wxInfo = wx.getStorageSync('wxInfo')
-        
-        // 判断是否可以加入
-        if(self.groupInfo.status == -1){
-          wx.showToast({
-            title: '无法加入',
-            icon: 'none',
-            duration: 2000,
-            mask: true
-          })
-          return
-        }
-
-        // 请求参数
-        let data = {
-          group_id: self._id,
-          user_id: self.userInfo._id,
-          user_info: {
-            avatarUrl: wxInfo.avatarUrl,
-            name: self.userInfo.name,
-            gender: self.userInfo.gender,
-          }
-        }
-
-        // 调用云函数
-        wx.cloud.callFunction({
-          name: 'joinGroup',
-          data: data
-        }).then(res=>{
-          delete data.group_id
-
-          self.groupInfo.members.push(data)
-          self.isJoined = true
-
-          self.$apply()
-          
-          wx.showToast({
-            title: '加入成功！',
-            icon: 'success',
-            duration: 1500,
-            mask: true
-          })
-        })
-      },
-      showExitModal(){
-        this.showExitView = true
-      },
-      hideExitModal(){
-        this.showExitView = false
-      },
-      exitGroup(){
-        let self = this
-        wx.cloud.callFunction({
-          name: 'exitGroup',
-          data: {group_id: self._id, user_id: self.userInfo._id}
-        }).then(res=>{
-          console.log(res)
-          if(res.result.stats.updated == 1){
-            wx.showToast({
-              title: '退出成功！',
-              icon: 'success',
-              duration: 1000
-            })
-            setTimeout(() => {
-              wx.switchTab({url: '/pages/index'})
-            }, 1000);
-          }
-        })
-      },
-      gotoCreateCheck(){
-        wx.navigateTo({url: '/pages/createCheck?_id='+this._id})
-      },
-      gotoEditGroupInfo(){
-        wx.navigateTo({url: '/pages/editGroupInfo?_id='+this._id})
-      },
-      getChecked(){
-        let self = this
-        
-        const db = wx.cloud.database(), _ = db.command
-
-        let ownerPosition = self.check.position.split('-')
-        // 获取经纬度坐标
-        wx.getLocation({
-          type: 'wgs84',
-          success (res) {
-            let now = new Date()
-            /*
-              time: Date,
-              user_id: ,
-              position: String,
-              status: Number,     1 to success, -1 to fail because of the position
-            */
-            
-            let data = {
-              time: Date.now(),
-              user_id: self.userInfo._id,
-              position: res.latitude + '-' + res.longitude
-            }
-
-            if(self.check.distance == -1){
-              data.status = 1
-            }
-            else{
-              let distance = getGreatCircleDistance(res.latitude, res.longitude, ownerPosition[0], ownerPosition[1])
-              data.status = distance <= self.check.distance?1:-1
-            }
-
-            // 调用云函数
-            wx.cloud.callFunction({
-              name: 'getChecked',
-              data: {
-                check_id: self.check._id,
-                check_info: data
-              }
-            }).then(res=>{
-              self.canCheck = false
-
-              self.$apply()
-              
-              wx.showToast({
-                title: '签到成功！',
-                icon: 'success',
-                duration: 1500,
-                mask: true
-              })
-            })
-            
-            // 通过经纬度获取距离（单位：米）
-            function getGreatCircleDistance(lat1,lng1,lat2,lng2){
-              var EARTH_RADIUS = 6378137.0;
-
-              var radLat1 = lat1*Math.PI/180.0;
-              var radLat2 = lat2*Math.PI/180.0;
-              
-              var a = radLat1 - radLat2;
-              var b = lng1*Math.PI/180.0 - lng2*Math.PI/180.0;
-              
-              var s = 2*Math.asin(Math.sqrt(Math.pow(Math.sin(a/2),2) + Math.cos(radLat1)*Math.cos(radLat2)*Math.pow(Math.sin(b/2),2)));
-              s = s*EARTH_RADIUS;
-              s = Math.round(s*10000)/10000.0;
-                      
-              return s;
-            }
-          },
-          fail (res){
-            console.log(res)
-          }
-        })
-      }
     }
 
     onLoad(option) {
       let self = this, _id = wx.getStorageSync('_id')
 
       if(_id){
-        self.userInfo._id = _id
+        self.user_id = _id
       }
-      else{
-        // 游客
-        wx.cloud.callFunction({
-          name: 'getGroupById',
-          data: {group_id: option._id}
-        }).then(res=>{
-          let groupInfo = res.result.data
-          groupInfo.checkForm = []
-          self.groupInfo = groupInfo
 
-          self.isJoined = false
-          self.$apply()
-        })
-        return 
-      }
-      self._id = option._id
-      
+      self.group_id = option.group_id
+      self.check_id = option.check_id
+    }
+
+    onShow(){
+      let self = this
       const db = wx.cloud.database(), _ = db.command
 
-      db.collection('users').doc(_id).get()
-      .then(res=>{
-        self.userInfo = res.data
-        self.$apply()
-      }).then(()=>{
-        wx.cloud.callFunction({
-          name: 'getGroupById',
-          data: {group_id: option._id}
-        }).then(res=>{
-          let groupInfo = res.result.data
-          self.groupInfo = groupInfo
+      wx.cloud.callFunction({
+        name: 'getGroupById',
+        data: {group_id: self.group_id}
+      }).then(res=>{
+        let groupInfo = res.result.data
+        self.groupInfo = groupInfo
 
-          // 判断能否加入
-          if(self.userInfo._id == groupInfo.owner){
-            self.isJoined = true
-          }
-          else{
-            if(groupInfo.members.length == 0){
-              self.isJoined = false
-            }
-            for(let item of groupInfo.members){
-              if(item.user_id == self.userInfo._id){
-                self.isJoined = true
+        // 最近的签到信息
+      
+        db.collection('checks').doc(self.check_id).get()
+        .then(res=>{
+          let check = res.data
+          let createTime = new Date(check.createAt), endTime = new Date(check.endTime)
+
+          check.status = endTime<(new Date())?1:0
+          check.statusWords = check.status==1?'已结束':'进行中'
+          check.createAt = `${createTime.getFullYear()}/${createTime.getMonth()+1}/${createTime.getDate()} ${createTime.getHours()}:${createTime.getMinutes()}`
+          check.endTime = `${endTime.getFullYear()}/${endTime.getMonth()+1}/${endTime.getDate()} ${endTime.getHours()}:${endTime.getMinutes()}`
+
+          check.success = []
+          check.fail = []
+          check.none = []
+          for(let member of groupInfo.members){
+            member.status = 0  // 未签到
+            for(let checkedUser of check.members){
+              if(checkedUser.user_id == member.user_id){
+                member.status = checkedUser.status
                 break
               }
-              else{
-                self.isJoined = false
-              }
+            }
+
+            if(member.status == 0){
+              check.none.push(member)
+            }
+            else if(member.status == 1){
+              check.success.push(member)
+            }
+            else if(member.status == -1){
+              check.fail.push(member)
             }
           }
-          
-          // 判断能否签到
-          if(self.userInfo._id != groupInfo.owner && groupInfo.checkForm && groupInfo.checkForm.length == 0){
-            self.canCheck = false
-          }
-          
+
+          self.check = check
           self.$apply()
 
-          // 获得签到历史表
-          if(groupInfo.checkForm.length != 0){
-            db.collection('checks').where(_.or(groupInfo.checkForm.map(item=>{return {_id: item}})))
-            .get({
-              success(res) {
-                
-                for(let item of res.data){
-                  let createTime = new Date(item.createAt), endTime = new Date(item.endTime)
-                  item.success = 0
-                  item.createAt = `${createTime.getFullYear()}/${createTime.getMonth()+1}/${createTime.getDate()} ${createTime.getHours()}:${createTime.getMinutes()}`
-                  item.endTime = `${endTime.getFullYear()}/${endTime.getMonth()+1}/${endTime.getDate()} ${endTime.getHours()}:${endTime.getMinutes()}`
-
-                  for(let member of item.members){
-                    if(member.status == 1){
-                      item.success = item.success + 1
-                    }
-                    if(member.user_id == self.userInfo._id){
-                      item.userStatus = member.status
-                    }
-                  }
-                }
-
-                res.data.sort((a, b)=>new Date(b.endTime) - new Date(a.endTime))
-                self.groupInfo.checkForm = res.data
-
-                // 最近的签到信息
-                let theNew = JSON.parse(JSON.stringify(res.data[0]))
-                let createTime = new Date(theNew.createAt), endTime = new Date(theNew.endTime)
-
-                self.canCheck = endTime >= new Date() ? true:false
-                theNew.status = endTime<(new Date())?1:0
-
-                if(theNew.status == 0){
-                  // 动态获取
-                  let loop = setInterval(() => {
-                    db.collection('checks').doc(theNew._id).get()
-                    .then(res=>{
-                      let check = res.data
-                      check.status = endTime<(new Date())?1:0
-                      check.statusWords = check.status==1?'已结束':'进行中'
-                      check.createAt = `${createTime.getFullYear()}/${createTime.getMonth()+1}/${createTime.getDate()} ${createTime.getHours()}:${createTime.getMinutes()}`
-                      check.endTime = `${endTime.getFullYear()}/${endTime.getMonth()+1}/${endTime.getDate()} ${endTime.getHours()}:${endTime.getMinutes()}`
-
-                      check.success = []
-                      check.fail = []
-                      check.none = []
-                      for(let member of groupInfo.members){
-                        member.status = 0  // 未签到
-                        for(let checkedUser of check.members){
-                          if(checkedUser.user_id == member.user_id){
-                            member.status = checkedUser.status
-                            break
-                          }
-                        }
-
-                        if(member.status == 0){
-                          check.none.push(member)
-                        }
-                        else if(member.status == 1){
-                          check.success.push(member)
-                        }
-                        else if(member.status == -1){
-                          check.fail.push(member)
-                        }
-                      }
-
-                      self.canCheck = endTime >= new Date() ? true:false
-                      self.check = check
-                      self.$apply()
-                      console.log(self.check)
-
-                      if(check.status == 1){
-                        clearInterval(loop)
-                      }
-                    })                    
-                  }, 2000);
-                }
-                else{
-                  theNew.statusWords = theNew.status==1?'已结束':'进行中'
-                  theNew.createAt = `${createTime.getFullYear()}/${createTime.getMonth()+1}/${createTime.getDate()} ${createTime.getHours()}:${createTime.getMinutes()}`
-                  theNew.endTime = `${endTime.getFullYear()}/${endTime.getMonth()+1}/${endTime.getDate()} ${endTime.getHours()}:${endTime.getMinutes()}`
-
-                  theNew.success = []
-                  theNew.fail = []
-                  theNew.none = []
-                  for(let member of groupInfo.members){
-                    member.status = 0  // 未签到
-                    for(let checkedUser of theNew.members){
-                      if(checkedUser.user_id == member.user_id){
-                        member.status = checkedUser.status
-                        break
-                      }
-                    }
-
-                    if(member.status == 0){
-                      theNew.none.push(member)
-                    }
-                    else if(member.status == 1){
-                      theNew.success.push(member)
-                    }
-                    else if(member.status == -1){
-                      theNew.fail.push(member)
-                    }
-                  }
-
-                  self.check = theNew
-                  self.$apply()
-                }
-              }
-            })
+          if(check.status == 1){
+            self.updating = true
+            self.$apply()
+            self.onShow()
           }
-        })
+          else{
+            self.updating = false
+            self.$apply()
+          }
+        }) 
       })
     }
   }

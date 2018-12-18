@@ -1,5 +1,9 @@
 <style lang="less">
+page{
+  background-image: linear-gradient(to bottom, white, #ddd);
+}
 .container{
+  
   >.header{
     display: flex;
     flex-direction: row;

@@ -89,6 +89,8 @@ page{
 </style>
 <template>
   <view class="container">
+    <nav></nav>
+
     <view class="header">
       <text>标题</text>
       <input placeholder="签到名称" data-key="checkInfo.title" value="{{ checkInfo.title }}" bindchange="inputChange" />
@@ -121,10 +123,15 @@ page{
 <script>
   import wepy from 'wepy'
   import util from '../utils/util'
+  import Nav from '../components/nav'
 
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '创建签到'
+    }
+
+    components = {
+      nav: Nav
     }
 
     data = {

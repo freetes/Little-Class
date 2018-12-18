@@ -27,7 +27,7 @@
   }
 </style>
 <template>
-  <view class="panel">
+  <view class="navigation">
     <slot name="title">
       Title
     </slot>
@@ -39,5 +39,16 @@
   import wepy from 'wepy'
 
   export default class Panel extends wepy.component {
+    props = {
+      title: String
+    }
+
+    methods = {
+      goBack(){
+        wx.navigateBack({
+          delta: 1
+        })
+      }
+    }
   }
 </script>

@@ -66,6 +66,8 @@
 </style>
 <template>
   <view class="container">
+    <nav></nav>
+    
     <view class="topics">
       <!-- <title class="title">什么是灰度大学？</title> -->
 
@@ -113,10 +115,15 @@
 
 <script>
   import wepy from 'wepy'
+  import Nav from '../components/nav'
 
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '关于'
+    }
+    
+    components = {
+      nav: Nav
     }
 
     data = {
