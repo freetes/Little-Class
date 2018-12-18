@@ -266,7 +266,6 @@ page{
         <button bindtap="disbandGroup">确定解散！</button>
       </view>
     </view>
-
   </view>
 </template>
 
@@ -290,7 +289,6 @@ page{
       groupInfo (newValue, oldValue) {
         let self = this
 
-        console.log('should update')
         const db = wx.cloud.database()
         
         let data = JSON.parse(JSON.stringify(newValue))

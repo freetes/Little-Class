@@ -213,7 +213,6 @@
         self.wxInfo = wxInfo
       }
       else{
-        console.log(wxInfo == true)
         self.wxInfo = {
           nickName: '登入',
           avatarUrl: '../static/imgs/user.png'

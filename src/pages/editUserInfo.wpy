@@ -163,7 +163,7 @@ page{
     data = {
       wxInfo: {
         nickName: '登入',
-        avatarUrl: '../static/imgs/用户.png'
+        avatarUrl: '../static/imgs/user.png'
       },
       sexArray: ['保密', '男', '女'],
       kindArray: ['学生', '教师'],
