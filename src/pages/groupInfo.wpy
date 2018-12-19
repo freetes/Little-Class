@@ -3,6 +3,7 @@ page{
   background-color: #ddd;
 }
 .container{
+  padding-top: 0;
   padding-bottom: 20px;
   
   >.groupInfo{
@@ -32,11 +33,18 @@ page{
       padding: 0 20px;
       padding-bottom: 20px;
       display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
       font-size: 14px;
-      color: gray;
+      color: #8A8A8A;
+
+      >.description{
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+      }
     }
   }
 
@@ -61,12 +69,12 @@ page{
 
       >text{
         font-size: 14px;
-        color: black;
+        color: #8A8A8A;
         font-weight: bold;
       }
       >text.assist{
         font-size: 12px;
-        color: gray;
+        color: #8A8A8A;
         font-weight: normal;
       }
     }
@@ -111,12 +119,12 @@ page{
 
       >text{
         font-size: 14px;
-        color: black;
+        color: #8A8A8A;
         font-weight: bold;
       }
       >text.assist{
         font-size: 12px;
-        color: gray;
+        color: #8A8A8A;
         font-weight: normal;
       }
     }
@@ -153,11 +161,11 @@ page{
 
       >view.title{
         font-size: 14px;
-        color: black;
+        color: #8A8A8A;
         font-weight: bold;
 
         >text.assist{
-          background-color: lightgray;
+          background-color: light#8A8A8A;
           color: black;
           padding: 5px 10px;
           border-radius: 10px;
@@ -209,12 +217,12 @@ page{
 
       >text{
         font-size: 14px;
-        color: black;
+        color: #8A8A8A;
         font-weight: bold;
       }
       >text.assist{
         font-size: 12px;
-        color: gray;
+        color: #8A8A8A;
         font-weight: normal;
       }
     }
@@ -233,7 +241,7 @@ page{
         font-weight: bold;
 
         >text.assist{
-          background-color: lightgray;
+          background-color: light#8A8A8A;
           color: black;
           padding: 5px 10px;
           border-radius: 10px;
@@ -277,7 +285,7 @@ page{
       border: none;
     }
     >.disable{
-      color: gray;
+      color: #8A8A8A;
     }
   }
   .modal-container{
@@ -303,10 +311,10 @@ page{
       padding-bottom: 0;
 
       >.modal-title{
-        border-bottom: 1px solid lightgray;
+        border-bottom: 1px solid light#8A8A8A;
         margin: 10px 0;
         font-size: 12px;
-        color: gray;
+        color: #8A8A8A;
       }
       >button{
         padding: 5px 10px;
@@ -336,8 +344,8 @@ page{
   >text{
     font-size: 14px;
     font-weight: bold;
-    color: black;
-    border: 1px dashed black;
+    color: #8A8A8A;
+    border: 1px dashed #8A8A8A;
     padding: 5px 5px;
     border-radius: 50%;
     width: 20px;
@@ -357,6 +365,7 @@ page{
       <text class="title">{{ groupInfo.name }}</text>
       <view>
         <text>ID：{{ groupInfo.groupCode }}</text>
+        <text class="description">{{ groupInfo.description }}</text>
       </view>
     </view>
 
@@ -374,7 +383,7 @@ page{
     </view>
 
     <!-- 签到表 信息 -->
-    <view class="check-form">
+    <view class="check-form" data-key="{{ '/pages/checkInfo?_id='+check._id }}" bindtap="gotoCheckInfo">
       <view class="title">
         <text>最近签到记录</text>
       </view>
@@ -384,7 +393,7 @@ page{
       <view class="info" wx:if="{{ !!check }}">
         <view>
           <text class="title">{{ check.title }}</text>
-          <text class="status" data-key="{{ '/pages/checkInfo?_id='+check._id }}" bindtap="gotoCheckInfo">{{ check.statusWords }}</text>
+          <text class="status">{{ check.statusWords }}</text>
         </view>
         <text>{{ check.createAt }} - {{ check.endTime }}</text>
       </view>

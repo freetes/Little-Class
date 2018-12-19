@@ -63,7 +63,7 @@ page{
   >.message{
     align-self: center;
     font-size: 14px;
-    color: gray;
+    color: #8A8A8A;
   }
   >button{
     padding: 10px 7%;

@@ -20,7 +20,7 @@ page{
       height: 25px;
       background-color: white;
       padding: 10px 10px;
-      border: 5px solid gray;
+      border: 5px solid #8A8A8A;
       border-radius: 50%;
     }
   }
@@ -60,7 +60,7 @@ page{
       }
 
       >.modal-title{
-        border-bottom: 1px solid lightgray;
+        border-bottom: 1px solid light#8A8A8A;
       }
       >.modal-message{
         text-align: right;
@@ -72,7 +72,7 @@ page{
         margin: 10px 0;
         padding: 10px 0;
         text-align: center;
-        border: 1px solid gray;
+        border: 1px solid #8A8A8A;
       }
       >button{
         background-color: white;
@@ -113,14 +113,13 @@ page{
       border-radius: 5px;
       margin-bottom: 20px;
       background-color: white;
-      // box-shadow: 0 5px 5px lightgray;
+      // box-shadow: 0 5px 5px light#8A8A8A;
       
       >.title{
-        font-size: 14px;
+        font-size: 16px;
         color: black;
         font-weight: bold;
-        padding: 0 10px;
-        padding-top: 10px;
+        padding: 15px 10px;
       }
       >view{
         display: flex;
@@ -130,7 +129,7 @@ page{
         width: 100%;
         padding: 10px 10px;
         font-size: 12px;
-        color: gray;
+        color: #8A8A8A;
       }
     }
   }
@@ -150,7 +149,7 @@ page{
       font-size: 14px;
       font-weight: bold;
       color: black;
-      border: 1px dashed black;
+      border: 1px dashed #8A8A8A;
       padding: 5px 5px;
       border-radius: 50%;
       width: 20px;
@@ -161,7 +160,7 @@ page{
     >text{
       font-size: 12px;
       // font-weight: ;
-      color: black;
+      color: #8A8A8A;
       margin-top: 5px;
       text-align: center;
     }
@@ -186,7 +185,15 @@ page{
   }
 
   .time{
-    margin-top: 60px;
+    margin-top: -40px;
+    padding:0 5%;
+    color: #8A8A8A;
+    font-weight: lighter;
+
+    >text.date{
+      font-size: 40px;
+      letter-spacing: 5px;
+    }
   }
 }
 </style>
@@ -194,7 +201,8 @@ page{
   <view class="container">
 
     <view class="time">
-
+      <text class="date">{{ time }}</text>
+      <text class="week">{{ ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][week] }}</text>
     </view>
 
     <view class="buttons">
@@ -207,8 +215,9 @@ page{
       <view class="group-item" data-url="{{ '/pages/groupInfo?_id='+item._id }}" wx:for="{{ groups }}" bindtap="goto">
         <text class="title">{{ item.name }}</text>
         <view>
-          <text>一共{{ item.members.length }}人</text>
-          <text>{{ item.belong == 1?'创建者':'' }}</text>
+          <text>{{ item.checkForm.length == 0?'无签到记录':item.checkForm.length + '次签到' }}</text>
+          <text>{{ item.members.length == 0?'空空无人':'共' + item.members.length + '人' }}</text>
+          <text wx:if="{{ item.belong == 1 }}">创建者</text>
         </view>
       </view>
     </view>
@@ -259,6 +268,8 @@ page{
       groups: [],
       showBtns: false,
       loading: true,
+      time: (new Date()).getDate(),
+      week: (new Date()).getDay()
     }
 
     computed = {
@@ -321,35 +332,41 @@ page{
       },
     }
 
-    onShow() {
+    onLoad(){
       let self = this
 
       let user_id = wx.getStorageSync('_id')
 
       if(user_id){
         self.user_id = user_id
+      }
+    }
 
+    onShow() {
+      let self = this
+
+      if(self.user_id){
         // 找到群组
         wx.cloud.callFunction({
           name: 'getAllGroups'
         }).then(res=>{
-          console.log(res)
           let data = []
 
           for(let group of res.result.data){
-            if(group.owner == user_id){
+            if(group.owner == self.user_id){
               group.belong = 1
               data.push(group)
             }
             else{
               for(let item of group.members){
-                if(item.user_id == user_id){
+                if(item.user_id == self.user_id){
                   data.push(group)
                   break
                 }
               }
             }
           }
+          data.sort((a, b)=>b.createTime - a.createTime)
           self.groups = data
           self.loading = false
           self.$apply()
@@ -361,7 +378,6 @@ page{
       }
     }
     onHide(){
-      this.user_id = ''
     }
   }
 </script>

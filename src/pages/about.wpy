@@ -6,6 +6,7 @@
   align-items: flex-start;
   width: 100%;
   padding: 10px 5%;
+  padding-top: 60px;
   font-size: 14px;
   color: black;
 
@@ -17,10 +18,10 @@
     width: 100%;
     padding-bottom: 20px;
     margin-bottom: 10px;
-    border-bottom: 1px dashed gray;
+    border-bottom: 1px dashed #8A8A8A;
 
     >text{
-      color: gray;
+      color: #8A8A8A;
       padding-top: 10px;
       font-size: 16px;
       font-weight: bold;
@@ -50,14 +51,14 @@
     width: 100%;
     padding-bottom: 20px;
     margin-bottom: 10px;
-    border-bottom: 1px dashed gray;
+    border-bottom: 1px dashed #8A8A8A;
 
     >text{
       font-weight: bold;
       padding: 5px 0;
     }
     >text.title{
-      color: gray;
+      color: #8A8A8A;
       padding-top: 10px;
       font-size: 16px;
     }
@@ -76,8 +77,18 @@
     <view class="update-historys">
       <text>UPDATE LOGS：</text>
       <view>
+        <text class="title">v0.0.9 in 2018-12-19</text>
+        <text class="changes">美化首页；</text>
+      </view>
+      <view>
+        <text class="title">v0.0.8 in 2018-12-18</text>
+        <text class="changes">很是惊艳的「全屏效果」；</text>
+        <text class="changes">完成「签到详情页」；</text>
+      </view>
+      <view>
         <text class="title">v0.0.7 in 2018-12-16</text>
-        <text class="changes">新增动画；完善逻辑；</text>
+        <text class="changes">新增动画；</text>
+        <text class="changes">完善逻辑；</text>
       </view>
       <view>
         <text class="title">v0.0.6 in 2018-12-15</text>
@@ -85,7 +96,7 @@
       </view>
       <view>
         <text class="title">v0.0.5 in 2018-12-14</text>
-        <text class="changes">新增「编辑群组信息页」、「关于页」</text>
+        <text class="changes">新增「编辑群组信息页」、「关于页」；</text>
       </view>
       <view>
         <text class="title">v0.0.4 in 2018-12-10</text>

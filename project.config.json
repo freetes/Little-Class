@@ -32,7 +32,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 5,
+			"current": 4,
 			"list": [
 				{
 					"id": -1,
@@ -59,10 +59,10 @@
 					"query": "_id=XAy-NJT75u22ZW8E"
 				},
 				{
-					"id": -1,
+					"id": 4,
 					"name": "createCheck",
 					"pathName": "pages/createCheck",
-					"query": "_id=XAnvA5T75u22WmuJ"
+					"query": "_id=XBiQ6JT75u22lu4H"
 				},
 				{
 					"id": 5,
@@ -75,6 +75,12 @@
 					"name": "about",
 					"pathName": "pages/about",
 					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "checkInfo",
+					"pathName": "pages/checkInfo",
+					"query": "group_id=XBiQ6JT75u22lu4H&check_id=XBi5QMDR1TiN7ckr"
 				}
 			]
 		}
