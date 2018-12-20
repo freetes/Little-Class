@@ -148,7 +148,7 @@ page{
     >text.logo{
       font-size: 14px;
       font-weight: bold;
-      color: black;
+      color: #8A8A8A;
       border: 1px dashed #8A8A8A;
       padding: 5px 5px;
       border-radius: 50%;
@@ -333,19 +333,20 @@ page{
     }
 
     onLoad(){
-      let self = this
 
-      let user_id = wx.getStorageSync('_id')
+    }
+
+    async onShow() {
+      let self = this, user_id = wx.getStorageSync('_id')
+
+      const db = wx.cloud.database()
 
       if(user_id){
         self.user_id = user_id
       }
-    }
+      let count = await db.collection('groups').where({}).count()
 
-    onShow() {
-      let self = this
-
-      if(self.user_id){
+      if(self.user_id && count.total!=0){
         // 找到群组
         wx.cloud.callFunction({
           name: 'getAllGroups'
@@ -375,6 +376,7 @@ page{
       else{
         self.groups = []
         self.loading = false
+        self.$apply()
       }
     }
     onHide(){

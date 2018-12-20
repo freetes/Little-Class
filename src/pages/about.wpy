@@ -77,6 +77,10 @@
     <view class="update-historys">
       <text>UPDATE LOGS：</text>
       <view>
+        <text class="title">v1.0.0 in 2018-12-20</text>
+        <text class="changes">正式删档！</text>
+      </view>
+      <view>
         <text class="title">v0.0.9 in 2018-12-19</text>
         <text class="changes">美化首页；</text>
       </view>

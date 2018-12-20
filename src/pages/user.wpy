@@ -133,7 +133,9 @@ page{
       wxInfo: {
         nickName: '登入',
         avatarUrl: '../static/imgs/user.png'
-      }
+      },
+      userInfo: {},
+      createdDays: ''
     }
 
     computed = {
@@ -209,9 +211,7 @@ page{
     }
 
     onShow() {
-      let self = this
-
-      let wxInfo = wx.getStorageSync('wxInfo')
+      let self = this, wxInfo = wx.getStorageSync('wxInfo'), _id = wx.getStorageSync('_id')
 
       if(wxInfo){
         self.wxInfo = wxInfo
@@ -222,6 +222,23 @@ page{
           avatarUrl: '../static/imgs/user.png'
         }
       }
+      if(_id){
+        self._id = _id
+      }
+      
+      const db = wx.cloud.database()
+
+      db.collection('users').doc(_id)
+      .get({
+        success: function(res) {
+          delete res.data._openid
+          delete res.data._id
+          
+          self.userInfo = res.data
+          self.createdDays = ((new Date()).getTime() - (new Date(res.data.createAt)).getTime())/1000/60/60/24
+          self.$apply()
+        }
+      })
     }
   }
 </script>

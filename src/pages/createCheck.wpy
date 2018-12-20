@@ -122,8 +122,6 @@ page{
       </view>
     </form>
 
-
-
   </view>
 </template>
 
@@ -276,7 +274,11 @@ page{
             })
           },
           fail (res){
-            console.log(res)
+            wx.showToast({
+              title: '获取地址失败，请前往小程序设置页面开启权限！',
+              icon: 'none',
+              duration: 2000
+            })
           }
         })
       }
