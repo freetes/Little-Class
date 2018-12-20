@@ -262,8 +262,6 @@
         </view>
       </view>
     </view>
-
-    <text wx:if="{{updating}}">更新中</text>
   </view>
 </template>
 
@@ -289,7 +287,6 @@
       user_id: '',
       group_id: '',
       check_id: '',
-      updating: false
     }
 
     computed = {
@@ -324,8 +321,6 @@
       
         db.collection('checks').doc(self.check_id).get()
         .then(res=>{
-          console.log(res)
-
           let check = res.data
           let createTime = new Date(check.createAt), endTime = new Date(check.endTime)
 
@@ -361,12 +356,10 @@
           self.$apply()
 
           if(check.status == 0){
-            self.updating = true
             self.$apply()
             self.onShow()
           }
           else{
-            self.updating = false
             self.$apply()
           }
         }) 

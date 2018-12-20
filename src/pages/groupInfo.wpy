@@ -465,7 +465,7 @@ page{
       <button hover-class="none" wx:if="{{ userInfo._id != groupInfo.owner && canCheck }}" bindtap="getChecked">立即签到</button>
       <button hover-class="none" wx:if="{{ userInfo._id != groupInfo.owner && isJoined}}" bindtap="showExitModal">退出</button>
       <!-- 拥有者 功能 -->
-      <button hover-class="none" wx:if="{{ userInfo._id == groupInfo.owner }}" bindtap="gotoCreateCheck">开启签到</button>
+      <button hover-class="none" wx:if="{{ userInfo._id == groupInfo.owner && !canCheck }}" bindtap="gotoCreateCheck">开启签到</button>
       <button hover-class="none" wx:if="{{ userInfo._id == groupInfo.owner }}" bindtap="gotoEditGroupInfo">修改信息</button>
     </view>
 
