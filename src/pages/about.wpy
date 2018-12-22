@@ -31,6 +31,7 @@
       flex-direction: column;
       justify-content: flex-start;
       align-items: flex-start;
+      margin: 5px 0 0 5px;
       
       >text.title{
         font-weight: bold;
@@ -71,11 +72,15 @@
     
     <view class="topics">
       <!-- <title class="title">什么是灰度大学？</title> -->
-
     </view>
 
     <view class="update-historys">
       <text>UPDATE LOGS：</text>
+      <!-- <view>
+        <text class="title">v1.0.1 in 2018-12-20</text>
+        <text class="changes">修改‘登录’；</text>
+        <text class="changes">新增首页按钮动画；</text>
+      </view> -->
       <view>
         <text class="title">v1.0.0 in 2018-12-20</text>
         <text class="changes">正式删档！</text>
@@ -123,7 +128,8 @@
     </view>
     <view class="futures">
       <text class="title">FUTURES：</text>
-      <text>各种场合、各种地点通用～</text>
+      <text>‘一言’模块</text>
+      <!-- <text></text> -->
     </view>
   </view>
 </template>

@@ -70,7 +70,6 @@ page{
       >text{
         font-size: 14px;
         color: #8A8A8A;
-        font-weight: bold;
       }
       >text.assist{
         font-size: 12px;
@@ -120,7 +119,6 @@ page{
       >text{
         font-size: 14px;
         color: #8A8A8A;
-        font-weight: bold;
       }
       >text.assist{
         font-size: 12px;
@@ -162,7 +160,6 @@ page{
       >view.title{
         font-size: 14px;
         color: #8A8A8A;
-        font-weight: bold;
 
         >text.assist{
           background-color: light#8A8A8A;
@@ -218,7 +215,6 @@ page{
       >text{
         font-size: 14px;
         color: #8A8A8A;
-        font-weight: bold;
       }
       >text.assist{
         font-size: 12px;
@@ -378,7 +374,7 @@ page{
         <text class="assist">{{ groupInfo.members.length==0?'空空无人':'共' + groupInfo.members.length + '人'}}</text>
       </view>
       <view wx:if="{{ groupInfo.members.length != 0 }}" wx:key="user_id">
-        <image mode="widthFix" wx:for="{{ groupInfo.members }}" src="{{ item.user_info.avatarUrl }}"></image>
+        <image mode="widthFix" wx:for="{{ groupInfo.members }}" wx:key="{{ groupInfo.members }}" src="{{ item.user_info.avatarUrl }}"></image>
       </view>
     </view>
 
@@ -456,7 +452,6 @@ page{
     </view>
 
     <!--  -->
-
 
     <view class="btns">
       <!-- 普通用户 功能 -->
@@ -866,6 +861,11 @@ page{
           }
         })
       })
+    }
+    onShareAppMessage() {
+      return {
+        title: `快来加入「${this.groupInfo.name}」~`
+      }
     }
   }
 </script>

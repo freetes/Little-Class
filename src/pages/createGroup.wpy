@@ -6,8 +6,8 @@ page{
 .container{
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
   width: 100%;
 
   >.header{
@@ -98,7 +98,7 @@ page{
     <view class="header">
       <text>基本信息</text>
       <input placeholder="群名称" data-key="groupInfo.name" value="{{ groupInfo.name }}" bindchange="inputChange" />
-      <textarea data-key="groupInfo.description" value="{{ groupInfo.description }}" bindblur="inputChange" auto-height placeholder="描述" />
+      <textarea data-key="groupInfo.description" value="{{ groupInfo.description }}" bindblur="inputChange" auto-height placeholder="群描述" />
     </view>
 
     <!-- <view class="inputs">

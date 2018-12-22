@@ -108,7 +108,7 @@ page{
       </view>
       <view class="btn-container" bindtap="signout">
         <image src="../static/icons/signout.png"></image>
-        <text>退出登入</text>
+        <text>退出登录</text>
       </view>
     </view>
 
@@ -131,7 +131,7 @@ page{
 
     data = {
       wxInfo: {
-        nickName: '登入',
+        nickName: '登录',
         avatarUrl: '../static/imgs/user.png'
       },
       userInfo: {},
@@ -202,7 +202,7 @@ page{
       },
       signout(){
         this.wxInfo = {
-          nickName: '登入',
+          nickName: '登录',
           avatarUrl: '../static/imgs/user.png'
         }
 
@@ -218,7 +218,7 @@ page{
       }
       else{
         self.wxInfo = {
-          nickName: '登入',
+          nickName: '登录',
           avatarUrl: '../static/imgs/user.png'
         }
       }
