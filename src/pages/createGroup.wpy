@@ -98,34 +98,17 @@ page{
     <view class="header">
       <text>基本信息</text>
       <input placeholder="群名称" data-key="groupInfo.name" value="{{ groupInfo.name }}" bindchange="inputChange" />
-      <textarea data-key="groupInfo.description" value="{{ groupInfo.description }}" bindblur="inputChange" auto-height placeholder="群描述" />
+      <textarea data-key="groupInfo.description" value="{{ groupInfo.description }}" bindinput="inputChange" auto-height placeholder="群描述" />
     </view>
 
-    <!-- <view class="inputs">
-      <text>基本信息</text>
-
-      <view class="input-container">
-        <text>姓名</text>
-        <input placeholder="填写群名称" data-key="userInfo.name" value="{{ userInfo.name }}" bindchange="inputChange" />
-      </view>
-      <view class="input-container">
-        <text>性别</text>
-        <picker mode="selector" data-key="userInfo.gender" bindchange="inputChange" value="{{ userInfo.gender }}" range="{{ sexArray }}">
-          <view class="picker">
-            {{ sexArray[userInfo.gender] }}
-          </view>
-        </picker>
-      </view>
-    </view> -->
-
     <button bindtap="createGroup">确定创建</button>
-
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
   import Nav from '../components/nav'
+  import request from '@/utils/request.js'
 
   export default class Index extends wepy.page {
     config = {
@@ -144,7 +127,7 @@ page{
         description: '',
       },
       openid: '',
-      _id: ''
+      userId: ''
     }
 
     computed = {
@@ -175,63 +158,36 @@ page{
             duration: 1000
           })
         }
-        
-        const db = wx.cloud.database()
-        
-        db.collection('groups').where({})
-        .count({
-          success: function(res) {
-            db.collection('groups').add({
-              data: {
-                name: self.groupInfo.name,
-                description: self.groupInfo.description,
-                owner: self._id,
-                createTime: Date.now(),
-                members: [],
-                checkForm: [],
-                status: 0,  // 0 表示可以加入，1 表示不能加入
-                groupCode: 10000 + res.total,
-              },
-              success: function(res) {
-                wx.showToast({
-                  title: '创建成功！',
-                  icon: 'success',
-                  duration: 1500
-                })
-                setTimeout(() => {
-                  wx.redirectTo({
-                    url: 'groupInfo?_id=' + res._id
-                  })
-                }, 1500);
-              }
-            })
-          }
+
+        let data = {
+          userId: self.userId,
+          groupName: self.groupInfo.name,
+          description: self.groupInfo.description
+        }
+
+        request.post('/createGroup', data)
+        .then(res=>{
+          console.log(res)
+          wx.showToast({
+            title: '创建成功！',
+            icon: 'success',
+            duration: 1500
+          })
+          // setTimeout(() => {
+          //   wx.redirectTo({
+          //     url: 'groupInfo?_id=' + res._id
+          //   })
+          // }, 1500);
         })
       }
     }
 
     onShow() {
-      let self = this, openid = wx.getStorageSync('openid'), _id = wx.getStorageSync('_id')
+      let self = this, userId = wx.getStorageSync('userId')
 
-      if(openid){
-        self.openid = openid
+      if(userId){
+        self.userId = userId
       }
-      if(_id){
-        self._id = _id
-      }
-      
-      const db = wx.cloud.database()
-
-      db.collection('users').doc(_id)
-      .get({
-        success: function(res) {
-          delete res.data._openid
-          delete res.data._id
-          
-          self.userInfo = res.data
-          self.$apply()
-        }
-      })
     }
   }
 </script>

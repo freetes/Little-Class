@@ -157,6 +157,7 @@ page{
 <script>
   import wepy from 'wepy'
   import Nav from '../components/nav'
+  import request from '@/utils/request.js'
 
   export default class Index extends wepy.page {
     config = {
@@ -180,36 +181,31 @@ page{
         level: 0,
       },
       message: '',
-      _id: ''
+      openid: ''
     }
 
     computed = {
-      now () {
-        return +new Date()
-      }
+      
     }
 
     watch = {
       userInfo (newValue, oldValue) {
         let self = this
         
-        const db = wx.cloud.database()
-        
-        db.collection('users').doc(self._id)
-        .update({
-          data: newValue,
-          success: function(res) {
-            console.log(res)
-            // 更新成功
-            if(res.stats.updated == 1){
-              self.message = '更新成功！'
-              self.$apply()
-              setTimeout(() => {
-                self.message = ''
-                self.$apply()
-              }, 2000);
-            }
-          }
+        request.post('/setUserInfo', {
+          userId: self.userInfo._id,
+          name: self.userInfo.name,
+          gender: self.userInfo.gender,
+          email: self.userInfo.email || '',
+          wxInfo: self.wxInfo
+        })
+        .then(res=>{
+          self.message = '更新成功！'
+          self.$apply()
+          setTimeout(() => {
+            self.message = ''
+            self.$apply()
+          }, 2000);
         })
       }
     }
@@ -217,6 +213,7 @@ page{
     methods = {
       inputChange(e){
         let self = this
+
         const keyArr = e.currentTarget.dataset.key.split('.')
 
         if(keyArr.length == 2){
@@ -229,45 +226,36 @@ page{
       updateUserInfo(){
         let self = this
         
-        const db = wx.cloud.database()
-        
-        db.collection('users').doc(self._id)
-        .update({
-          data: self.userInfo,
-          success: function(res) {
-            console.log(res)
-            // 更新成功
-            if(res.stats.updated == 1){
-
-            }
-          }
+        request.post('/setUserInfo', {
+          userId: self.userInfo._id,
+          name: self.userInfo.name,
+          gender: self.userInfo.gender,
+          email: self.userInfo.email || '',
+          wxInfo: self.wxInfo
+        })
+        .then(res=>{
+          self.userInfo = res.data
+          self.$apply()
         })
       }
     }
 
     onShow() {
-      let self = this, wxInfo = wx.getStorageSync('wxInfo'), _id = wx.getStorageSync('_id')
+      let self = this, wxInfo = wx.getStorageSync('wxInfo'), openid = wx.getStorageSync('openid')
 
       if(wxInfo){
         self.wxInfo = wxInfo
       }
-      if(_id){
-        self._id = _id
-      }
-      
-      const db = wx.cloud.database()
+      if(openid){
+        self.openid = openid
 
-      db.collection('users').doc(_id)
-      .get({
-        success: function(res) {
-          delete res.data._openid
-          delete res.data._id
-          
+        // 获取用户信息
+        request.post('/login', {openid})
+        .then(res=>{
           self.userInfo = res.data
           self.$apply()
-        }
-      })
-
+        })
+      }
     }
   }
 </script>

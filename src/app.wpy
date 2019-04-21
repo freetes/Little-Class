@@ -38,7 +38,7 @@ export default class extends wepy.app {
     pages: [
       'pages/index',
       'pages/user',
-      'pages/editUserInfo',
+      'pages/userInfo',
       'pages/createGroup',
       'pages/editGroupInfo',
       'pages/groupInfo',
@@ -84,24 +84,12 @@ export default class extends wepy.app {
   constructor () {
     super()
     this.use('requestfix')
+    this.use('promisify');
   }
 
   onLaunch() {
     wx.cloud.init({
       traceUser: true
-    })
-  }
-
-  getUserInfo(cb) {
-    const that = this
-    if (this.globalData.userInfo) {
-      return this.globalData.userInfo
-    }
-    wepy.getUserInfo({
-      success (res) {
-        that.globalData.userInfo = res.userInfo
-        cb && cb(res.userInfo)
-      }
     })
   }
 }

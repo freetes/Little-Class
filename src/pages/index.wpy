@@ -224,7 +224,7 @@ page{
     </view>
 
     <view class="group-list" wx:if="{{ groups.length != 0 }}">
-      <view class="group-item" data-url="{{ '/pages/groupInfo?_id='+item._id }}" wx:for="{{ groups }}" bindtap="goto">
+      <view class="group-item" data-url="{{ '/pages/groupInfo?group_id='+item._id }}" wx:for="{{ groups }}" bindtap="goto">
         <text class="title">{{ item.name }}</text>
         <view>
           <text>{{ item.checkForm.length == 0?'无签到记录':item.checkForm.length + '次签到' }}</text>
@@ -264,6 +264,7 @@ page{
 
 <script>
   import wepy from 'wepy'
+  import request from '@/utils/request.js'
 
   export default class Index extends wepy.page {
     config = {
@@ -271,7 +272,7 @@ page{
     }
 
     data = {
-      user_id: '',
+      userId: '',
       joinView: {
         groupCode: undefined,
         showJoinView: false,
@@ -288,22 +289,19 @@ page{
     }
 
     methods = {
-      searchGroup(){
+      async searchGroup(){
         let self = this
         
-        // 调用云函数
-        wx.cloud.callFunction({
-          name: 'getGroupByCode',
-          data: {groupCode: self.joinView.groupCode}
-        }).then(res=>{
+        request.post('/searchGroupByCode', {code: self.joinView.groupCode})
+        .then(res=>{
           // 无记录
-          if(res.result.data.length == 0){
+          if(res.data.length == 0){
             self.joinView.message = '未找到'
             self.$apply()
           }
           else{
             wx.navigateTo({
-              url: '/pages/groupInfo?_id=' + res.result.data[0]._id
+              url: '/pages/groupInfo?group_id=' + res.data[0]._id
             })
           }
         })
@@ -351,41 +349,25 @@ page{
     }
 
     async onShow() {
-      let self = this, user_id = wx.getStorageSync('_id')
+      let self = this, userId = wx.getStorageSync('userId')
 
       const db = wx.cloud.database()
 
-      if(user_id){
-        self.user_id = user_id
+      if(userId){
+        self.userId = userId
       }
       else{
-        self.user_id = ''
+        self.userId = ''
       }
+
       let count = await db.collection('groups').where({}).count()
 
-      if(self.user_id && count.total!=0){
-        // 找到群组
-        wx.cloud.callFunction({
-          name: 'getAllGroups'
-        }).then(res=>{
-          let data = []
+      if(self.userId && count.total!=0){
 
-          for(let group of res.result.data){
-            if(group.owner == self.user_id){
-              group.belong = 1
-              data.push(group)
-            }
-            else{
-              for(let item of group.members){
-                if(item.user_id == self.user_id){
-                  data.push(group)
-                  break
-                }
-              }
-            }
-          }
-          data.sort((a, b)=>b.createTime - a.createTime)
-          self.groups = data
+        request.post('/getAllGroupsByUserId', {userId})
+        .then(res=>{
+          console.log(res)
+          self.groups = res.data
           self.loading = false
           self.$apply()
         })

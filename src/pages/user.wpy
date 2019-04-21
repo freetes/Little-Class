@@ -102,7 +102,7 @@ page{
     </button>
 
     <view class="btns">
-      <view class="btn-container" bindtap="goto('/pages/editUserInfo')">
+      <view class="btn-container" bindtap="goto('/pages/userInfo')">
         <image src="../static/icons/userinfo.png"></image>
         <text>个人信息</text>
       </view>
@@ -123,6 +123,7 @@ page{
 
 <script>
   import wepy from 'wepy'
+  import request from '@/utils/request.js'
 
   export default class Index extends wepy.page {
     config = {
@@ -134,19 +135,16 @@ page{
         nickName: '登录',
         avatarUrl: '../static/imgs/user.png'
       },
-      userInfo: {},
       createdDays: ''
     }
 
     computed = {
-      now () {
-        return +new Date()
-      }
     }
 
     methods = {
       login(e){
         let self = this
+
         // 微信信息，头像、昵称
         this.wxInfo = e.detail.userInfo
 
@@ -159,39 +157,25 @@ page{
         // 获取openid
         wx.cloud.callFunction({name: 'getOpenid'})
         .then(res=>{
-          // 通过 openid 获取用户信息
-          const db = wx.cloud.database()
-          
-          db.collection('users').where({
-            _openid: res.result.openid,
+          let openid = res.result.openid
+          let data = {
+            openid: openid,
+            wxInfo: e.detail.userInfo
+          }
+          wx.setStorage({
+            key: "openid",
+            data: openid
           })
-          .get({
-            success: function (res){
-              // new user
-              if(res.data.length == 0){
-                db.collection('users').add({
-                  data: {
-                    name: e.detail.userInfo.nickName,
-                    gender: e.detail.userInfo.gender,
-                    createAt: new Date(),
-                    level: 0,
-                  }
-                })
-                .then(res=>{
-                  console.log(res)
-                  wx.setStorage({
-                    key: "_id",
-                    data: res._id
-                  })
-                })
-              }
-              else{
-                wx.setStorage({
-                  key: "_id",
-                  data: res.data[0]._id
-                })
-              }
-            }
+
+          request.post('/login', data)
+          .then(res=>{
+            console.log(res)
+
+            // 保存用户唯一标识符 user._id
+            wx.setStorage({
+              key: "userId",
+              data: res.data._id
+            })
           })
         })
       },
@@ -211,10 +195,10 @@ page{
     }
 
     onShow() {
-      let self = this, wxInfo = wx.getStorageSync('wxInfo'), _id = wx.getStorageSync('_id')
+      let self = this, wxInfo = wx.getStorageSync('wxInfo'), openid = wx.getStorageSync('openid')
 
       if(wxInfo){
-        self.wxInfo = wxInfo
+        self.wxInfo.avatarUrl = wxInfo.avatarUrl
       }
       else{
         self.wxInfo = {
@@ -222,23 +206,17 @@ page{
           avatarUrl: '../static/imgs/user.png'
         }
       }
-      if(_id){
-        self._id = _id
-      }
-      
-      const db = wx.cloud.database()
 
-      db.collection('users').doc(_id)
-      .get({
-        success: function(res) {
-          delete res.data._openid
-          delete res.data._id
-          
-          self.userInfo = res.data
+      if(openid){
+        self.openid = openid
+
+        request.post('/login', {openid})
+        .then(res=>{
+          self.wxInfo.nickName = res.data.name
           self.createdDays = ((new Date()).getTime() - (new Date(res.data.createAt)).getTime())/1000/60/60/24
           self.$apply()
-        }
-      })
+        })
+      }
     }
   }
 </script>

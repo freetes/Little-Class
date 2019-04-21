@@ -6,15 +6,17 @@
 		"postcss": false,
 		"minified": false,
 		"newFeature": true,
+		"nodeModules": true,
 		"autoAudits": false,
-		"uglifyFileName": true,
-		"nodeModules": true
+		"uglifyFileName": true
 	},
 	"compileType": "miniprogram",
 	"appid": "wx46cf1f82f22ec635",
 	"projectname": "little-class",
 	"miniprogramRoot": "dist/",
 	"cloudfunctionRoot": "src/functions/",
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
 	"condition": {
 		"search": {
 			"current": -1,
