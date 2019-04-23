@@ -127,8 +127,8 @@ page{
 
 <script>
   import wepy from 'wepy'
-  import util from '../utils/util'
   import Nav from '../components/nav'
+  import util from '@/utils/util.js'
   import request from '@/utils/request.js'
 
   export default class Index extends wepy.page {
@@ -227,12 +227,10 @@ page{
     onLoad(option) {
       let self = this, userId = wx.getStorageSync('userId'), groupId = option.group_id
 
-      if(userId){
-        self.userId = userId
-      }
+      self.userId = userId
       self.groupId = groupId
 
-      request.post('/getCheckFormsByGroupId', {groupId})
+      request.post('/getCheckFormsByGroupId', {groupId, userId})
       .then(res=>{
         self.title += `第${res.data.length + 1}次签到`
         self.$apply()

@@ -229,34 +229,34 @@
         <!-- 成功签到 -->
         <view class="title">
           <text>签到成功</text>
-          <text class="assist">{{ check.success.length }}</text>
+          <text class="assist">{{ checkForm.success.length }}</text>
         </view>
         <view class="status">
-          <view wx:for="{{ check.success }}" wx:key="user_id">
-            <text>{{ item.user_info.name }}</text>
+          <view wx:for="{{ checkForm.success }}" wx:key="user_id">
+            <text>{{ item.name }}</text>
             <text>{{ '签到成功' }}</text>
           </view>
         </view>
 
         <!-- 签到失败。不在有效范围 -->
-        <view wx:if="{{ check.fail.length!=0 }}" class="title">
+        <view wx:if="{{ checkForm.fail.length!=0 }}" class="title">
           <text>签到失败，不在有效范围内</text>
-          <text class="assist">{{ check.fail.length }}</text>
+          <text class="assist">{{ checkForm.fail.length }}</text>
         </view>
         <view class="status">
-          <view wx:if="{{ check.fail.length!=0 }}" wx:for="{{ check.fail }}" wx:key="user_id">
-            <text>{{ item.user_info.name }}</text>
+          <view wx:if="{{ checkForm.fail.length!=0 }}" wx:for="{{ checkForm.fail }}" wx:key="user_id">
+            <text>{{ item.name }}</text>
             <text>{{ '距离太远' }}</text>
           </view>
         </view>
         <!-- 未签到 -->
         <view class="title">
           <text>未签到</text>
-          <text class="assist">{{ check.none.length }}</text>
+          <text class="assist">{{ checkForm.none.length }}</text>
         </view>
         <view class="status">
-          <view wx:for="{{ check.none }}" wx:key="user_id">
-            <text>{{ item.user_info.name }}</text>
+          <view wx:for="{{ checkForm.none }}" wx:key="user_id">
+            <text>{{ item.name }}</text>
             <text>{{ '未签到' }}</text>
           </view>
         </view>
@@ -269,6 +269,7 @@
   import wepy from 'wepy'
   import Nav from '../components/nav'
   import request from '@/utils/request.js'
+  import util from '@/utils/util.js'
 
   export default class Index extends wepy.page {
     config = {
@@ -305,8 +306,6 @@
         self.userId = userId
       }
 
-      console.log(option)
-
       self.groupId = option.group_id
       self.checkFormId = option.checkForm_id
     }
@@ -316,8 +315,34 @@
 
       request.post('/getCheckFormById', {checkFormId: self.checkFormId})
       .then(res=>{
+        res.data.checkForm.success = []
+        res.data.checkForm.fail = []
+        res.data.checkForm.none = []
+
+        for(let item of res.data.checkForm.members){
+          if(item.checkStatus == 0){
+            res.data.checkForm.none.push(item)
+          }
+          else if(item.checkStatus == 1){
+            res.data.checkForm.success.push(item)
+          }
+          else if(item.checkStatus == -1){
+            res.data.checkForm.fail.push(item)
+          }
+        }
+
+        // 判断能否签到
+        if(util.isAfter(res.data.checkForm.end_at)){
+          res.data.checkForm.statusWords = '进行中'
+          self.canCheck = true
+        }
+        else{
+          res.data.checkForm.statusWords = '已结束'
+          self.canCheck = false
+        }
+
         self.checkForm = res.data.checkForm
-        self.$apply()
+        self.$apply()            
       })
     }
   }

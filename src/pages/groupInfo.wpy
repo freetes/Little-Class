@@ -34,9 +34,10 @@ page{
       color: #8A8A8A;
 
       >.description{
+        width: 100%;
         display: -webkit-box;
         -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2;
+        -webkit-line-clamp: 4;
         overflow: hidden;
       }
     }
@@ -360,13 +361,13 @@ page{
     </view>
 
     <!-- 成员 信息 -->
-    <view class="members" wx:if="{{ userInfo._id == groupInfo.owner}}">
+    <view class="members" wx:if="{{ groupInfo.userLevel == 1 }}">
       <view class="title">
         <text>成员</text>
-        <text class="assist">{{ groupInfo.members.length==0?'空空无人':'共' + groupInfo.members.length + '人'}}</text>
+        <text class="assist">{{ members.length==0?'空空无人':'共' + members.length + '人'}}</text>
       </view>
-      <view wx:if="{{ groupInfo.members.length != 0 }}" wx:key="user_id">
-        <image mode="widthFix" wx:for="{{ groupInfo.members }}" wx:key="{{ groupInfo.members }}" src="{{ item.wxInfo.avatarUrl }}"></image>
+      <view wx:if="{{ members.length != 0 }}" wx:key="user_id">
+        <image mode="widthFix" wx:for="{{ members }}" wx:key="{{ members }}" src="{{ item.wxInfo.avatarUrl }}"></image>
       </view>
     </view>
 
@@ -393,7 +394,7 @@ page{
         </view>
         <view class="status">
           <view wx:for="{{ checkForm.success }}" wx:key="user_id">
-            <text>{{ item.user_info.name }}</text>
+            <text>{{ item.name }}</text>
             <text>{{ '签到成功' }}</text>
           </view>
         </view>
@@ -405,7 +406,7 @@ page{
         </view>
         <view class="status">
           <view wx:if="{{ checkForm.fail.length!=0 }}" wx:for="{{ checkForm.fail }}" wx:key="user_id">
-            <text>{{ item.user_info.name }}</text>
+            <text>{{ item.name }}</text>
             <text>{{ '距离太远' }}</text>
           </view>
         </view>
@@ -416,7 +417,7 @@ page{
         </view>
         <view class="status">
           <view wx:for="{{ checkForm.none }}" wx:key="user_id">
-            <text>{{ item.user_info.name }}</text>
+            <text>{{ item.name }}</text>
             <text>{{ '未签到' }}</text>
           </view>
         </view>
@@ -428,17 +429,17 @@ page{
       <view class="title">
         <text>历史签到</text>
       </view>
-      <view class="blank" wx:if="{{groupInfo.checkForms.length == 0}}">
+      <view class="blank" wx:if="{{checkForms.length == 0}}">
         <text>空</text>
       </view>
-      <view class="history" wx:for="{{groupInfo.checkForms}}" data-url="{{ '/pages/checkFormInfo?group_id=' + groupId + '&checkForm_id='+item._id }}" bindtap="gotoCheckFormInfoPage">
+      <view class="history" wx:for="{{checkForms}}" data-url="{{ '/pages/checkFormInfo?group_id=' + groupId + '&checkForm_id='+item._id }}" bindtap="gotoCheckFormInfoPage">
         <view class="title">
           <text>{{ item.title }}</text>
         </view>
         <view class="status">
           <text>{{ item.createAt }}</text>
-          <text wx:if="{{ userInfo._id != groupInfo.owner}}">{{item.userStatus == 1?'签到成功':item.userStatus == -1?'签到失败，不在规定范围':'未签到'}}</text>
-          <text wx:else>{{ item.successCount + '/' + groupInfo.members.length }}</text>
+          <text wx:if="{{ groupInfo.userLevel == 1 }}">{{ item.successCount + '/' + members.length }}</text>
+          <text wx:else>{{item.checkStatus == 1?'签到成功':item.checkStatus == -1?'签到失败，不在规定范围':'未签到'}}</text>
         </view>
       </view>
     </view>
@@ -447,12 +448,12 @@ page{
 
     <view class="btns">
       <!-- 普通用户 功能 -->
-      <button hover-class="none" wx:if="{{ !groupInfo.userLevel && groupInfo.status != -1 }}" bindtap="joinGroup">申请加群</button>
-      <text class="disable" disabled="{{ true }}" hover-class="none" wx:if="{{ !groupInfo.userLevel && groupInfo.status == -1 }}">加入已关闭，无法加入</text>
-      <button hover-class="none" wx:if="{{ groupInfo.userLevel == 0 && canCheck }}" bindtap="createCheck">立即签到</button>
+      <button hover-class="none" wx:if="{{ !groupInfo.userLevel && groupInfo.userLevel!=0 && groupInfo.status != -1 }}" bindtap="joinGroup">申请加群</button>
+      <text class="disable" disabled="{{ true }}" hover-class="none" wx:if="{{ !groupInfo.userLevel && groupInfo.userLevel!=0 && groupInfo.status == -1 }}">加入已关闭，无法加入</text>
+      <button hover-class="none" wx:if="{{ canCheck }}" bindtap="createCheck">立即签到</button>
       <button hover-class="none" wx:if="{{ groupInfo.userLevel == 0}}" bindtap="toogleExitModal">退出</button>
       <!-- 拥有者 功能 -->
-      <button hover-class="none" wx:if="{{ groupInfo.userLevel == 1 && !canCheck }}" bindtap="gotoCreateCheck">开启签到</button>
+      <button hover-class="none" wx:if="{{ groupInfo.userLevel == 1 && !canCheck && canCreateCheck }}" bindtap="gotoCreateCheck">开启签到</button>
       <button hover-class="none" wx:if="{{ groupInfo.userLevel == 1 }}" bindtap="gotoEditGroupInfo">修改信息</button>
     </view>
 
@@ -470,10 +471,12 @@ page{
   import wepy from 'wepy'
   import Nav from '../components/nav'
   import request from '@/utils/request.js'
+  import util from '@/utils/util.js'
 
   export default class Index extends wepy.page {
     config = {
-      navigationBarTitleText: '群组信息'
+      navigationBarTitleText: '群组信息',
+      enablePullDownRefresh: true
     }
 
     components = {
@@ -483,18 +486,68 @@ page{
     data = {
       groupId: '',
       groupInfo: {
-        checkForms: [],
-        members: []
       },
       userInfo: {
         userId: ''
       },
+      members: [],
+      checkForms: [],
       checkForm: undefined,
       canCheck: false,
+      canCreateCheck: true,
       showExitView: false
     }
 
     computed = {
+    }
+
+    watch = {
+      checkForms (newValue, oldValue) {
+        let self = this
+
+        if(newValue.length > 0){
+          request.post('/getCheckFormById', {checkFormId: newValue[0]._id})
+          .then(res=>{
+            res.data.checkForm.success = []
+            res.data.checkForm.fail = []
+            res.data.checkForm.none = []
+
+            for(let item of res.data.checkForm.members){
+              if(item.checkStatus == 0){
+                res.data.checkForm.none.push(item)
+              }
+              else if(item.checkStatus == 1){
+                res.data.checkForm.success.push(item)
+              }
+              else if(item.checkStatus == -1){
+                res.data.checkForm.fail.push(item)
+              }
+            }
+
+            // 判断能否签到
+            if(util.isAfter(res.data.checkForm.end_at)){
+              res.data.checkForm.statusWords = '进行中'
+              self.canCheck = true
+              self.canCreateCheck = false
+            }
+            else{
+              res.data.checkForm.statusWords = '已结束'
+              self.canCheck = false
+            }
+
+            // 判断是否已经签到
+            for(let item of res.data.checkForm.success){
+              if(self.userInfo.userId == item._id){
+                self.canCheck = false
+                break
+              }
+            }
+
+            self.checkForm = res.data.checkForm
+            self.$apply()            
+          })
+        }
+      }
     }
 
     methods = {
@@ -513,8 +566,10 @@ page{
         }
       },
       joinGroup(){
+        let self = this
+
         // 判断是否登录
-        if(this.userInfo.userId == ''){
+        if(self.userInfo.userId == ''){
           wx.showToast({
             title: '请先登录',
             icon: 'none',
@@ -549,6 +604,7 @@ page{
             duration: 1500,
             mask: true
           })
+          self.onShow()
         })
       },
       exitGroup(){
@@ -601,30 +657,30 @@ page{
             
             let data = {
               checkFormId: self.checkForm._id,
-              userId: self.userInfo._id,
+              userId: self.userInfo.userId,
               checkAt: Date.now(),
               position: res.latitude + '-' + res.longitude
             }
 
-            if(self.check.distance == -1){
+            if(self.checkForm.distance == -1){
               data.status = 1
             }
             else{
               let distance = getGreatCircleDistance(res.latitude, res.longitude, ownerPosition[0], ownerPosition[1])
-              data.status = distance <= self.check.distance?1:-1
+              data.status = distance <= self.checkForm.distance?1:-1
             }
 
             request.post('/createCheck', data)
-            .then(res=>{
-              self.canCheck = false
-              self.$apply()
-              
+            .then(res=>{              
               wx.showToast({
                 title: '签到成功！',
                 icon: 'success',
                 duration: 1500,
                 mask: true
               })
+              self.onShow()
+              self.canCheck = false
+
             })
             
             // 通过经纬度获取距离（单位：米）
@@ -655,6 +711,13 @@ page{
       }
     }
 
+    // 下拉刷新
+    onPullDownRefresh() {
+      this.onShow()
+      wx.stopPullDownRefresh()
+    }
+
+
     onLoad(option) {
       let self = this, userId = wx.getStorageSync('userId'), groupId = option.group_id
 
@@ -665,38 +728,33 @@ page{
       }
 
       self.groupId = groupId
-
-      // 获取群组信息
-      request.post('/getGroupInfoById', {groupId, userId})
-      .then(res=>{
-        self.groupInfo = res.data
-        self.$apply()
-      })
     }
 
     onShow(){
       let self = this
 
-      request.post('/getCheckFormsByGroupId', {groupId: self.groupId})
+      // 获取群组信息
+      request.post('/getGroupInfoById', {groupId: self.groupId, userId: self.userInfo.userId})
       .then(res=>{
-        self.groupInfo.checkForms = res.data
-
-        if(res.data.length > 0){
-          request.post('/getCheckFormById', {checkFormId: res.data[0]._id})
-          .then(res=>{
-            self.checkForm = res.data.checkForm
-            self.$apply()            
-          })
-        }
-        
+        self.groupInfo = res.data
         self.$apply()
       })
 
-      request.post('/getUsersByGroupId', {groupId: self.groupId})
-      .then(res=>{
-        self.groupInfo.members = res.data
-        self.$apply()
-      })
+      if(self.userInfo.userId){
+        // 获取签到表信息
+        request.post('/getCheckFormsByGroupId', {groupId: self.groupId, userId: self.userInfo.userId})
+        .then(res=>{
+          self.checkForms = res.data
+          self.$apply()
+        })
+
+        // 获取群员
+        request.post('/getUsersByGroupId', {groupId: self.groupId})
+        .then(res=>{
+          self.members = res.data
+          self.$apply()
+        })
+      }
     }
 
     onShareAppMessage() {

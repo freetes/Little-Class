@@ -228,7 +228,7 @@ page{
         <text class="title">{{ item.name }}</text>
         <view>
           <text>{{ item.formCount == 0?'无签到记录':item.formCount + '次签到' }}</text>
-          <text>{{ item.formCount == 0?'空空无人':'共' + item.formCount + '人' }}</text>
+          <text>{{ item.userCount == 0?'空空无人':'共' + item.userCount + '人' }}</text>
           <text wx:if="{{ item.userLevel == 1 }}">创建者</text>
         </view>
       </view>

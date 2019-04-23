@@ -212,7 +212,7 @@ page{
 <template>
   <view class="container">
 
-    <view class="time">
+    <view class="time" bindlongpress="gotoTimePage">
       <text class="date">{{ time }}</text>
       <text class="week">{{ ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][week] }}</text>
     </view>
@@ -265,6 +265,9 @@ page{
     }
 
     methods = {
+      gotoTimePage(){
+        wx.navigateTo({url: '/pages/grayClock'})
+      },
       goto(e){
         wx.navigateTo({url: e.currentTarget.dataset.url})
       },

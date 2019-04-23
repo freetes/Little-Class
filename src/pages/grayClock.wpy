@@ -1,0 +1,56 @@
+<style lang="less">
+page{
+}
+
+.container{
+
+}
+</style>
+<template>
+  <view class="container" bindlongpress="goBack">
+    <text>Welcome to this page<text>  
+    <text>undone<text>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import request from '@/utils/request.js'
+
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '灰度签到'
+    }
+
+    data = {
+      userId: '',
+      joinView: {
+        groupCode: undefined,
+        showJoinView: false,
+        message: ''
+      },
+      groups: [],
+      showBtns: false,
+      loading: true,
+      time: (new Date()).getDate(),
+      week: (new Date()).getDay()
+    }
+
+    methods = {
+      goBack(){
+        wx.switchTab({
+          url: '/pages/oneWord'
+        })
+      },
+    }
+
+    onLoad(){
+
+    }
+    onShareAppMessage() {
+    }
+
+    onShow() {
+    }
+  }
+</script>

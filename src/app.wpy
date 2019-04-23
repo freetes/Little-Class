@@ -47,6 +47,7 @@ export default class extends wepy.app {
       'pages/createCheckForm',
       'pages/oneWord',
       'pages/createOneWord',
+      'pages/grayClock',
       'pages/about',
     ],
     window: {
