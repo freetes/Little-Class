@@ -10,7 +10,8 @@ page{
   height: auto;
   min-height: 100%;
   background-color: white;
-  font-family: "-apple-system","BlinkMacSystemFont","PingFang SC",Helvetica,Tahoma,Arial,"Microsoft YaHei","微软雅黑","黑体","Heiti",sans-serif,"SimSun",serif;
+  webkit-overflow-scrolling: touch;
+  font-family: "-apple-system","PingFang SC",Helvetica,Tahoma,Arial,"Microsoft YaHei","微软雅黑","黑体","Heiti",sans-serif,"SimSun",serif;
 }
 .container {
   position: absolute;
@@ -42,8 +43,10 @@ export default class extends wepy.app {
       'pages/createGroup',
       'pages/editGroupInfo',
       'pages/groupInfo',
-      'pages/checkInfo',
-      'pages/createCheck',
+      'pages/checkFormInfo',
+      'pages/createCheckForm',
+      'pages/oneWord',
+      'pages/createOneWord',
       'pages/about',
     ],
     window: {
@@ -52,6 +55,11 @@ export default class extends wepy.app {
       navigationBarTitleText: '灰度签到',
       navigationBarTextStyle: 'white',
       navigationStyle: 'custom'
+    },
+    permission: {
+      'scope.userLocation': {
+        desc: '您的位置信息将用于定位'
+      }
     },
     tabBar: {
       color: '#8a8a8a',
@@ -63,6 +71,12 @@ export default class extends wepy.app {
           text: '首页',
           iconPath: './static/icons/index.png',
           selectedIconPath: './static/icons/index-s.png',
+        }, 
+        {
+          pagePath: 'pages/oneWord',
+          text: '一言',
+          iconPath: './static/icons/oneWord.png',
+          selectedIconPath: './static/icons/oneWord-s.png',
         }, 
         {
           pagePath: 'pages/user',

@@ -11,6 +11,9 @@ let request = {
       data: data,
     })
 
+    // 测试
+    console.log(res.data)
+
     return res.data
   },
   post: async (url, data)=>{
@@ -19,6 +22,9 @@ let request = {
       method: 'POST',
       data: data,
     })
+
+    // 测试
+    console.log(res.data)
 
     return res.data
   }

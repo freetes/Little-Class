@@ -217,12 +217,12 @@
     <!-- 签到表 信息 -->
     <view class="check-form">
       <view class="title">
-        <text>{{ check.title }}</text>
+        <text>{{ checkForm.title }}</text>
       </view>
       <view class="info">
         <view>
-          <text class="date">{{ check.createAt }} - {{ check.endTime }}</text>
-          <text class="status">{{ check.statusWords }}</text>
+          <text class="date">{{ checkForm.createAt }} - {{ checkForm.endTime }}</text>
+          <text class="status">{{ checkForm.statusWords }}</text>
         </view>
       </view>
       <view class="member">
@@ -268,6 +268,7 @@
 <script>
   import wepy from 'wepy'
   import Nav from '../components/nav'
+  import request from '@/utils/request.js'
 
   export default class Index extends wepy.page {
     config = {
@@ -283,10 +284,12 @@
         checkForm: [],
         members: []
       },
-      check: {},
-      user_id: '',
-      group_id: '',
-      check_id: '',
+      checkForm: {
+
+      },
+      userId: '',
+      groupId: '',
+      checkFormId: '',
     }
 
     computed = {
@@ -296,73 +299,23 @@
     }
 
     onLoad(option) {
-      let self = this, _id = wx.getStorageSync('_id')
+      let self = this, userId = wx.getStorageSync('userId')
 
-      if(_id){
-        self.user_id = _id
+      if(userId){
+        self.userId = userId
       }
 
-      self.group_id = option.group_id
-      self.check_id = option.check_id
+      self.groupId = option.group_id
+      self.checkFormId = option.checkForm_id
     }
 
     onShow(){
       let self = this
-      const db = wx.cloud.database(), _ = db.command
 
-      wx.cloud.callFunction({
-        name: 'getGroupById',
-        data: {group_id: self.group_id}
-      }).then(res=>{
-        let groupInfo = res.result.data
-        self.groupInfo = groupInfo
-
-        // 最近的签到信息
-      
-        db.collection('checks').doc(self.check_id).get()
-        .then(res=>{
-          let check = res.data
-          let createTime = new Date(check.createAt), endTime = new Date(check.endTime)
-
-          check.status = endTime<(new Date())?1:0
-          check.statusWords = check.status==1?'已结束':'进行中'
-          check.createAt = `${createTime.getFullYear()}/${createTime.getMonth()+1}/${createTime.getDate()} ${createTime.getHours()}:${createTime.getMinutes()}`
-          check.endTime = `${endTime.getFullYear()}/${endTime.getMonth()+1}/${endTime.getDate()} ${endTime.getHours()}:${endTime.getMinutes()}`
-
-          check.success = []
-          check.fail = []
-          check.none = []
-          for(let member of groupInfo.members){
-            member.status = 0  // 未签到
-            for(let checkedUser of check.members){
-              if(checkedUser.user_id == member.user_id){
-                member.status = checkedUser.status
-                break
-              }
-            }
-
-            if(member.status == 0){
-              check.none.push(member)
-            }
-            else if(member.status == 1){
-              check.success.push(member)
-            }
-            else if(member.status == -1){
-              check.fail.push(member)
-            }
-          }
-
-          self.check = check
-          self.$apply()
-
-          if(check.status == 0){
-            self.$apply()
-            self.onShow()
-          }
-          else{
-            self.$apply()
-          }
-        }) 
+      request.post('/getCheckFormById', {checkFormId: self.checkFormId})
+      .then(res=>{
+        self.checkForm = res.data.checkForm
+        self.$apply()
       })
     }
   }

@@ -230,7 +230,7 @@ page{
       </view>
       <view class="input-container">
         <text>群ID</text>
-        <input value="{{ groupInfo.groupCode }}" disabled="true"/>
+        <input value="{{ groupInfo.code }}" disabled="true"/>
       </view>
       <text>群简介</text>
       <textarea data-key="groupInfo.description" value="{{ groupInfo.description }}" bindblur="inputChange" auto-height placeholder="描述" />
@@ -290,6 +290,7 @@ page{
 <script>
   import wepy from 'wepy'
   import Nav from '../components/nav';
+  import request from '@/utils/request.js'
 
   export default class Index extends wepy.page {
     config = {
@@ -301,14 +302,41 @@ page{
     }
 
     data = {
+      groupId: '',
       groupInfo: {},
       message: '',
       joinGroupArray: ['任何人都可以加入', '不允许加入'],
-      _id: '',
       showDisbandView: false,
       showDeleteView: false,
       deleteIndex: ''
     }
+
+    watch = {
+      groupInfo (newValue, oldValue) {
+        let self = this
+
+        let data = {
+          groupId: self.groupId,
+          groupInfo: {
+            name: self.groupInfo.name,
+            description: self.groupInfo.description,
+            status: self.groupInfo.status || 0,
+            update_at: new Date()
+          }
+        }
+        
+        request.post('/setGroupInfo', data)
+        .then(res=>{
+          self.message = '更新成功！'
+          self.$apply()
+          setTimeout(() => {
+            self.message = ''
+            self.$apply()
+          }, 2000);
+        })
+      }
+    }
+
 
     methods = {
       deleteMember(){
@@ -358,23 +386,6 @@ page{
           this[keyArr[0]][keyArr[1]][keyArr[2]] = e.detail.value
         }
       },
-      updateUserInfo(){
-        let self = this
-        
-        const db = wx.cloud.database()
-        
-        db.collection('users').doc(self._id)
-        .update({
-          data: self.userInfo,
-          success: function(res) {
-            console.log(res)
-            // 更新成功
-            if(res.stats.updated == 1){
-
-            }
-          }
-        })
-      },
       disbandGroup(){
         let self = this
         
@@ -397,18 +408,15 @@ page{
     onLoad(option) {
       let self = this
 
-      self._id = option._id
-
+      self.groupId = option.group_id
     }
 
     onShow(){
       let self = this
       
-      wx.cloud.callFunction({
-        name: 'getGroupById',
-        data: {group_id: self._id}
-      }).then(res=>{
-        self.groupInfo = res.result.data
+      request.post('/getGroupInfoById', {groupId: self.groupId})
+      .then(res=>{
+        self.groupInfo = res.data
         self.$apply()
       })
     }

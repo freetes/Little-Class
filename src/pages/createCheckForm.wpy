@@ -96,7 +96,7 @@ page{
 
     <view class="header">
       <text>标题</text>
-      <input placeholder="签到名称" data-key="checkInfo.title" value="{{ checkInfo.title }}" bindchange="inputChange" />
+      <input placeholder="签到名称" data-key="title" value="{{ title }}" bindchange="inputChange" />
     </view>
 
     <form report-submit="{{ true }}" bindsubmit="createCheck">
@@ -129,6 +129,7 @@ page{
   import wepy from 'wepy'
   import util from '../utils/util'
   import Nav from '../components/nav'
+  import request from '@/utils/request.js'
 
   export default class Index extends wepy.page {
     config = {
@@ -144,28 +145,16 @@ page{
       durationIndex: 0,
       distanceArray: ['50米', '100米', '200米', '不限'],
       distanceIndex: 0,
-      checkInfo: {
-        title: util.getDate(new Date()),
-        checkCode: '',
-        position: '',
-        distance: '',
-        endTime: '',
-        creater: '',
-        createAt: '',
-        group_id: ''
-      },
+      title: util.getDate(new Date()),
       groupInfo: {
         name: '',
         description: '',
       },
-      user_id: '',
-      _id: ''
+      userId: '',
+      groupId: ''
     }
 
     computed = {
-      now () {
-        return new Date()
-      }
     }
 
     methods = {
@@ -185,94 +174,45 @@ page{
       },
       createCheck(e){
         let self = this
-        
-        const db = wx.cloud.database(), _ = db.command
 
-        /*
-        let form_id = e.detail.formId
-        wx.request({
-          url: `https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${'wx46cf1f82f22ec635'}&secret=${'25b71b70e9617f00097f657b08209927'}`,
-          success(res){
-            console.log(res)
-
-            wx.cloud.callFunction({
-              name: 'sendCustomerMessage',
-              data: {
-                form_id,
-                access_token: res.data.access_token
-              }
-            }).then(res=>{
-              console.log(res)
-            })
-            wx.request({
-              url: `https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=${res.data.access_token}`,
-              method: 'POST',
-              data: {
-                access_token: res.data.access_token,
-                touser: 'oApC45RC09Ka1kcCibuEEqTV0yAg',
-                template_id: '6HGFJCSpinhS2nuQKjygJtU5LGh1lXDmNArhfaah1Es',
-                // page: 'pages/groupInfo?_id=' + self._id,
-                form_id: form_id,
-                // data: {
-                //   keyword1: {value: '1'},
-                //   keyword2: {value: '叮！该签到啦～'},
-                //   keyword3: {value: '2'},
-                //   keyword3: {value: '3'}
-                // }
-              },
-              complete(res){
-                console.log(res)
-              }
-            })
-          }
-        })
-        */
         // 获取经纬度坐标
         wx.getLocation({
           type: 'wgs84',
-          success (res) {
+          success (position) {
             let now = new Date()
             let minutes = self.durationIndex == 0?3:
                 self.durationIndex == 1?5:
                 self.durationIndex == 2?10:
                 self.durationIndex == 3?60:0
             
-            self.checkInfo.distance = self.distanceIndex == 0?50:
-              self.distanceIndex == 1?100:
-              self.distanceIndex == 2?200:-1
-            self.checkInfo.createAt = new Date()
-            self.checkInfo.creater = self.user_id
-            self.checkInfo.group_id = self._id
-            self.checkInfo.members = []
-            self.checkInfo.checkCode = Math.ceil(Math.random()*100000)
-            self.checkInfo.endTime = new Date(self.checkInfo.createAt.getTime() + minutes*60*1000)
-            self.checkInfo.position = res.latitude + '-' + res.longitude
-            self.$apply()
+            let data = {
+              title: self.title,
+              position: position.latitude + '-' + position.longitude,
+              distance: self.distanceIndex == 0?50:
+                        self.distanceIndex == 1?100:
+                        self.distanceIndex == 2?200:-1,
+              groupId: self.groupId,
+              userId: self.userId,
+              code: Math.ceil(Math.random()*100000),
+              createAt: now,
+              endAt: new Date( now.getTime() + minutes*60*1000 )
+            }
 
-            db.collection('checks').add({
-              data: self.checkInfo,
-              success: function(res) {
-                db.collection('groups').doc(self._id)
-                .update({
-                  data: {
-                    checkForm: _.push(res._id)
-                  },
-                  success: function(res) {
-                    wx.showToast({
-                      title: '开启签到成功！',
-                      icon: 'success',
-                      duration: 1500
-                    })
-                    setTimeout(() => {
-                      wx.redirectTo({
-                        url: 'groupInfo?_id=' + self._id
-                      })
-                    }, 1500);
-                  }
+            request.post('/createCheckForm', data)
+            .then(res=>{
+              wx.showToast({
+                title: '开启签到成功！',
+                icon: 'success',
+                duration: 1500
+              })
+              setTimeout(() => {
+                wx.redirectTo({
+                  url: 'groupInfo?group_id=' + self.groupId
                 })
-              }
+              }, 1500);
             })
           },
+
           fail (res){
             wx.showToast({
               title: '获取地址失败，请前往小程序设置页面开启权限！',
@@ -285,25 +225,17 @@ page{
     }
 
     onLoad(option) {
-      let self = this, _id = wx.getStorageSync('_id')
+      let self = this, userId = wx.getStorageSync('userId'), groupId = option.group_id
 
-      if(_id){
-        self.user_id = _id
+      if(userId){
+        self.userId = userId
       }
-      self._id = option._id
-      
-      const db = wx.cloud.database()
+      self.groupId = groupId
 
-      db.collection('groups').doc(option._id)
-      .get({
-        success: function(res) {
-          self.groupInfo = res.data
-          self.checkInfo.title += ` 第${res.data.checkForm?res.data.checkForm.length + 1:1}次签到`
-          self.$apply()
-        },
-        fail: function(res){
-          console.log(res)
-        }
+      request.post('/getCheckFormsByGroupId', {groupId})
+      .then(res=>{
+        self.title += `第${res.data.length + 1}次签到`
+        self.$apply()
       })
     }
   }

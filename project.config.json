@@ -34,7 +34,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 4,
+			"current": 8,
 			"list": [
 				{
 					"id": -1,
@@ -83,6 +83,12 @@
 					"name": "checkInfo",
 					"pathName": "pages/checkInfo",
 					"query": "group_id=XBiQ6JT75u22lu4H&check_id=XBi5QMDR1TiN7ckr"
+				},
+				{
+					"id": -1,
+					"name": "oneWord",
+					"pathName": "pages/oneWord",
+					"scene": null
 				}
 			]
 		}

@@ -137,6 +137,7 @@
 <script>
   import wepy from 'wepy'
   import Nav from '../components/nav'
+  import request from '@/utils/request.js'
 
   export default class Index extends wepy.page {
     config = {

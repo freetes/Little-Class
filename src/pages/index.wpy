@@ -237,7 +237,7 @@ page{
     <!-- 为空时 -->
     <view class="blank" wx:if="{{ !loading && groups.length == 0 }}">
       <text class="logo">空</text>
-      <block wx:if="{{ user_id=='' }}">
+      <block wx:if="{{ !userId }}">
         <text>您还没有登录</text>
         <text>请先登录</text>
       </block>
@@ -348,34 +348,24 @@ page{
     onShareAppMessage() {
     }
 
-    async onShow() {
+    onShow() {
       let self = this, userId = wx.getStorageSync('userId')
 
-      const db = wx.cloud.database()
-
+      // 判断是否登录
       if(userId){
         self.userId = userId
-      }
-      else{
-        self.userId = ''
-      }
-
-      let count = await db.collection('groups').where({}).count()
-
-      if(self.userId && count.total!=0){
 
         request.post('/getAllGroupsByUserId', {userId})
         .then(res=>{
-          console.log(res)
           self.groups = res.data
           self.loading = false
           self.$apply()
         })
       }
       else{
+        self.userId = ''
         self.groups = []
         self.loading = false
-        self.$apply()
       }
     }
     onHide(){
