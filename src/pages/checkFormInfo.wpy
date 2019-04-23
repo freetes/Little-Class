@@ -305,6 +305,8 @@
         self.userId = userId
       }
 
+      console.log(option)
+
       self.groupId = option.group_id
       self.checkFormId = option.checkForm_id
     }

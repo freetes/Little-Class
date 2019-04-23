@@ -224,12 +224,12 @@ page{
     </view>
 
     <view class="group-list" wx:if="{{ groups.length != 0 }}">
-      <view class="group-item" data-url="{{ '/pages/groupInfo?group_id='+item._id }}" wx:for="{{ groups }}" bindtap="goto">
+      <view class="group-item" data-url="{{ '/pages/groupInfo?group_id='+item._id }}" wx:for="{{ groups }}" wx:key="group" bindtap="goto">
         <text class="title">{{ item.name }}</text>
         <view>
-          <text>{{ item.checkForm.length == 0?'无签到记录':item.checkForm.length + '次签到' }}</text>
-          <text>{{ item.members.length == 0?'空空无人':'共' + item.members.length + '人' }}</text>
-          <text wx:if="{{ item.belong == 1 }}">创建者</text>
+          <text>{{ item.formCount == 0?'无签到记录':item.formCount + '次签到' }}</text>
+          <text>{{ item.formCount == 0?'空空无人':'共' + item.formCount + '人' }}</text>
+          <text wx:if="{{ item.userLevel == 1 }}">创建者</text>
         </view>
       </view>
     </view>

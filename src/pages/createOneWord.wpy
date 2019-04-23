@@ -26,14 +26,14 @@ page{
       width: 100%;
       padding: 10px 0;
       border-bottom: 1px solid light#8A8A8A;
-      font-size: 18px;
+      font-size: 16px;
       font-weight: bold;
       color: black;
     }
     >textarea{
       width: 100%;
       padding: 10px 0;
-      min-height: 100px;
+      height: 300px;
       font-size: 16px;
       color: black;
     }
@@ -96,10 +96,9 @@ page{
     <nav></nav>
 
     <view class="header">
-      <text>基本信息</text>
-      <input placeholder="标题" data-key="oneWordInfo.title" value="{{ oneWordInfo.title }}" bindchange="inputChange" />
-      <input placeholder="副标题" data-key="oneWordInfo.subtitle" value="{{ oneWordInfo.subtitle }}" bindchange="inputChange" />
-      <textarea data-key="oneWordInfo.content" value="{{ oneWordInfo.content }}" bindinput="inputChange" auto-height placeholder="内容" />
+      <input placeholder="标题（选填）" data-key="oneWordInfo.title" value="{{ oneWordInfo.title }}" bindchange="inputChange" />
+      <input placeholder="副标题（选填）" data-key="oneWordInfo.subtitle" value="{{ oneWordInfo.subtitle }}" bindchange="inputChange" />
+      <textarea data-key="oneWordInfo.content" value="{{ oneWordInfo.content }}" bindinput="inputChange" placeholder="内容" />
     </view>
 
     <button bindtap="createOneWord">确定</button>
@@ -162,13 +161,13 @@ page{
         request.post('/createOneWord', data)
         .then(res=>{
           wx.showToast({
-            title: '创建成功！',
+            title: '新建成功！',
             icon: 'success',
             duration: 1500
           })
           setTimeout(() => {
-            wx.redirectTo({
-              url: 'oneWord'
+            wx.switchTab({
+              url: '/pages/oneWord'
             })
           }, 1500);
         })

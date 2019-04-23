@@ -76,6 +76,11 @@
 
     <view class="update-historys">
       <text>UPDATE LOGS：</text>
+      <view>
+        <text class="title">v1.0.1 in 2019.4.23</text>
+        <text class="changes">放弃微信云开发，改用服务器；</text>
+        <text class="changes">新增「一言」，欢迎闲聊哟～</text>
+      </view>
       <!-- <view>
         <text class="title">v1.0.1 in 2018-12-20</text>
         <text class="changes">修改‘登录’；</text>

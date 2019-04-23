@@ -259,8 +259,8 @@ page{
       </view>
       <view class="member-container" wx:if="{{ groupInfo.members.length!=0 }}" wx:key="user_id">
         <view class="userInfo" wx:for="{{ groupInfo.members }}" bindlongpress="showDeleteView" data-index="{{ index }}">
-          <image mode="widthFix" src="{{ item.user_info.avatarUrl }}"></image>
-          <text>{{ item.user_info.name }}</text>
+          <image mode="widthFix" src="{{ item.wxInfo.avatarUrl }}"></image>
+          <text>{{ item.name }}</text>
         </view>
       </view>
     </view>
@@ -417,6 +417,12 @@ page{
       request.post('/getGroupInfoById', {groupId: self.groupId})
       .then(res=>{
         self.groupInfo = res.data
+        self.$apply()
+      })
+
+      request.post('/getUsersByGroupId', {groupId: self.groupId})
+      .then(res=>{
+        self.groupInfo.members = res.data
         self.$apply()
       })
     }

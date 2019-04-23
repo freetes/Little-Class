@@ -129,7 +129,7 @@ page{
       
       >.content{
         font-size: 16px;
-        color: black;
+        color: #555;
         font-weight: bold;
         padding: 15px 10px;
       }
@@ -222,7 +222,7 @@ page{
     </view>
 
     <view class="oneWord-list" wx:if="{{ oneWords.length != 0 }}">
-      <view class="oneWord-item" wx:for="{{ oneWords }}">
+      <view class="oneWord-item" wx:for="{{ oneWords }}" wx:key="oneWord">
         <text class="content">{{ item.content }}</text>
       </view>
     </view>
@@ -248,7 +248,8 @@ page{
 
   export default class Index extends wepy.page {
     config = {
-      navigationBarTitleText: '灰度签到'
+      navigationBarTitleText: '灰度签到',
+      enablePullDownRefresh: true
     }
 
     data = {
@@ -289,6 +290,13 @@ page{
     onLoad(){
 
     }
+
+    // 下拉刷新
+    onPullDownRefresh() {
+      this.onShow()
+      wx.stopPullDownRefresh()
+    }
+
     onShareAppMessage() {
     }
 
