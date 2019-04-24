@@ -1,6 +1,5 @@
 <style lang="less">
 page{
-  background-color: #ddd;
 }
 .container{
   padding-top: 0;
@@ -349,8 +348,6 @@ page{
 </style>
 <template>
   <view class="container">
-    <nav></nav>
-
     <!-- 群组 信息 -->
     <view class="groupInfo">
       <text class="title">{{ groupInfo.name }}</text>
@@ -469,7 +466,6 @@ page{
 
 <script>
   import wepy from 'wepy'
-  import Nav from '../components/nav'
   import request from '@/utils/request.js'
   import util from '@/utils/util.js'
 
@@ -477,10 +473,6 @@ page{
     config = {
       navigationBarTitleText: '群组信息',
       enablePullDownRefresh: true
-    }
-
-    components = {
-      nav: Nav
     }
 
     data = {

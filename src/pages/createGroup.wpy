@@ -1,6 +1,6 @@
 <style lang="less">
 page{
-  background-color: white;
+  background-color: #fafafa;
 }
 
 .container{
@@ -93,8 +93,6 @@ page{
 </style>
 <template>
   <view class="container">
-    <nav></nav>
-
     <view class="header">
       <text>基本信息</text>
       <input placeholder="群名称" data-key="groupInfo.name" value="{{ groupInfo.name }}" bindchange="inputChange" />
@@ -107,16 +105,12 @@ page{
 
 <script>
   import wepy from 'wepy'
-  import Nav from '../components/nav'
   import request from '@/utils/request.js'
 
   export default class Index extends wepy.page {
     config = {
-      navigationBarTitleText: '创建群组'
-    }
-
-    components = {
-      nav: Nav
+      navigationBarTitleText: '创建群组',
+      navigationBarBackgroundColor: '#fafafa'
     }
 
     data = {

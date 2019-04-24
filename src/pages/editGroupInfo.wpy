@@ -1,6 +1,6 @@
 <style lang="less">
 page{
-  background-color: white;
+  background-color: #fafafa;
 }
 
 .container{
@@ -220,8 +220,6 @@ page{
 </style>
 <template>
   <view class="container">
-    <nav></nav>
-
     <view class="header">
       <text>基本信息</text>
       <view class="input-container">
@@ -289,16 +287,12 @@ page{
 
 <script>
   import wepy from 'wepy'
-  import Nav from '../components/nav';
   import request from '@/utils/request.js'
 
   export default class Index extends wepy.page {
     config = {
-      navigationBarTitleText: '群组信息'
-    }
-
-    components = {
-      nav: Nav
+      navigationBarTitleText: '群组信息',
+      navigationBarBackgroundColor: '#fafafa'
     }
 
     data = {

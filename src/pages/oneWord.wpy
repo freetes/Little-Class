@@ -3,7 +3,6 @@ page{
 }
 
 .container{
-  background-image: linear-gradient(to bottom, white, #ddd);
 
   .buttons{
     position: fixed;
@@ -197,7 +196,6 @@ page{
   }
 
   .time{
-    margin-top: -40px;
     padding:0 5%;
     color: #8A8A8A;
     font-weight: lighter;
@@ -248,7 +246,7 @@ page{
 
   export default class Index extends wepy.page {
     config = {
-      navigationBarTitleText: '灰度签到',
+      navigationBarTitleText: '一言',
       enablePullDownRefresh: true
     }
 

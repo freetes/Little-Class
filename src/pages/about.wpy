@@ -6,7 +6,6 @@
   align-items: flex-start;
   width: 100%;
   padding: 10px 5%;
-  padding-top: 60px;
   font-size: 14px;
   color: black;
 
@@ -68,7 +67,6 @@
 </style>
 <template>
   <view class="container">
-    <nav></nav>
     
     <view class="topics">
       <!-- <title class="title">什么是灰度大学？</title> -->
@@ -76,6 +74,11 @@
 
     <view class="update-historys">
       <text>UPDATE LOGS：</text>
+      <view>
+        <text class="title">Changes in 2019.4.24</text>
+        <text class="changes">放弃「全屏效果」；</text>
+        <text class="changes">放弃背景色渐变，改用微信灰调；</text>
+      </view>
       <view>
         <text class="title">v1.0.1 in 2019.4.23</text>
         <text class="changes">放弃微信云开发，改用服务器；</text>
@@ -141,7 +144,6 @@
 
 <script>
   import wepy from 'wepy'
-  import Nav from '../components/nav'
   import request from '@/utils/request.js'
 
   export default class Index extends wepy.page {
@@ -149,10 +151,6 @@
       navigationBarTitleText: '关于'
     }
     
-    components = {
-      nav: Nav
-    }
-
     data = {
 
     }

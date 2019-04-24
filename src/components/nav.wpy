@@ -2,7 +2,7 @@
 .navigation{
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   padding: 0 10px;
 
@@ -16,13 +16,14 @@
   >image{
     width: 40px;
     height: 40px;
+    margin-right: 20px;
   }
 }
 </style>
 <template>
   <view class="navigation">
-    <image src="../static/icons/back.svg" bindtap="goBack"></image>
-    <text></text>
+    <image wx:if="{{ showBack=='true' }}" src="../static/icons/back.svg" bindtap="goBack"></image>
+    <text>{{ title }}</text>
   </view>
 </template>
 <script>
@@ -30,7 +31,11 @@
 
   export default class BackHeader extends wepy.component {
     props = {
-      title: String
+      title: String,
+      showBack: {
+        type: String,
+        default: 'true'
+      },
     }
 
     methods = {
@@ -39,6 +44,11 @@
           delta: 1
         })
       }
+    }
+
+    onLoad(){
+      console.log(this.title)
+      console.log(this.showBack)
     }
   }
 </script>

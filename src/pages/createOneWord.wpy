@@ -1,6 +1,6 @@
 <style lang="less">
 page{
-  background-color: white;
+  background-color: #fafafa;
 }
 
 .container{
@@ -93,8 +93,6 @@ page{
 </style>
 <template>
   <view class="container">
-    <nav></nav>
-
     <view class="header">
       <input placeholder="标题（选填）" data-key="oneWordInfo.title" value="{{ oneWordInfo.title }}" bindchange="inputChange" />
       <input placeholder="副标题（选填）" data-key="oneWordInfo.subtitle" value="{{ oneWordInfo.subtitle }}" bindchange="inputChange" />
@@ -107,16 +105,12 @@ page{
 
 <script>
   import wepy from 'wepy'
-  import Nav from '../components/nav'
   import request from '@/utils/request.js'
 
   export default class CreateOneWord extends wepy.page {
     config = {
-      navigationBarTitleText: '创建一言'
-    }
-
-    components = {
-      nav: Nav
+      navigationBarTitleText: '创建一言',
+      navigationBarBackgroundColor: '#fafafa'
     }
 
     data = {

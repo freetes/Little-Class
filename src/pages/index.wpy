@@ -3,7 +3,6 @@ page{
 }
 
 .container{
-  background-image: linear-gradient(to bottom, white, #ddd);
 
   .buttons{
     position: fixed;
@@ -211,12 +210,6 @@ page{
 </style>
 <template>
   <view class="container">
-
-    <view class="time">
-      <text class="date">{{ time }}</text>
-      <text class="week">{{ ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][week] }}</text>
-    </view>
-
     <view class="buttons">
       <image wx:if="{{ showBtns }}" src="../static/icons/search_group.png" bindtap="showJoinView"></image>
       <image wx:if="{{ showBtns }}" src="../static/icons/create_group.png" bindtap="gotoCreateGroup"></image>
@@ -268,7 +261,8 @@ page{
 
   export default class Index extends wepy.page {
     config = {
-      navigationBarTitleText: '灰度签到'
+      navigationBarTitleText: '我的群组',
+      enablePullDownRefresh: true
     }
 
     data = {
@@ -281,8 +275,6 @@ page{
       groups: [],
       showBtns: false,
       loading: true,
-      time: (new Date()).getDate(),
-      week: (new Date()).getDay()
     }
 
     computed = {
@@ -345,6 +337,13 @@ page{
     onLoad(){
 
     }
+
+    // 下拉刷新
+    onPullDownRefresh() {
+      this.onShow()
+      wx.stopPullDownRefresh()
+    }
+    
     onShareAppMessage() {
     }
 

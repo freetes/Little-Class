@@ -1,6 +1,6 @@
 <style lang="less">
 page{
-  background-color: white;
+  background-color: #fafafa;
 }
 
 .container{
@@ -92,8 +92,6 @@ page{
 </style>
 <template>
   <view report-submit="{{true}}" bindsubmit="createCheck" class="container">
-    <nav></nav>
-
     <view class="header">
       <text>标题</text>
       <input placeholder="签到名称" data-key="title" value="{{ title }}" bindchange="inputChange" />
@@ -127,17 +125,13 @@ page{
 
 <script>
   import wepy from 'wepy'
-  import Nav from '../components/nav'
   import util from '@/utils/util.js'
   import request from '@/utils/request.js'
 
   export default class Index extends wepy.page {
     config = {
-      navigationBarTitleText: '创建签到'
-    }
-
-    components = {
-      nav: Nav
+      navigationBarTitleText: '创建签到',
+      navigationBarBackgroundColor: '#fafafa'
     }
 
     data = {
