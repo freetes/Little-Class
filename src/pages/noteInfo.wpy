@@ -79,13 +79,14 @@ page{
     align-items: flex-start;
     margin: 0 7%;
     width: 86%;
+    padding-bottom: 100px;
 
     >text{
       font-weight: bold;
       font-size: 16px;
     }
 
-    >view.comment{
+    >.comment{
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
@@ -93,6 +94,28 @@ page{
       margin: 10px 0;
       width: 100%;
       color: black;
+
+      >.user-info{
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+
+        >image{
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          margin-right: 10px;
+        }
+        >.user-name{
+          font-size: 16px;
+          margin-right: 10px;
+        }
+        >.user-feeling{
+          font-size: 14px;
+        }
+      }
     }
   }
   >.create-comment-container{
@@ -106,21 +129,40 @@ page{
     display: flex;
     flex-direction: row;
     justify-content: center;
-    align-items: center;
-    line-height: 20px;
+    align-items: flex-end;
+    z-index: 100;
 
     >textarea{
-      min-height: 24px;
-      max-height: 40px;
-      line-height: 16px;
+      width: 100%;
+      min-height: 30px;
+      max-height: 80px;
       font-size: 16px;
-      padding: 2px;
+      padding: 0 5px;
       box-sizing: border-box;
       border: 1px solid gray;
     }
-    >image{
+    >view{
+      width: 80px;
       height: 30px;
-      width: 30px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      align-items: center;
+
+      >picker{
+        width: 40px;
+        height: 30px;
+      }
+      .feeling-words{
+        width: 40px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+      }
+      >image{
+        width: 30px;
+        height: 30px;
+      }
     }
   }
   >.tagsInput{
@@ -159,7 +201,7 @@ page{
   <view class="container">
     <block wx:if="{{ !editNote }}">
       <view class="header">
-        <image wx:if="{{ noteInfo.filePath }}" class="note-cover" src="{{ noteInfo.filePath }}" mode="aspectFill" lazy-load></image>
+        <image bindtap="showNoteCover" wx:if="{{ noteInfo.filePath }}" class="note-cover" src="{{ noteInfo.filePath }}" mode="aspectFill" lazy-load></image>
         <text class="note-title">{{ noteInfo.title }}</text>
         <text class="note-info">{{ noteInfo.create_at }}  字数：{{ noteInfo.content.length }}  {{ noteInfo.visible?'公共':'私有' }}</text>
         <text class="note-content">{{ noteInfo.content }}</text>
@@ -172,23 +214,29 @@ page{
 
       <view class="comments-container">
         <text>comments:</text>
-        <view class="comment" wx:for="{{ comments }}">
-          {{ item.feeling }} {{ item.content }}
+        <view class="comment" wx:for="{{ comments }}" bindlongpress="deleteComment('{{item.user_id}}', '{{item._id}}')">
+          <view class="user-info">
+            <image src="{{ item.avatarUrl }}"></image>
+            <text class="user-name">{{ item.userName }}</text>
+            <text class="feeling">{{ item.feeling }}</text>
+          </view>
+          <text>{{ item.content }}</text>
         </view>
       </view>
 
       <!-- 后期优化细节 -->
       <!-- 新增评论输入框 -->
-      <view class="create-comment-container" style="bottom: {{keyboardHeight}}px">
-        <textarea bindfocus="keyboard" data-key="comment.content" bindinput="inputChange" fixed show-confirm-bar="{{ false }}" adjust-position="{{ false }}"></textarea>
-        <picker bindchange="feelingChange" value="{{comment.feelingIndex}}" range="{{feelings}}">
-          <view class="picker">
-            {{feelings[comment.feelingIndex]}}
-          </view>
-        </picker>
-        <image src="../static/icons/send.png" bindtap="createComment"></image>
+      <view class="create-comment-container" catchtap="" style="bottom: {{keyboardHeight}}px">
+        <textarea bindblur="hideKeyboard" maxlength="{{ 100 }}" auto-height="{{ true }}" bindfocus="keyboard" data-key="comment.content" bindinput="inputChange" fixed show-confirm-bar="{{ false }}" adjust-position="{{ false }}"></textarea>
+        <view>
+          <picker bindchange="feelingChange" value="{{comment.feelingIndex}}" range="{{feelings}}">
+            <view class="feeling-words">
+              {{feelings[comment.feelingIndex]}}
+            </view>
+          </picker>
+          <image src="../static/icons/send.png" bindtap="createComment"></image>
+        </view>
       </view>
-
     </block>
 
     <!-- 编辑笔记 -->
@@ -250,6 +298,24 @@ page{
     }
 
     methods = {
+      deleteComment(userId, commentId){
+        let self = this
+
+        if(self.userId == userId){
+          wx.showModal({
+            title: '提示',
+            content: '确定删除评论？',
+            success(res) {
+              if (res.confirm) {
+                request.post('/deleteComment', {commentId})
+                .then(res=>{
+                  self.onShow()
+                })
+              } 
+            }
+          })
+        }
+      },
       createComment(){
         let self = this
 
@@ -270,12 +336,22 @@ page{
 
         request.post('/createComment', data)
         .then(res=>{
-
+          wx.showToast({
+            title: '评论成功～',
+            icon: 'success',
+            duration: 1500
+          })
+          self.comment.content = ''
+          self.$apply()
+          self.onShow()
         })
       },
       feelingChange(e){
         this.comment.feelingIndex = e.detail.value
         this.comment.feeling = this.feelings[e.detail.value]
+      },
+      hideKeyboard(){
+        this.keyboardHeight = 0
       },
       keyboard(e){
         console.log(e)
@@ -366,6 +442,11 @@ page{
           }
         })
       },
+      showNoteCover(){
+        wx.previewImage({
+          urls: [this.noteInfo.filePath]
+        })
+      },
       inputChange(e){
         let self = this
         const keyArr = e.currentTarget.dataset.key.split('.')
@@ -392,7 +473,7 @@ page{
 
     }
 
-    onShow() {
+    onShow(){
       let self = this, userId = wx.getStorageSync('userId')
 
       if(userId){

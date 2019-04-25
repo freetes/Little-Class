@@ -36,62 +36,50 @@ page{
     }
   }
 
-  .note-list{
+  swiper{
+    display: flex;
+    width: 90%;
+    height: 500px;
+    margin: 20px 5%;
+    box-sizing: border-box;
+    box-shadow: 0 5px 5px #8A8A8A;
+    border-radius: 5px;
+  }
+
+  swiper-item{
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
     width: 100%;
-    padding: 20px 5%;
-    animation: showIn 0.5s ease;
+    height: 100%;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    background-color: white;
 
-    @keyframes showIn {
-      from {
-        margin-top: 40px;
-        opacity: 0;
-      }
-      to {
-        margin-top: 0px;
-        opacity: 1;
-      }
-    }
-
-    >.note-item{
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: flex-start;
+    >.cover{
       width: 100%;
-      height: 300px;
-      border: none;
-      border-radius: 5px;
-      margin-bottom: 20px;
-      background-color: white;
-      box-shadow: 0 5px 5px #8A8A8A;
-
-      >.cover{
-        width: 100%;
-        height: 100px;
-        border-top-left-radius: 5px;
-        border-top-right-radius: 5px;
-      }
-      
-      >.content{
-        font-size: 16px;
-        color: #555;
-        font-weight: bold;
-        padding: 15px 10px;
-      }
-      >view{
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-        padding: 10px 10px;
-        font-size: 12px;
-        color: #8A8A8A;
-      }
+      height: 100px;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+    }
+    
+    >.content{
+      font-size: 16px;
+      color: #555;
+      font-weight: bold;
+      padding: 15px 10px;
+    }
+    >view{
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      padding: 10px 10px;
+      font-size: 12px;
+      color: #8A8A8A;
     }
   }
 
@@ -145,36 +133,63 @@ page{
     }
   }
 
-  .time{
-    padding:0 5%;
-    color: #8A8A8A;
-    font-weight: lighter;
+  >.header{
+    width: 90%;
+    margin: 0 5%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 
-    >text.date{
-      font-size: 40px;
-      letter-spacing: 5px;
+    >.time-container{
+      color: #8A8A8A;
+      font-weight: lighter;
+
+      >text.date{
+        font-size: 40px;
+        letter-spacing: 5px;
+      }
     }
   }
+  
 }
 </style>
 <template>
   <view class="container">
 
-    <view class="time" bindlongpress="gotoTimePage">
-      <text class="date">{{ time }}</text>
-      <text class="week">{{ ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][week] }}</text>
+    <view class="header">
+      <view class="time-container" bindlongpress="gotoTimePage">
+        <text class="date">{{ time }}</text>
+        <text class="week">{{ ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][week] }}</text>
+      </view>
+      <view class="tabs">
+        <text wx:if="{{ showMyNotes }}" bindtap="toggleNotes">我的</text>
+        <text wx:else bindtap="toggleNotes">全部</text>
+      </view>
     </view>
 
     <view class="buttons">
       <image data-url="/pages/createNote" src="../static/icons/create_group.png" bindtap="goto"></image>
     </view>
 
-    <view class="note-list" wx:if="{{ notes.length != 0 }}">
-      <view class="note-item" data-url="{{ '/pages/noteInfo?note_id='+item._id }}" wx:for="{{ notes }}" wx:key="note" bindtap="goto">
-        <image wx:if="{{ item.filePath }}" class="cover" src="{{ 'https://api.grayclass.site:2333' + item.filePath }}" mode="aspectFill" lazy-load></image>
-        <text class="content">{{ item.content }}</text>
-      </view>
-    </view>
+    <swiper wx:if="{{ showMyNotes }}" class="notes-container" style="height: {{ swiperHeight + 'px'}}" circular="{{ true }}">
+      <block wx:for="{{ myNotes }}" wx:key="note">
+        <swiper-item class="note-item" data-url="{{ '/pages/noteInfo?note_id='+item._id }}" bindtap="goto">
+          <image wx:if="{{ item.filePath }}" class="cover" src="{{ 'https://api.grayclass.site:2333' + item.filePath }}" mode="aspectFill" lazy-load="{{ true }}"></image>
+          <text class="content">{{ item.content }}</text>
+        </swiper-item>
+      </block>
+    </swiper>
+
+    <swiper wx:else class="notes-container" style="height: {{ swiperHeight + 'px'}}" circular="{{ true }}">
+      <block wx:for="{{ allNotes }}" wx:key="note">
+        <swiper-item class="note-item" data-url="{{ '/pages/noteInfo?note_id='+item._id }}" bindtap="goto">
+          <image wx:if="{{ item.filePath }}" class="cover" src="{{ 'https://api.grayclass.site:2333' + item.filePath }}" mode="aspectFill" lazy-load="{{ true }}"></image>
+          <text class="content">{{ item.content }}</text>
+        </swiper-item>
+      </block>
+    </swiper>
+
 
     <!-- 为空时 -->
     <view class="blank" wx:if="{{ !loading && groups.length == 0 }}">
@@ -203,9 +218,12 @@ page{
 
     data = {
       userId: '',
-      notes: [],
+      myNotes: [],
+      allNotes: [],
       loading: true,
       showInput: false,
+      swiperHeight: 600,
+      showMyNotes: true,
       time: (new Date()).getDate(),
       week: (new Date()).getDay()
     }
@@ -214,6 +232,9 @@ page{
     }
 
     methods = {
+      toggleNotes(){
+        this.showMyNotes = !this.showMyNotes
+      },
       gotoTimePage(){
         wx.navigateTo({url: '/pages/grayClock'})
       },
@@ -259,19 +280,27 @@ page{
       if(userId){
         self.userId = userId
 
+        request.post('/getNotesByUserId', {userId})
+        .then(res=>{
+          self.myNotes = res.data
+
+          self.$apply()
+        })
       }
       else{
-        self.loading = false
       }
 
-      request.post('/getNotesByUserId', {userId})
+      request.post('/getAllNotes', {})
       .then(res=>{
-        self.notes = res.data
+        self.allNotes = res.data
 
         self.$apply()
       })
-    }
-    onHide(){
+
+      const res = wx.getSystemInfoSync()
+      self.swiperHeight = res.windowHeight - 100
+      
+      self.loading = false
     }
   }
 </script>

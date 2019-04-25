@@ -42,6 +42,18 @@ page{
     }
   }
 
+  >.modules-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 92%;
+    margin: 5px 4%;
+    padding: 10px 10px;
+    background-color: white;
+    border-radius: 10px;
+  }
+
   >.members{
     display: flex;
     flex-direction: column;
@@ -354,6 +366,22 @@ page{
       <view>
         <text>ID：{{ groupInfo.code }}</text>
         <text class="description">{{ groupInfo.description }}</text>
+      </view>
+    </view>
+
+    <!-- 模块入口 -->
+    <view class="modules-container">
+      <view>
+        <text>成员</text>
+      </view>
+      <view>
+        <text>签到</text>
+      </view>
+      <view>
+        <text>讨论</text>
+      </view>
+      <view>
+        <text>文件</text>
       </view>
     </view>
 
