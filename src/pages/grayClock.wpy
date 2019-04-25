@@ -8,8 +8,8 @@ page{
 </style>
 <template>
   <view class="container" bindlongpress="goBack">
-    <text>Welcome to this page<text>  
-    <text>undone<text>
+    <text>Welcome to this page</text>  
+    <text>undone</text>
   </view>
 </template>
 

@@ -1,0 +1,230 @@
+<style lang="less">
+page{
+  background-color: #fafafa;
+}
+
+.container{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+
+  >.header{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin: 10px 7%;
+    width: 86%;
+
+    >text{
+      color: #8a8a8a;
+      font-size: 12px;
+    }
+    >input{
+      width: 100%;
+      padding: 10px 0;
+      border-bottom: 1px solid #8A8A8A;
+      font-size: 16px;
+      font-weight: bold;
+      color: black;
+    }
+    >textarea{
+      width: 100%;
+      padding: 10px 0;
+      height: 250px;
+      font-size: 16px;
+      color: black;
+    }
+  }
+  >.tagsInput{
+    margin: 10px 7%;
+    width: 86%;
+    padding: 10px 0;
+    border-bottom: 1px solid #8A8A8A;
+    font-size: 16px;
+    font-weight: bold;
+    color: black;
+  }
+  >.others{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin: 10px 7%;
+    width: 86%;
+    font-size: 16px;
+  }
+  >button{
+    padding: 10px 7%;
+    width: 86%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-color: white;
+    border-top: 1px solid #fafafa;
+    border-bottom: 1px solid #fafafa;
+  }
+  >button::after{
+    border: none;
+  }
+}
+</style>
+<template>
+  <view class="container">
+    <view class="header">
+      <input placeholder="标题（选填）" data-key="noteInfo.title" value="{{ noteInfo.title }}" bindchange="inputChange" />
+      <input placeholder="副标题（选填）" data-key="noteInfo.subtitle" value="{{ noteInfo.subtitle }}" bindchange="inputChange" />
+      <textarea data-key="noteInfo.content" value="{{ noteInfo.content }}" bindinput="inputChange" placeholder="内容" />
+    </view>
+    <input class="tagsInput" placeholder="标签，用空格隔开" data-key="noteInfo.tags" value="{{ noteInfo.tags }}" bindchange="inputChange" />
+    <view class="others">
+      <text wx:if="{{ noteInfo.filePath=='' }}" bindtap="chooseImage">选择图片</text>
+      <view wx:else>
+        <image mode="aspectFill" src="{{ noteInfo.filePath }}" style="height: 30px; width: 30px;"></image>
+        <text bindtap="clearFile">清空图片</text>
+      </view>
+
+      <text bindtap="toggleVisible">{{ noteInfo.visible?'公共':'私有' }}</text>
+    </view>
+
+    <button bindtap="createNote">确定</button>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import request from '@/utils/request.js'
+
+  export default class CreateNote extends wepy.page {
+    config = {
+      navigationBarTitleText: '创建笔记',
+      navigationBarBackgroundColor: '#fafafa'
+    }
+
+    data = {
+      userId: '',
+      noteInfo: {
+        title: '',
+        subtitle: '',
+        content: '',
+        filePath: '',
+        visible: false,
+        tags: ''
+      },
+    }
+
+    methods = {
+      createNote(){
+        let self = this
+
+        if(self.noteInfo.content == ''){
+          return wx.showToast({
+            title: '内容不能为空！',
+            icon: 'none',
+            duration: 1000
+          })
+        }
+
+        let data = {
+          title: self.noteInfo.title,
+          subtitle: self.noteInfo.subtitle,
+          content: self.noteInfo.content,
+          visible: JSON.stringify(self.noteInfo.visible),
+          tags: JSON.stringify(self.noteInfo.tags.split(' ')),
+          userId: self.userId,
+        }
+
+        console.log(data)
+        console.log(self.noteInfo.filePath)
+
+        if(self.noteInfo.filePath){
+          const uploadTask = wx.uploadFile({
+            url: 'https://api.grayclass.site:2333/api/createNote',
+            filePath: self.noteInfo.filePath,
+            name: 'file',
+            formData: data,
+            success(res) {
+              console.log(res)
+              const data = res.data
+
+              wx.showToast({
+                title: '新增成功～',
+                icon: 'success',
+                duration: 1500
+              })
+              setTimeout(() => {
+                wx.switchTab({
+                  url: '/pages/oneWord'
+                })
+              }, 1500);
+            }
+          })
+
+          // 后期细化再说
+          // uploadTask.onProgressUpdate((res) => {
+          //   console.log('上传进度', res.progress)
+          //   console.log('已经上传的数据长度', res.totalBytesSent)
+          //   console.log('预期需要上传的数据总长度', res.totalBytesExpectedToSend)
+          // })
+        }
+        else{
+          request.post('/createNote', data)
+          .then(res=>{
+            
+          })
+        }
+      },
+      chooseImage(){
+        let self = this
+
+        wx.chooseImage({
+          count: 1,
+          success(res) {
+
+            self.noteInfo.filePath = res.tempFilePaths[0]
+            self.$apply()
+
+            // 压缩图片
+            if(res.tempFilePaths.length > 0){
+              wx.compressImage({
+                src: res.tempFilePaths[0],
+                quality: 75,
+                success(res){
+
+                  self.noteInfo.filePath = res.tempFilePath
+                  self.$apply()
+                }
+              })
+            }
+          }
+        })
+      },
+      inputChange(e){
+        let self = this
+        const keyArr = e.currentTarget.dataset.key.split('.')
+
+        if(keyArr.length == 2){
+          this[keyArr[0]][keyArr[1]] = e.detail.value
+        }
+        else if(keyArr.length == 3){
+          this[keyArr[0]][keyArr[1]][keyArr[2]] = e.detail.value
+        }
+      },
+      clearFile(){
+        this.noteInfo.filePath = ''
+      },
+      toggleVisible(){
+        this.noteInfo.visible = !this.noteInfo.visible
+      },
+    }
+
+    onShow() {
+      let self = this, userId = wx.getStorageSync('userId')
+
+      if(userId){
+        self.userId = userId
+      }
+    }
+  }
+</script>

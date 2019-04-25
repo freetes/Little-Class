@@ -8,7 +8,8 @@
 		"newFeature": true,
 		"nodeModules": true,
 		"autoAudits": false,
-		"uglifyFileName": true
+		"uglifyFileName": true,
+		"checkInvalidKey": true
 	},
 	"compileType": "miniprogram",
 	"appid": "wx46cf1f82f22ec635",
@@ -34,7 +35,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 8,
+			"current": 11,
 			"list": [
 				{
 					"id": -1,
@@ -88,7 +89,28 @@
 					"id": -1,
 					"name": "oneWord",
 					"pathName": "pages/oneWord",
+					"query": "",
 					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "createNote",
+					"pathName": "pages/createNote",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "notes",
+					"pathName": "pages/notes",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "noteInfo",
+					"pathName": "pages/noteInfo",
+					"query": "note_id=5cc10bd36263691ef1d9285d"
 				}
 			]
 		}
