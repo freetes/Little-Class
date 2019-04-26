@@ -9,9 +9,8 @@ page{
     flex-direction: column;;
     justify-content: flex-start;
     align-items: flex-start;
-    margin: 10px 7%;
-    padding-top: 10px;
-    width: 86%;
+    margin: 10px 5%;
+    width: 90%;
 
     >.title{
       display: flex;
@@ -24,7 +23,7 @@ page{
     }
     >.member-container{
       display: flex;
-      flex-direction: row;
+      flex-direction: column;
       justify-content: flex-start;
       align-items: flex-start;
       flex-wrap: wrap;
@@ -34,23 +33,31 @@ page{
 
       >.userInfo{
         display: flex;
-        flex-direction: column;
-        justify-content: space-between;
+        flex-direction: row;
+        justify-content: flex-start;
         align-items: center;
-        width: 20%;
-        height: auto;
+        width: 100%;
+        height: 50px;
         padding: 5px 0;
+        margin-top: 10px;
 
         >image{
-          width: 50px;
-          height: 50px;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          margin-right: 10px;
         }
         >text{
-          font-size: 12px;
-          overflow: hidden;
-          text-wrap: none;
+          font-size: 14px;
           color: black;
-          font-weight: bold;
+          margin-right: 10px;
+        }
+        >.delete-button{
+          font-size: 12px;
+          color: gray;
+          border: 1px solid lightgray;
+          padding: 0 3px;
+          border-radius: 2px;
         }
       }
       >.btns{
@@ -64,24 +71,6 @@ page{
           border: none;
         }
       }
-    }
-  }
-  >.btns{
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    padding: 10px 7%;
-    width: 100%;
-
-    >button{
-      padding: 10px 0;
-      background-color: white;
-      border-top: 1px solid #fafafa;
-      border-bottom: 1px solid #fafafa;
-    }
-    >button::after{
-      border: none;
     }
   }
   .modal-container{
@@ -127,6 +116,44 @@ page{
       }
     }
   }
+    >.inputs{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin: 10px 5%;
+    padding-top: 10px;
+    width: 90%;
+
+    >text{
+      color: #8a8a8a;
+      font-size: 14px;
+    }
+
+    >.input-container{
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+      width: 100%;
+      border-bottom: 1px solid #fafafa;
+
+      >text{
+        flex: 0 1 auto;
+        color: black;
+        font-size: 16px;
+        padding-right: 20px;
+      }
+      >input, >picker{
+        flex: 1 0 auto;
+        color: black;
+        font-size: 16px;
+        font-weight: bold;
+        text-align: right;
+      }
+    }
+  }
   >.message{
     align-self: center;
     font-size: 14px;
@@ -136,18 +163,28 @@ page{
 </style>
 <template>
   <view class="container">
+
+    <view class="inputs">
+      <text>我的信息</text>
+      <view class="input-container">
+        <text>昵称</text>
+        <input placeholder="请输入群昵称" data-key="userInfo.nickname" value="{{ userInfo.nickname }}" bindchange="inputChange" />
+      </view>
+    </view>
+
     <text class="message">{{message}}</text>
 
     <!-- 成员 信息 -->
     <view class="members">
       <view class="title">
-        <text>成员管理</text>
+        <text>所有成员</text>
         <text class="assist">{{ members.length==0?'空空无人':'共' + members.length + '人'}}</text>
       </view>
       <view class="member-container" wx:if="{{ members.length!=0 }}" wx:key="user_id">
-        <view class="userInfo" wx:for="{{ members }}" bindlongpress="showDeleteView" data-index="{{ index }}">
+        <view class="userInfo" wx:for="{{ members }}">
           <image mode="widthFix" src="{{ item.wxInfo.avatarUrl }}"></image>
-          <text>{{ item.name }}</text>
+          <text class="username">{{ item.nickname || item.name }}</text>
+          <text wx:if="{{ isOwner }}" class="delete-button" bindtap="showDeleteView({{ index }})">删除</text>
         </view>
       </view>
     </view>
@@ -174,11 +211,35 @@ page{
 
     data = {
       groupId: '',
+      userId: '',
       members: [],
+      userInfo: {},
       message: '',
       showDeleteView: false,
+      isOwner: false,
       deleteIndex: ''
     }
+
+    watch = {
+      userInfo (newValue, oldValue) {
+        let self = this
+        
+        request.post('/editUserGroupInfo', {
+          userId: self.userId,
+          groupId: self.groupId,
+          nickname: self.userInfo.nickname,
+        })
+        .then(res=>{
+          self.message = '更新成功！'
+          self.$apply()
+          setTimeout(() => {
+            self.message = ''
+            self.$apply()
+          }, 2000);
+        })
+      }
+    }
+
 
     methods = {
       deleteMember(){
@@ -204,8 +265,9 @@ page{
           }
         })
       },
-      showDeleteView(e){
-        this.deleteIndex = e.currentTarget.dataset.index
+      showDeleteView(index){
+        
+        this.deleteIndex = index
         this.showDeleteView = true
       },
       hideDeleteView(){
@@ -231,13 +293,26 @@ page{
     }
 
     onShow(){
-      let self = this
+      let self = this, userId = wx.getStorageSync('userId')
+
+      self.userId = userId
       
       request.post('/getUsersByGroupId', {groupId: self.groupId})
       .then(res=>{
+        for(let item of res.data){
+          if(item._id == userId){
+            if(item.userLevel == 1){
+              self.isOwner = true
+            }
+            self.userInfo = item
+            break
+          }
+        }
         self.members = res.data
+        
         self.$apply()
       })
+
     }
   }
 </script>
