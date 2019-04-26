@@ -88,68 +88,6 @@ page{
       }
     }
   }
-  >.members{
-    display: flex;
-    flex-direction: column;;
-    justify-content: flex-start;
-    align-items: flex-start;
-    margin: 10px 7%;
-    padding-top: 10px;
-    width: 86%;
-
-    >.title{
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-      color: #8A8A8A;
-      font-size: 14px;
-    }
-    >.member-container{
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-start;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      align-content: flex-start;
-      padding: 5px 0;
-      width: 100%;
-
-      >.userInfo{
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
-        width: 20%;
-        height: auto;
-        padding: 5px 0;
-
-        >image{
-          width: 50px;
-          height: 50px;
-        }
-        >text{
-          font-size: 12px;
-          overflow: hidden;
-          text-wrap: none;
-          color: black;
-          font-weight: bold;
-        }
-      }
-      >.btns{
-        >button{
-          padding: 10px 0;
-          background-color: white;
-          border-top: 1px solid #fafafa;
-          border-bottom: 1px solid #fafafa;
-        }
-        >button::after{
-          border: none;
-        }
-      }
-    }
-  }
   >.btns{
     display: flex;
     flex-direction: column;
@@ -249,20 +187,6 @@ page{
 
     <text class="message">{{message}}</text>
 
-    <!-- 成员 信息 -->
-    <view class="members">
-      <view class="title">
-        <text>成员管理</text>
-        <text class="assist">{{ groupInfo.members.length==0?'空空无人':'共' + groupInfo.members.length + '人'}}</text>
-      </view>
-      <view class="member-container" wx:if="{{ groupInfo.members.length!=0 }}" wx:key="user_id">
-        <view class="userInfo" wx:for="{{ groupInfo.members }}" bindlongpress="showDeleteView" data-index="{{ index }}">
-          <image mode="widthFix" src="{{ item.wxInfo.avatarUrl }}"></image>
-          <text>{{ item.name }}</text>
-        </view>
-      </view>
-    </view>
-
     <view class="btns">
       <!-- <button bindtap="">保存修改</button> -->
       <button bindtap="showDisbandView">解散</button>
@@ -273,13 +197,6 @@ page{
       <view class="modal-main" catchtap>
         <text class="modal-title">解散群组</text>
         <button bindtap="disbandGroup">确定解散！</button>
-      </view>
-    </view>
-    <!-- 删除群员弹出框 -->
-    <view wx:if="{{ showDeleteView }}" bindtap="hideDeleteView" class="modal-container">
-      <view class="modal-main" catchtap>
-        <text class="modal-title">删除群员</text>
-        <button bindtap="deleteMember">确定删除 {{ groupInfo.members[deleteIndex].user_info.name }}?</button>
       </view>
     </view>
   </view>
@@ -333,29 +250,6 @@ page{
 
 
     methods = {
-      deleteMember(){
-        let self = this
-
-        wx.cloud.callFunction({
-          name: 'exitGroup',
-          data: {group_id: self._id, user_id: self.groupInfo.members[self.deleteIndex].user_id}
-        }).then(res=>{
-          console.log(res)
-          if(res.result.stats.updated == 1){
-            wx.showToast({
-              title: '删除成功！',
-              icon: 'success',
-              duration: 1000
-            })
-            setTimeout(() => {
-              self.deleteIndex = ''
-              self.showDeleteView = false
-              self.$apply()
-              self.onShow()
-            }, 1000);
-          }
-        })
-      },
       showDeleteView(e){
         this.deleteIndex = e.currentTarget.dataset.index
         this.showDeleteView = true
@@ -390,11 +284,11 @@ page{
             wx.showToast({
               title: '解散成功！',
               icon: 'success',
-              duration: 1500
+              duration: 1000
             })
             setTimeout(() => {
               wx.switchTab({url: '/pages/index'})
-            }, 1500);
+            }, 1000);
           })
       }
     }
@@ -411,12 +305,6 @@ page{
       request.post('/getGroupInfoById', {groupId: self.groupId})
       .then(res=>{
         self.groupInfo = res.data
-        self.$apply()
-      })
-
-      request.post('/getUsersByGroupId', {groupId: self.groupId})
-      .then(res=>{
-        self.groupInfo.members = res.data
         self.$apply()
       })
     }

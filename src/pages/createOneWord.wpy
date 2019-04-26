@@ -157,13 +157,13 @@ page{
           wx.showToast({
             title: '新建成功！',
             icon: 'success',
-            duration: 1500
+            duration: 1000
           })
           setTimeout(() => {
             wx.switchTab({
               url: '/pages/oneWord'
             })
-          }, 1500);
+          }, 1000);
         })
       }
     }

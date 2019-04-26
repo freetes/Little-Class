@@ -197,13 +197,13 @@ page{
               wx.showToast({
                 title: '开启签到成功！',
                 icon: 'success',
-                duration: 1500
+                duration: 1000
               })
               setTimeout(() => {
                 wx.redirectTo({
                   url: 'groupInfo?group_id=' + self.groupId
                 })
-              }, 1500);
+              }, 1000);
             })
           },
 

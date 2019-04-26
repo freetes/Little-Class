@@ -165,13 +165,13 @@ page{
           wx.showToast({
             title: '创建成功！',
             icon: 'success',
-            duration: 1500
+            duration: 1000
           })
           // setTimeout(() => {
           //   wx.redirectTo({
           //     url: 'groupInfo?_id=' + res._id
           //   })
-          // }, 1500);
+          // }, 1000);
         })
       }
     }

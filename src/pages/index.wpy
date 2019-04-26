@@ -217,7 +217,7 @@ page{
     </view>
 
     <view class="group-list" wx:if="{{ groups.length != 0 }}">
-      <view class="group-item" data-url="{{ '/pages/groupInfo?group_id='+item._id }}" wx:for="{{ groups }}" wx:key="group" bindtap="goto">
+      <view class="group-item" wx:for="{{ groups }}" wx:key="group" bindtap="goto('/pages/groupInfo?group_id={{item._id}}')">
         <text class="title">{{ item.name }}</text>
         <view>
           <text>{{ item.formCount == 0?'无签到记录':item.formCount + '次签到' }}</text>
@@ -309,8 +309,8 @@ page{
         }
         wx.navigateTo({url: '/pages/createGroup'})
       },
-      goto(e){
-        wx.navigateTo({url: e.currentTarget.dataset.url})
+      goto(url){
+        wx.navigateTo({url})
       },
       showJoinView(){
         this.joinView.showJoinView = true

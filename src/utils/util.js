@@ -5,7 +5,7 @@ function getDate(date){
       month = date.getMonth() + 1, 
       day = date.getDate();
 
-  return `${year}-${month}-${day}`
+  return `${year}/${month}/${day}`
 }
 
 function getTime(date){
@@ -16,7 +16,7 @@ function getTime(date){
       minute = date.getMinutes(),
       second = date.getSeconds()
 
-  return `${year}-${month}-${day} ${hour}:${minute}:${second}`
+  return `${year}/${month}/${day} ${hour}:${minute}:${second}`
 }
 
 function isAfter(date){

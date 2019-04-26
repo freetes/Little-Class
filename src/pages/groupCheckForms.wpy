@@ -1,118 +1,18 @@
 <style lang="less">
 page{
+  background-color: #ededed;
 }
+
 .container{
-  padding-top: 0;
-  padding-bottom: 20px;
   
-  >.groupInfo{
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: flex-start;
-    width: 100%;
-    height: 200px;
-    padding: 10px 0;
-
-    >.title{
-      padding: 0 20px;
-      padding-bottom: 10px;
-      font-size: 16px;
-      font-weight: bold;
-      color: black;
-    }
-    >view{
-      width: 100%;
-      padding: 0 20px;
-      padding-bottom: 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: flex-start;
-      font-size: 14px;
-      color: #8A8A8A;
-
-      >.description{
-        width: 100%;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 4;
-        overflow: hidden;
-      }
-    }
-  }
-
-  >.modules-container{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: flex-start;
-    width: 92%;
-    margin: 5px 4%;
-    padding: 10px 10px;
-    background-color: white;
-    border-radius: 10px;
-  }
-
-  >.members{
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    width: 92%;
-    margin: 5px 4%;
-    padding: 10px 10px;
-    background-color: white;
-    border-radius: 10px;
-
-    >view.title{
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-      margin-bottom: 10px;
-
-      >text{
-        font-size: 14px;
-        color: #8A8A8A;
-      }
-      >text.assist{
-        font-size: 12px;
-        color: #8A8A8A;
-        font-weight: normal;
-      }
-    }
-
-    >view{
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-start;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      width: 100%;
-
-      >image{
-        display: inline-block;
-        width: 20%;
-        max-height: 70px;
-        margin-left: 4%;
-        margin-bottom: 5px;
-        border-radius: 50%;
-      }
-    }
-  }
-
   >.check-form{
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    width: 92%;
-    margin: 5px 4%;
-    padding: 10px 10px;
-    background-color: white;
-    border-radius: 10px;
+    width: 100%;
+    padding: 10px 5%;
+    background-color: #ededed;
 
     >view.title{
       display: flex;
@@ -204,11 +104,9 @@ page{
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    width: 92%;
-    margin: 5px 4%;
-    padding: 10px 10px;
-    background-color: white;
-    border-radius: 10px;
+    width: 100%;
+    padding: 10px 5%;
+    background-color: #ededed;
 
     >view.title{
       display: flex;
@@ -270,69 +168,39 @@ page{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 92%;
-    margin: 5px 4%;
+    width: 100%;
+    height: 300px;
     padding-bottom: 20px;
-    padding: 5px 0;
-    background-color: white;
+    background-color: #fafafa;
     border-radius: 10px;
 
+    >input{
+      font-size: 16px;
+      padding: 4px 4px;
+      width: 100px;
+      text-align: center;
+      line-height: 24px;
+      margin-bottom: 10px;
+      border: 1px solid lightgray;
+    }
+
     >button{
-      padding: 5px 0%;
-      background-color: white;
+      padding: 0 10px;
+      color: white;
+      background-color: green;
       font-size: 14px;
       font-weight: bold;
     }
+    button[disabled] {
+      color:rgba(255, 255, 255, 0.6);
+      background-color: lightgray;
+    }
+
     >button::after{
       border: none;
     }
-    >.disable{
-      color: #8A8A8A;
-    }
   }
-  .modal-container{
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(0, 0, 0, 0.7);
 
-    >.modal-main{
-      background-color: #fff;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: flex-start;
-      padding: 0 10px;
-      width: 60%;
-      padding-bottom: 0;
-
-      >.modal-title{
-        border-bottom: 1px solid light#8A8A8A;
-        margin: 10px 0;
-        font-size: 12px;
-        color: #8A8A8A;
-      }
-      >button{
-        padding: 5px 10px;
-        margin: 20px 0;
-        align-self: center;
-        border: 1px solid #8a8a8a;
-        background-color: white;
-        font-size: 14px;
-        color: black;
-        font-weight: bold;
-      }
-      >button::after{
-        border: none;
-      }
-    }
-  }
 }
 
 .blank{
@@ -360,44 +228,17 @@ page{
 </style>
 <template>
   <view class="container">
-    <!-- 群组 信息 -->
-    <view class="groupInfo">
-      <text class="title">{{ groupInfo.name }}</text>
-      <view>
-        <text>ID：{{ groupInfo.code }}</text>
-        <text class="description">{{ groupInfo.description }}</text>
-      </view>
-    </view>
 
-    <!-- 模块入口 -->
-    <view class="modules-container">
-      <view bindtap="goto('/pages/groupCheckForms?group_id={{groupId}}')">
-        <text>签到</text>
-      </view>
-      <view>
-        <text>讨论</text>
-      </view>
-      <view>
-        <text>文件</text>
-      </view>
-      <view bindtap="goto('/pages/groupUsers?group_id={{groupId}}')">
-        <text>成员</text>
-      </view>
-    </view>
-
-    <!-- 成员 信息 -->
-    <view class="members" wx:if="{{ groupInfo.userLevel == 1 }}">
-      <view class="title">
-        <text>成员</text>
-        <text class="assist">{{ members.length==0?'空空无人':'共' + members.length + '人'}}</text>
-      </view>
-      <view wx:if="{{ members.length != 0 }}" wx:key="user_id">
-        <image mode="widthFix" wx:for="{{ members }}" wx:key="{{ members }}" src="{{ item.wxInfo.avatarUrl }}"></image>
-      </view>
+    <view class="btns">
+      <!-- 普通用户 功能 -->
+      <input type="number" maxlength="5" data-key="checkCode" bindinput="inputChange" placeholder="输入签到码" disabled="{{!canCheck}}" />
+      <button hover-class="none" bindtap="createCheck" disabled="{{!canCheck}}">立即签到</button>
+      <!-- 拥有者 功能 -->
+      <button hover-class="none" wx:if="{{ groupInfo.userLevel == 1 && !canCheck && canCreateCheck }}" bindtap="goto('/pages/createCheckForm?group_id={{groupId}}')">开启签到</button>
     </view>
 
     <!-- 签到表 信息 -->
-    <view class="check-form" bindtap="goto('/pages/checkFormInfo?group_id={{groupId}}&checkForm_id={{checkForm._id}}')">
+    <view class="check-form" wx:if="{{ groupInfo.userLevel == 1 }}" bindtap="goto('/pages/checkFormInfo?group_id={{groupId}}&checkForm_id={{checkForm._id}}')">
       <view class="title">
         <text>最近签到记录</text>
       </view>
@@ -449,7 +290,7 @@ page{
       </view>
     </view>
 
-    <!-- 历史签到表 信息 
+    <!-- 历史签到表 信息 -->
     <view class="check-history">
       <view class="title">
         <text>历史签到</text>
@@ -463,31 +304,12 @@ page{
         </view>
         <view class="status">
           <text>{{ item.createAt }}</text>
-          <text wx:if="{{ groupInfo.userLevel == 1 }}">{{ item.successCount + '/' + members.length }}</text>
+          <text wx:if="{{ groupInfo.userLevel == 1 }}">签到成功人数：{{ item.successCount }}</text>
           <text wx:else>{{item.checkStatus == 1?'签到成功':item.checkStatus == -1?'签到失败，不在规定范围':'未签到'}}</text>
         </view>
       </view>
     </view>
-    -->
 
-    <view class="btns">
-      <!-- 普通用户 功能 -->
-      <button hover-class="none" wx:if="{{ !groupInfo.userLevel && groupInfo.userLevel!=0 && groupInfo.status != -1 }}" bindtap="joinGroup">申请加群</button>
-      <text class="disable" disabled="{{ true }}" hover-class="none" wx:if="{{ !groupInfo.userLevel && groupInfo.userLevel!=0 && groupInfo.status == -1 }}">加入已关闭，无法加入</text>
-      <button hover-class="none" wx:if="{{ canCheck }}" bindtap="createCheck">立即签到</button>
-      <button hover-class="none" wx:if="{{ groupInfo.userLevel == 0}}" bindtap="toogleExitModal">退出</button>
-      <!-- 拥有者 功能 -->
-      <button hover-class="none" wx:if="{{ groupInfo.userLevel == 1 && !canCheck && canCreateCheck }}" bindtap="goto('/pages/createCheckForm?group_id={{groupId}}')">开启签到</button>
-      <button hover-class="none" wx:if="{{ groupInfo.userLevel == 1 }}" bindtap="goto('/pages/editGroupInfo?group_id={{groupId}}')">修改信息</button>
-    </view>
-
-    <!-- 退出群组弹出框 -->
-    <view wx:if="{{ showExitView }}" bindtap="toogleExitModal" class="modal-container">
-      <view class="modal-main" catchtap>
-        <text class="modal-title">退出群组</text>
-        <button bindtap="exitGroup">确定退出！</button>
-      </view>
-    </view>
   </view>
 </template>
 
@@ -498,7 +320,8 @@ page{
 
   export default class Index extends wepy.page {
     config = {
-      navigationBarTitleText: '群组信息',
+      navigationBarTitleText: '签到表信息',
+      navigationBarBackgroundColor: '#fafafa',
       enablePullDownRefresh: true
     }
 
@@ -508,12 +331,11 @@ page{
       userInfo: {
         userId: ''
       },
-      members: [],
+      checkCode: '',
       checkForms: [],
       checkForm: undefined,
       canCheck: false,
       canCreateCheck: true,
-      showExitView: false
     }
 
     computed = {
@@ -557,6 +379,7 @@ page{
             for(let item of res.data.checkForm.success){
               if(self.userInfo.userId == item._id){
                 self.canCheck = false
+                res.data.checkForm.statusWords = '已签到'
                 break
               }
             }
@@ -573,84 +396,31 @@ page{
         let self = this
         const keyArr = e.currentTarget.dataset.key.split('.')
 
-        if(keyArr.length == 2){
+        if(keyArr.length == 1){
+          this[keyArr[0]] = e.detail.value
+        }
+        else if(keyArr.length == 2){
           this[keyArr[0]][keyArr[1]] = e.detail.value
         }
         else if(keyArr.length == 3){
           this[keyArr[0]][keyArr[1]][keyArr[2]] = e.detail.value
         }
       },
-      joinGroup(){
+      goto(url){
+        wx.navigateTo({url})
+      },
+      createCheck(){
         let self = this
 
-        // 判断是否登录
-        if(self.userInfo.userId == ''){
+        if(self.checkCode != self.checkForm.code){
           wx.showToast({
-            title: '请先登录',
+            title: '签到码错误！',
             icon: 'none',
             duration: 1000,
             mask: true
           })
           return 
         }
-
-        // 判断是否可以加入
-        if(self.groupInfo.status == -1){
-          wx.showToast({
-            title: '无法加入',
-            icon: 'none',
-            duration: 2000,
-            mask: true
-          })
-          return
-        }
-
-        // 请求参数
-        let data = {
-          groupId: self.groupId,
-          userId: self.userInfo.userId,
-        }
-
-        request.post('/joinGroup', data)
-        .then(res=>{
-          wx.showToast({
-            title: '加入成功！',
-            icon: 'success',
-            duration: 1500,
-            mask: true
-          })
-          self.onShow()
-        })
-      },
-      exitGroup(){
-        let self = this
-
-        // 请求参数
-        let data = {
-          groupId: self.groupId,
-          userId: self.userInfo.userId,
-        }
-
-        request.post('/exitGroup', data)
-        .then(res=>{
-          wx.showToast({
-            title: '退出成功！',
-            icon: 'success',
-            duration: 1000
-          })
-          setTimeout(() => {
-            wx.switchTab({url: '/pages/index'})
-          }, 1000);
-        })
-      },
-      toogleExitModal(){
-        this.showExitView = !this.showExitView
-      },
-      goto(url){
-        wx.navigateTo({url})
-      },
-      createCheck(){
-        let self = this
         
         let ownerPosition = self.checkForm.position.split('-')
 
@@ -729,7 +499,6 @@ page{
       wx.stopPullDownRefresh()
     }
 
-
     onLoad(option) {
       let self = this, userId = wx.getStorageSync('userId'), groupId = option.group_id
 
@@ -757,13 +526,6 @@ page{
         request.post('/getCheckFormsByGroupId', {groupId: self.groupId, userId: self.userInfo.userId})
         .then(res=>{
           self.checkForms = res.data
-          self.$apply()
-        })
-
-        // 获取群员
-        request.post('/getUsersByGroupId', {groupId: self.groupId})
-        .then(res=>{
-          self.members = res.data
           self.$apply()
         })
       }

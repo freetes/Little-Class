@@ -42,6 +42,8 @@ export default class extends wepy.app {
       'pages/createGroup',
       'pages/editGroupInfo',
       'pages/groupInfo',
+      'pages/groupUsers',
+      'pages/groupCheckForms',
       'pages/checkFormInfo',
       'pages/createCheckForm',
       'pages/oneWord',

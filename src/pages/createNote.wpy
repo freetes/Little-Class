@@ -73,8 +73,7 @@ page{
 <template>
   <view class="container">
     <view class="header">
-      <input placeholder="标题（选填）" data-key="noteInfo.title" value="{{ noteInfo.title }}" bindchange="inputChange" />
-      <input placeholder="副标题（选填）" data-key="noteInfo.subtitle" value="{{ noteInfo.subtitle }}" bindchange="inputChange" />
+      <input placeholder="标题" data-key="noteInfo.title" value="{{ noteInfo.title }}" bindchange="inputChange" />
       <textarea data-key="noteInfo.content" value="{{ noteInfo.content }}" bindinput="inputChange" placeholder="内容" />
     </view>
     <input class="tagsInput" placeholder="标签，用空格隔开" data-key="noteInfo.tags" value="{{ noteInfo.tags }}" bindchange="inputChange" />
@@ -106,7 +105,6 @@ page{
       userId: '',
       noteInfo: {
         title: '',
-        subtitle: '',
         content: '',
         filePath: '',
         visible: false,
@@ -118,6 +116,14 @@ page{
       createNote(){
         let self = this
 
+        if(self.noteInfo.title == ''){
+          return wx.showToast({
+            title: '标题不能为空！',
+            icon: 'none',
+            duration: 1000
+          })
+        }
+
         if(self.noteInfo.content == ''){
           return wx.showToast({
             title: '内容不能为空！',
@@ -128,15 +134,11 @@ page{
 
         let data = {
           title: self.noteInfo.title,
-          subtitle: self.noteInfo.subtitle,
           content: self.noteInfo.content,
           visible: JSON.stringify(self.noteInfo.visible),
-          tags: JSON.stringify(self.noteInfo.tags.split(' ')),
+          tags: self.noteInfo.tags?JSON.stringify(self.noteInfo.tags.split(/\s+/)):JSON.stringify([]),
           userId: self.userId,
         }
-
-        console.log(data)
-        console.log(self.noteInfo.filePath)
 
         if(self.noteInfo.filePath){
           const uploadTask = wx.uploadFile({
@@ -145,33 +147,32 @@ page{
             name: 'file',
             formData: data,
             success(res) {
-              console.log(res)
-              const data = res.data
-
               wx.showToast({
                 title: '新增成功～',
                 icon: 'success',
-                duration: 1500
+                duration: 1000
               })
               setTimeout(() => {
                 wx.switchTab({
-                  url: '/pages/oneWord'
+                  url: '/pages/notes'
                 })
-              }, 1500);
+              }, 1000);
             }
           })
-
-          // 后期细化再说
-          // uploadTask.onProgressUpdate((res) => {
-          //   console.log('上传进度', res.progress)
-          //   console.log('已经上传的数据长度', res.totalBytesSent)
-          //   console.log('预期需要上传的数据总长度', res.totalBytesExpectedToSend)
-          // })
         }
         else{
           request.post('/createNote', data)
           .then(res=>{
-            
+            wx.showToast({
+              title: '新增成功～',
+              icon: 'success',
+              duration: 1000
+            })
+            setTimeout(() => {
+              wx.switchTab({
+                url: '/pages/notes'
+              })
+            }, 1000);
           })
         }
       },

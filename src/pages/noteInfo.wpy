@@ -15,32 +15,48 @@ page{
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    margin: 10px 7%;
-    width: 86%;
+    width: 100%;
 
     >.note-cover{
       width: 100%;
-      height: 150px;
+      height: 200px;
     }
     .note-title{
-      font-size: 20px;
+      margin: 0 10%;
+      width: 80%;
+      margin-top: 30px;
+      font-size: 24px;
       font-weight: bold;
       color: black;
-      line-height: 30px;
     }
     .note-info{
+      margin: 0 10%;
+      width: 80%;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      margin-top: 10px;
       font-size: 14px;
+      font-weight: lighter;
       color: gray;
-      line-height: 20px;
+
+      >text{
+        margin-right: 10px;
+      }
     }
     .note-content{
+      margin: 20px 10%;
+      width: 80%;
       font-size: 16px;
-      color: #222;
+      color: black;
+      font-weight: lighter;
       line-height: 20px;
     }
 
     >input{
-      width: 100%;
+      margin: 10px 5%;
+      width: 90%;
       padding: 10px 0;
       border-bottom: 1px solid #8A8A8A;
       font-size: 16px;
@@ -48,7 +64,8 @@ page{
       color: black;
     }
     >textarea{
-      width: 100%;
+      margin: 10px 5%;
+      width: 90%;
       padding: 10px 0;
       height: 250px;
       font-size: 16px;
@@ -60,15 +77,17 @@ page{
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    margin: 0 7%;
-    width: 86%;
-    color: gray;
+    margin: 20px 10%;
+    width: 80%;
+    padding-bottom: 20px;
     font-size: 14px;
+    color: gray;
 
     >text.tag{
       background-color: gray;
       color: white;
-      padding: 3px 5px;
+      padding: 1px 3px;
+      font-size: 12px;
       margin-left: 10px;
     }
   }
@@ -77,16 +96,18 @@ page{
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    margin: 0 7%;
-    width: 86%;
+    padding: 0 10%;
+    padding-top: 30px;
     padding-bottom: 100px;
+    width: 100%;
+    background-color: #ededed;
 
-    >text{
-      font-weight: bold;
-      font-size: 16px;
+    >text.title{
+      color: #333;
+      font-size: 14px;
     }
 
-    >.comment{
+    >.comment-container{
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
@@ -94,7 +115,12 @@ page{
       margin: 10px 0;
       width: 100%;
       color: black;
+      font-size: 14px;
 
+      >.comment{
+        font-size: 14px;
+        margin-top: 5px;
+      }
       >.user-info{
         width: 100%;
         display: flex;
@@ -103,13 +129,13 @@ page{
         align-items: center;
 
         >image{
-          width: 30px;
-          height: 30px;
+          width: 24px;
+          height: 24px;
           border-radius: 50%;
           margin-right: 10px;
         }
         >.user-name{
-          font-size: 16px;
+          font-size: 14px;
           margin-right: 10px;
         }
         >.user-feeling{
@@ -125,11 +151,14 @@ page{
     width: 100%;
     padding: 5px;
     box-sizing: border-box;
-    background-color: #efefef;
+    border-top: 1px solid #f7f7f7;
+    background-color: #f7f7f7;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: flex-end;
+    padding: 10px;
+
     z-index: 100;
 
     >textarea{
@@ -137,9 +166,10 @@ page{
       min-height: 30px;
       max-height: 80px;
       font-size: 16px;
-      padding: 0 5px;
+      padding: 0 3px;
       box-sizing: border-box;
-      border: 1px solid gray;
+      border-radius: 5px;
+      background-color: white;
     }
     >view{
       width: 80px;
@@ -199,51 +229,56 @@ page{
 </style>
 <template>
   <view class="container">
-    <block wx:if="{{ !editNote }}">
-      <view class="header">
-        <image bindtap="showNoteCover" wx:if="{{ noteInfo.filePath }}" class="note-cover" src="{{ noteInfo.filePath }}" mode="aspectFill" lazy-load></image>
-        <text class="note-title">{{ noteInfo.title }}</text>
-        <text class="note-info">{{ noteInfo.create_at }}  字数：{{ noteInfo.content.length }}  {{ noteInfo.visible?'公共':'私有' }}</text>
-        <text class="note-content">{{ noteInfo.content }}</text>
+    <view class="header">
+      <image bindtap="showNoteCover" wx:if="{{ noteInfo.filePath }}" class="note-cover" src="{{ noteInfo.filePath }}" mode="aspectFill" lazy-load></image>
+      <text class="note-title" bindlongpress="deleteNote">{{ noteInfo.title }}</text>
+      <view class="note-info">
+        <text>{{ noteInfo.create_at }}</text>
+        <text>字数：{{ noteInfo.content.length }}</text>
       </view>
+      <!-- 后期扩展：创作人信息 -->
+      <!-- <view class="note-writer">
+        <text>{{ noteInfo.create_at }}</text>
+        <text>字数：{{ noteInfo.content.length }}</text>
+      </view> -->
+      <text class="note-content">{{ noteInfo.content }}</text>
+    </view>
 
-      <view class="tags-container">
-        <text>tags:</text>
-        <text class="tag" wx:for="{{ noteInfo.tags }}">{{ item }}</text>
+    <view class="tags-container">
+      <text class="title">tags:</text>
+      <text class="tag" wx:for="{{ noteInfo.tags }}">{{ item }}</text>
+    </view>
+
+    <view class="comments-container" wx:if="{{comments.length > 0}}">
+      <text>评论：</text>
+      <view class="comment-container" wx:for="{{ comments }}" bindlongpress="deleteComment('{{item.user_id}}', '{{item._id}}')">
+        <view class="user-info">
+          <image src="{{ item.avatarUrl }}"></image>
+          <text class="user-name">{{ item.userName }}</text>
+          <text class="feeling">{{ item.feeling }}</text>
+        </view>
+        <text class="comment">{{ item.content }}</text>
       </view>
+    </view>
 
-      <view class="comments-container">
-        <text>comments:</text>
-        <view class="comment" wx:for="{{ comments }}" bindlongpress="deleteComment('{{item.user_id}}', '{{item._id}}')">
-          <view class="user-info">
-            <image src="{{ item.avatarUrl }}"></image>
-            <text class="user-name">{{ item.userName }}</text>
-            <text class="feeling">{{ item.feeling }}</text>
+    <!-- 后期优化细节 -->
+    <!-- 新增评论输入框 -->
+    <view class="create-comment-container" catchtap="" style="bottom: {{keyboardHeight}}px">
+      <textarea bindblur="hideKeyboard" maxlength="{{ 100 }}" auto-height="{{ true }}" bindfocus="keyboard" data-key="comment.content" bindinput="inputChange" fixed show-confirm-bar="{{ false }}" adjust-position="{{ false }}"></textarea>
+      <view>
+        <picker bindchange="feelingChange" value="{{comment.feelingIndex}}" range="{{feelings}}">
+          <view class="feeling-words">
+            {{feelings[comment.feelingIndex]}}
           </view>
-          <text>{{ item.content }}</text>
-        </view>
+        </picker>
+        <image src="../static/icons/send.png" bindtap="createComment"></image>
       </view>
+    </view>
 
-      <!-- 后期优化细节 -->
-      <!-- 新增评论输入框 -->
-      <view class="create-comment-container" catchtap="" style="bottom: {{keyboardHeight}}px">
-        <textarea bindblur="hideKeyboard" maxlength="{{ 100 }}" auto-height="{{ true }}" bindfocus="keyboard" data-key="comment.content" bindinput="inputChange" fixed show-confirm-bar="{{ false }}" adjust-position="{{ false }}"></textarea>
-        <view>
-          <picker bindchange="feelingChange" value="{{comment.feelingIndex}}" range="{{feelings}}">
-            <view class="feeling-words">
-              {{feelings[comment.feelingIndex]}}
-            </view>
-          </picker>
-          <image src="../static/icons/send.png" bindtap="createComment"></image>
-        </view>
-      </view>
-    </block>
-
-    <!-- 编辑笔记 -->
+    <!-- 编辑笔记 后期开发
     <block wx:else>
       <view class="header">
         <input placeholder="标题（选填）" data-key="noteInfo.title" value="{{ noteInfo.title }}" bindchange="inputChange" />
-        <input placeholder="副标题（选填）" data-key="noteInfo.subtitle" value="{{ noteInfo.subtitle }}" bindchange="inputChange" />
         <textarea data-key="noteInfo.content" value="{{ noteInfo.content }}" bindinput="inputChange" placeholder="内容" />
       </view>
       <input class="tagsInput" placeholder="标签，用空格隔开" data-key="noteInfo.tags" value="{{ noteInfo.tags }}" bindchange="inputChange" />
@@ -259,6 +294,7 @@ page{
 
       <button bindtap="editNote">确定</button>
     </block>
+    -->
   </view>
 </template>
 
@@ -270,7 +306,8 @@ page{
   export default class NoteInfo extends wepy.page {
     config = {
       navigationBarTitleText: '笔记详情',
-      navigationBarBackgroundColor: '#fafafa'
+      navigationBarBackgroundColor: '#fafafa',
+      enablePullDownRefresh: true
     }
 
     data = {
@@ -289,7 +326,6 @@ page{
       comments: [],
       noteInfo: {
         title: '',
-        subtitle: '',
         content: '',
         filePath: '',
         visible: false,
@@ -298,6 +334,34 @@ page{
     }
 
     methods = {
+      deleteNote(){
+        let self = this
+
+        if(self.noteInfo.user_id == self.userId){
+          wx.showModal({
+            title: '提示',
+            content: '确定删除笔记？',
+            success(res) {
+              if (res.confirm) {
+                request.post('/deleteNote', {noteId: self.noteInfo._id})
+                .then(res=>{
+                  wx.showToast({
+                    title: '删除成功～',
+                    icon: 'success',
+                    duration: 1000
+                  })
+                  setTimeout(()=>{
+                    wx.switchTab({
+                      url: '/pages/notes'
+                    })
+                  }, 1000)
+                  
+                })
+              } 
+            }
+          })
+        }
+      },
       deleteComment(userId, commentId){
         let self = this
 
@@ -309,6 +373,7 @@ page{
               if (res.confirm) {
                 request.post('/deleteComment', {commentId})
                 .then(res=>{
+
                   self.onShow()
                 })
               } 
@@ -339,7 +404,7 @@ page{
           wx.showToast({
             title: '评论成功～',
             icon: 'success',
-            duration: 1500
+            duration: 1000
           })
           self.comment.content = ''
           self.$apply()
@@ -354,7 +419,6 @@ page{
         this.keyboardHeight = 0
       },
       keyboard(e){
-        console.log(e)
         this.keyboardHeight = e.detail.height
       },
       editNote(){
@@ -372,7 +436,6 @@ page{
           noteId: self.nodeId,
           userId: self.userId,
           title: self.noteInfo.title,
-          subtitle: self.noteInfo.subtitle,
           filePath: self.noteInfo.filePath,
           content: self.noteInfo.content,
           visible: JSON.stringify(self.noteInfo.visible),
@@ -393,13 +456,13 @@ page{
               wx.showToast({
                 title: '新增成功～',
                 icon: 'success',
-                duration: 1500
+                duration: 1000
               })
               setTimeout(() => {
                 wx.switchTab({
-                  url: '/pages/oneWord'
+                  url: '/pages/notes'
                 })
-              }, 1500);
+              }, 1000);
             }
           })
 
@@ -465,6 +528,16 @@ page{
         this.noteInfo.visible = !this.noteInfo.visible
       },
     }
+
+    // 下拉刷新
+    onPullDownRefresh() {
+      this.onShow()
+      wx.stopPullDownRefresh()
+    }
+
+    onShareAppMessage() {
+    }
+
 
     onLoad(option){
       let self = this
