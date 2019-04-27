@@ -3,98 +3,116 @@ page{
   background-color: #fafafa;
 }
 .container{
-  >.check-form{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 90%;
+  margin: 5px 5%;
+
+  >.main-top{
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    width: 92%;
-    margin: 5px 4%;
-    padding: 10px 10px;
-    background-color: white;
-    border-radius: 10px;
+    width: 100%;
+    margin-bottom: 10px;
 
-    >view.title{
+    >text{
+      font-size: 16px;
+      color: black;
+    }
+
+    >.status-words{
+      font-size: 24px;
+      align-self: center;
+      padding: 50px;
+    }
+
+    >.code{
+      padding-bottom: 10px;
+      color: #be1a1d;
+    }
+    >.date{
+      font-size: 12px;
+      color: gray;
+    }
+    
+  }
+
+  >.info{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    width: 100%;
+    font-size: 14px;
+
+    >view{
+      width: 100%;
       display: flex;
       flex-direction: row;
       justify-content: space-between;
       align-items: center;
-      width: 100%;
-      margin-bottom: 10px;
 
-      >text{
-        font-size: 16px;
-        color: black;
+      >text.date{
         font-weight: bold;
       }
-      >text.assist{
-        font-size: 12px;
-        color: #8A8A8A;
-        font-weight: normal;
-      }
     }
+  }
 
-    >view.info{
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-start;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      width: 100%;
+  >.member{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+    margin: 10px 0;
+
+    >view.title{
       font-size: 14px;
+      color: black;
 
-      >view{
-        width: 100%;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-
-        >text.date{
-          font-weight: bold;
-        }
+      >text.assist{
+        background-color: gray;
+        color: white;
+        padding: 0 10px;
+        line-height: 20px;
+        border-radius: 10px;
+        text-align: center;
+        margin-left: 10px;
       }
     }
 
-    >view.member{
+    >view.status{
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
       align-items: flex-start;
       width: 100%;
-      margin: 10px 0;
+      margin-bottom: 10px;
 
-      >view.title{
-        font-size: 14px;
-        color: black;
-        font-weight: bold;
-
-        >text.assist{
-          background-color: light#8A8A8A;
-          color: black;
-          padding: 5px 10px;
-          border-radius: 10px;
-          line-height: 20px;
-          text-align: center;
-          margin-left: 10px;
-        }
-      }
-
-      >view.status{
+      >view{
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         justify-content: flex-start;
-        align-items: flex-start;
+        align-items: center;
         width: 100%;
-        margin-bottom: 10px;
+        margin: 5px 0;
+        font-size: 14px;
 
-        >view{
-          display: flex;
-          flex-direction: row;
-          justify-content: space-between;
-          align-items: center;
-          width: 100%;
-          margin: 5px 0;
+        >.count{
+          margin-right: 10px;
+          color: #a5a5a5;
+        }
+        >image.avatar{
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          margin-right: 10px;
+        }
+        >.name{
           font-size: 14px;
         }
       }
@@ -131,50 +149,46 @@ page{
 <template>
   <view class="container">
     <!-- 签到表 信息 -->
-    <view class="check-form">
+    <view class="main-top">
+      <text class="status-words">{{ checkForm.statusWords }}</text>
+      <text class="code">签到码：{{ checkForm.code }}</text>
+      <text class="title">{{ checkForm.title }}</text>
+      <text class="date">{{ checkForm.createAt }} - {{ checkForm.endAt }}</text>
+    </view>
+    <view class="member">
+      <!-- 成功签到 -->
       <view class="title">
-        <text>{{ checkForm.title }}</text>
+        <text>签到成功</text>
+        <text class="assist">{{ checkForm.success.length }}</text>
       </view>
-      <view class="info">
-        <view>
-          <text class="date">{{ checkForm.createAt }} - {{ checkForm.endTime }}</text>
-          <text class="status">{{ checkForm.statusWords }}</text>
+      <view class="status">
+        <view wx:for="{{ checkForm.success }}" wx:key="user_id">
+          <text class="count">{{ index + 1}}.</text>
+          <image class="avatar" src="{{ item.wxInfo.avatarUrl }}"></image>
+          <text class="name">{{ item.name }}</text>
         </view>
       </view>
-      <view class="member">
-        <!-- 成功签到 -->
-        <view class="title">
-          <text>签到成功</text>
-          <text class="assist">{{ checkForm.success.length }}</text>
-        </view>
-        <view class="status">
-          <view wx:for="{{ checkForm.success }}" wx:key="user_id">
-            <text>{{ item.name }}</text>
-            <text>{{ '签到成功' }}</text>
-          </view>
-        </view>
 
-        <!-- 签到失败。不在有效范围 -->
-        <view wx:if="{{ checkForm.fail.length!=0 }}" class="title">
-          <text>签到失败，不在有效范围内</text>
-          <text class="assist">{{ checkForm.fail.length }}</text>
+      <!-- 签到失败。不在有效范围 -->
+      <view wx:if="{{ checkForm.fail.length!=0 }}" class="title">
+        <text>签到失败，不在有效范围内</text>
+        <text class="assist">{{ checkForm.fail.length }}</text>
+      </view>
+      <view class="status">
+        <view wx:if="{{ checkForm.fail.length!=0 }}" wx:for="{{ checkForm.fail }}" wx:key="user_id">
+          <image class="avatar" src="{{ item.wxInfo.avatarUrl }}"></image>
+          <text class="name">{{ item.name }}</text>
         </view>
-        <view class="status">
-          <view wx:if="{{ checkForm.fail.length!=0 }}" wx:for="{{ checkForm.fail }}" wx:key="user_id">
-            <text>{{ item.name }}</text>
-            <text>{{ '距离太远' }}</text>
-          </view>
-        </view>
-        <!-- 未签到 -->
-        <view class="title">
-          <text>未签到</text>
-          <text class="assist">{{ checkForm.none.length }}</text>
-        </view>
-        <view class="status">
-          <view wx:for="{{ checkForm.none }}" wx:key="user_id">
-            <text>{{ item.name }}</text>
-            <text>{{ '未签到' }}</text>
-          </view>
+      </view>
+      <!-- 未签到 -->
+      <view class="title">
+        <text>未签到</text>
+        <text class="assist">{{ checkForm.none.length }}</text>
+      </view>
+      <view class="status">
+        <view wx:for="{{ checkForm.none }}" wx:key="user_id">
+          <image class="avatar" src="{{ item.wxInfo.avatarUrl }}"></image>
+          <text class="name">{{ item.name }}</text>
         </view>
       </view>
     </view>
@@ -188,7 +202,7 @@ page{
 
   export default class Index extends wepy.page {
     config = {
-      navigationBarTitleText: '群组信息',
+      navigationBarTitleText: '签到信息',
       navigationBarBackgroundColor: '#fafafa'
     }
 
@@ -252,6 +266,9 @@ page{
           res.data.checkForm.statusWords = '已结束'
           self.canCheck = false
         }
+
+        res.data.checkForm.createAt = util.getTime(new Date(res.data.checkForm.create_at))
+        res.data.checkForm.endAt = util.getTime(new Date(res.data.checkForm.end_at))
 
         self.checkForm = res.data.checkForm
         self.$apply()            

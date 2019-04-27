@@ -35,9 +35,6 @@ page{
 
     }
   }
-  >form{
-    width: 100%;
-  }
   .inputs{
     display: flex;
     flex-direction: column;
@@ -91,34 +88,32 @@ page{
 }
 </style>
 <template>
-  <view report-submit="{{true}}" bindsubmit="createCheck" class="container">
+  <view class="container">
     <view class="header">
       <text>标题</text>
-      <input placeholder="签到名称" data-key="title" value="{{ title }}" bindchange="inputChange" />
+      <input placeholder="签到名称" maxlength="20" data-key="title" value="{{ title }}" bindchange="inputChange" />
     </view>
 
-    <form report-submit="{{ true }}" bindsubmit="createCheck">
-      <view class="inputs">
-        <text>签到设置</text>
-        <view class="input-container">
-          <text>持续时间</text>
-          <picker mode="selector" data-key="durationIndex" bindchange="inputChange" value="{{ durationIndex }}" range="{{ durationArray }}">
-            <view class="picker">
-              {{ durationArray[durationIndex] }}
-            </view>
-          </picker>
-        </view>
-        <view class="input-container">
-          <text>签到距离</text>
-          <picker mode="selector" data-key="distanceIndex" bindchange="inputChange" value="{{ distanceIndex }}" range="{{ distanceArray }}">
-            <view class="picker">
-              {{ distanceArray[distanceIndex] }}
-            </view>
-          </picker>
-        </view>
-        <button form-type="submit">确定创建</button>
+    <view class="inputs">
+      <text>签到设置</text>
+      <view class="input-container">
+        <text>持续时间</text>
+        <picker mode="selector" data-key="durationIndex" bindchange="inputChange" value="{{ durationIndex }}" range="{{ durationArray }}">
+          <view class="picker">
+            {{ durationArray[durationIndex] }}
+          </view>
+        </picker>
       </view>
-    </form>
+      <view class="input-container">
+        <text>签到距离</text>
+        <picker mode="selector" data-key="distanceIndex" bindchange="inputChange" value="{{ distanceIndex }}" range="{{ distanceArray }}">
+          <view class="picker">
+            {{ distanceArray[distanceIndex] }}
+          </view>
+        </picker>
+      </view>
+      <button bindtap="createCheckForm">确定创建</button>
+    </view>
 
   </view>
 </template>
@@ -136,7 +131,7 @@ page{
 
     data = {
       durationArray: ['三分钟', '五分钟', '十分钟', '一小时'],
-      durationIndex: 0,
+      durationIndex: 1,
       distanceArray: ['50米', '100米', '200米', '不限'],
       distanceIndex: 0,
       title: util.getDate(new Date()),
@@ -166,7 +161,7 @@ page{
           this[keyArr[0]][keyArr[1]][keyArr[2]] = e.detail.value
         }
       },
-      createCheck(e){
+      createCheckForm(e){
         let self = this
 
         // 获取经纬度坐标
@@ -201,7 +196,7 @@ page{
               })
               setTimeout(() => {
                 wx.redirectTo({
-                  url: 'groupInfo?group_id=' + self.groupId
+                  url: 'checkFormInfo?group_id=' + self.groupId + '&checkForm_id=' + res.data._id
                 })
               }, 1000);
             })

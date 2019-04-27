@@ -129,7 +129,7 @@ page{
       >.title{
         font-size: 16px;
         padding-bottom: 10px;
-        color: black;
+        color: #333333;
         font-weight: bold;
       }
       >view{
@@ -211,7 +211,7 @@ page{
   <view class="container">
     <view class="buttons">
       <image wx:if="{{ showBtns }}" src="../static/icons/search_group.png" bindtap="showJoinView"></image>
-      <image wx:if="{{ showBtns }}" src="../static/icons/create_group.png" bindtap="gotoCreateGroup"></image>
+      <image wx:if="{{ showBtns }}" src="../static/icons/add.png" bindtap="gotoCreateGroup"></image>
       <image src="../static/icons/more.png" bindtap="toggleBtns"></image>
     </view>
 

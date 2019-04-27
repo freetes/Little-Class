@@ -116,7 +116,7 @@ page{
       }
     }
   }
-    >.inputs{
+  >.inputs{
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -159,6 +159,29 @@ page{
     font-size: 14px;
     color: #8A8A8A;
   }
+  >.btns{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    margin: 5px 5%;
+    background-color: white;
+    border-radius: 10px;
+
+    >button{
+      padding: 5px 0%;
+      background-color: white;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    >button::after{
+      border: none;
+    }
+    >.disable{
+      color: #8A8A8A;
+    }
+  }
 }
 </style>
 <template>
@@ -195,6 +218,11 @@ page{
         <text class="modal-title">删除群员</text>
         <button bindtap="deleteMember">确定删除 {{ members[deleteIndex].user_info.name }}?</button>
       </view>
+    </view>
+
+    <view class="btns">
+      <!-- 普通用户 功能 -->
+      <button hover-class="none" wx:if="{{ userInfo.userLevel == 0}}" bindtap="exitGroup">退出</button>
     </view>
   </view>
 </template>
@@ -283,6 +311,34 @@ page{
         else if(keyArr.length == 3){
           this[keyArr[0]][keyArr[1]][keyArr[2]] = e.detail.value
         }
+      },
+      exitGroup(){
+        let self = this
+
+        wx.showModal({
+          title: '提示',
+          content: '确定退出？',
+          success(res) {
+            if (res.confirm) {
+              // 请求参数
+              let data = {
+                groupId: self.groupId,
+                userId: self.userInfo._id,
+              }
+              request.post('/exitGroup', data)
+              .then(res=>{
+                wx.showToast({
+                  title: '退出成功！',
+                  icon: 'success',
+                  duration: 1000
+                })
+                setTimeout(() => {
+                  wx.switchTab({url: '/pages/index'})
+                }, 1000);
+              })
+            } 
+          }
+        })
       },
     }
 

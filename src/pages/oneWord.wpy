@@ -216,7 +216,7 @@ page{
     </view>
 
     <view class="buttons">
-      <image data-url="/pages/createNote" src="../static/icons/create_group.png" bindtap="goto"></image>
+      <image data-url="/pages/createNote" src="../static/icons/add.png" bindtap="goto"></image>
     </view>
 
     <view class="oneWord-list" wx:if="{{ oneWords.length != 0 }}">

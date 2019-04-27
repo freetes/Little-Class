@@ -89,11 +89,25 @@ page{
         >view{
           display: flex;
           flex-direction: row;
-          justify-content: space-between;
+          justify-content: flex-start;
           align-items: center;
           width: 100%;
           margin: 5px 0;
           font-size: 14px;
+
+          >.count{
+            margin-right: 10px;
+            color: #a5a5a5;
+          }
+          >image.avatar{
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 10px;
+          }
+          >.name{
+            font-size: 14px;
+          }
         }
       }
     }
@@ -118,16 +132,16 @@ page{
 
       >text{
         font-size: 14px;
-        color: #8A8A8A;
+        color: gray;
       }
       >text.assist{
         font-size: 12px;
-        color: #8A8A8A;
+        color: gray;
         font-weight: normal;
       }
     }
 
-    >view.history{
+    >.history{
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
@@ -138,10 +152,8 @@ page{
       >view.title{
         font-size: 14px;
         color: black;
-        font-weight: bold;
 
         >text.assist{
-          background-color: light#8A8A8A;
           color: black;
           padding: 5px 10px;
           border-radius: 10px;
@@ -151,7 +163,7 @@ page{
         }
       }
 
-      >view.status{
+      >.status{
         display: flex;
         flex-direction: row;
         justify-content: space-between;
@@ -160,6 +172,9 @@ page{
         margin-bottom: 10px;
         font-size: 14px;
       }
+    }
+    >.history:last-child{
+      padding-bottom: 100px;
     }
   }
   
@@ -190,6 +205,7 @@ page{
       background-color: green;
       font-size: 14px;
       font-weight: bold;
+      margin-bottom: 10px;
     }
     button[disabled] {
       color:rgba(255, 255, 255, 0.6);
@@ -198,6 +214,11 @@ page{
 
     >button::after{
       border: none;
+    }
+
+    >.a{
+      font-size: 16px;
+      color: blue;
     }
   }
 
@@ -231,10 +252,12 @@ page{
 
     <view class="btns">
       <!-- 普通用户 功能 -->
-      <input type="number" maxlength="5" data-key="checkCode" bindinput="inputChange" placeholder="输入签到码" disabled="{{!canCheck}}" />
-      <button hover-class="none" bindtap="createCheck" disabled="{{!canCheck}}">立即签到</button>
+      <block>
+        <input type="number" maxlength="5" data-key="checkCode" bindinput="inputChange" placeholder="输入签到码" disabled="{{!canCheck}}" />
+        <button hover-class="none" bindtap="createCheck" disabled="{{!canCheck}}">立即签到</button>
+      </block>
       <!-- 拥有者 功能 -->
-      <button hover-class="none" wx:if="{{ groupInfo.userLevel == 1 && !canCheck && canCreateCheck }}" bindtap="goto('/pages/createCheckForm?group_id={{groupId}}')">开启签到</button>
+      <text class="a" wx:if="{{ groupInfo.userLevel == 1 && !canCheck }}" bindtap="goto('/pages/createCheckForm?group_id={{groupId}}')">开启签到</text>
     </view>
 
     <!-- 签到表 信息 -->
@@ -260,8 +283,8 @@ page{
         </view>
         <view class="status">
           <view wx:for="{{ checkForm.success }}" wx:key="user_id">
-            <text>{{ item.name }}</text>
-            <text>{{ '签到成功' }}</text>
+            <image class="avatar" src="{{ item.wxInfo.avatarUrl }}"></image>
+            <text class="name">{{ item.name }}</text>
           </view>
         </view>
 
@@ -272,8 +295,8 @@ page{
         </view>
         <view class="status">
           <view wx:if="{{ checkForm.fail.length!=0 }}" wx:for="{{ checkForm.fail }}" wx:key="user_id">
-            <text>{{ item.name }}</text>
-            <text>{{ '距离太远' }}</text>
+            <image class="avatar" src="{{ item.wxInfo.avatarUrl }}"></image>
+            <text class="name">{{ item.name }}</text>
           </view>
         </view>
         <!-- 未签到 -->
@@ -283,8 +306,8 @@ page{
         </view>
         <view class="status">
           <view wx:for="{{ checkForm.none }}" wx:key="user_id">
-            <text>{{ item.name }}</text>
-            <text>{{ '未签到' }}</text>
+            <image class="avatar" src="{{ item.wxInfo.avatarUrl }}"></image>
+            <text class="name">{{ item.name }}</text>
           </view>
         </view>
       </view>
@@ -309,7 +332,6 @@ page{
         </view>
       </view>
     </view>
-
   </view>
 </template>
 
@@ -320,7 +342,7 @@ page{
 
   export default class Index extends wepy.page {
     config = {
-      navigationBarTitleText: '签到表信息',
+      navigationBarTitleText: '签到',
       navigationBarBackgroundColor: '#fafafa',
       enablePullDownRefresh: true
     }
@@ -335,7 +357,6 @@ page{
       checkForms: [],
       checkForm: undefined,
       canCheck: false,
-      canCreateCheck: true,
     }
 
     computed = {
@@ -368,7 +389,6 @@ page{
             if(util.isAfter(res.data.checkForm.end_at)){
               res.data.checkForm.statusWords = '进行中'
               self.canCheck = true
-              self.canCreateCheck = false
             }
             else{
               res.data.checkForm.statusWords = '已结束'
@@ -428,6 +448,7 @@ page{
         wx.getLocation({
           type: 'wgs84',
           success (res) {
+            console.log(res)
             let now = new Date()
             /**
              * @form_id
@@ -449,6 +470,7 @@ page{
             }
             else{
               let distance = getGreatCircleDistance(res.latitude, res.longitude, ownerPosition[0], ownerPosition[1])
+              console.log(distance)
               data.status = distance <= self.checkForm.distance?1:-1
             }
 
@@ -462,24 +484,21 @@ page{
               })
               self.onShow()
               self.canCheck = false
-
             })
             
             // 通过经纬度获取距离（单位：米）
-            function getGreatCircleDistance(lat1,lng1,lat2,lng2){
-              var EARTH_RADIUS = 6378137.0;
+            function getGreatCircleDistance(lat1, lng1, lat2, lng2){
+              var theta = lng1 - lng2;
 
-              var radLat1 = lat1*Math.PI/180.0;
-              var radLat2 = lat2*Math.PI/180.0;
-              
-              var a = radLat1 - radLat2;
-              var b = lng1*Math.PI/180.0 - lng2*Math.PI/180.0;
-              
-              var s = 2*Math.asin(Math.sqrt(Math.pow(Math.sin(a/2),2) + Math.cos(radLat1)*Math.cos(radLat2)*Math.pow(Math.sin(b/2),2)));
-              s = s*EARTH_RADIUS;
-              s = Math.round(s*10000)/10000.0;
-                      
-              return s;
+              var dist = Math.sin(lat1/ 180 * Math.PI) * Math.sin(lat2/ 180 * Math.PI)
+                          + Math.cos(lat1/ 180 * Math.PI) * Math.cos(lat2/ 180 * Math.PI)
+                          * Math.cos(theta/ 180 * Math.PI);
+
+              dist = Math.acos(dist);
+              dist = dist* 180 / Math.PI;
+
+              var miles = dist * 60 * 1.1515;
+              return miles;
             }
           },
           fail (res){

@@ -179,7 +179,7 @@ page{
         <text wx:if="{{ showMyNotes }}" bindtap="toggleNotes">我的</text>
         <text wx:else bindtap="toggleNotes">全部</text>
 
-        <image class="create-icon" data-url="/pages/createNote" src="../static/icons/create_group.png" bindtap="goto"></image>
+        <image class="create-icon" data-url="/pages/createNote" src="../static/icons/add.png" bindtap="goto"></image>
       </view>
     </view>
 

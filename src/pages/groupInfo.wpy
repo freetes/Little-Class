@@ -11,13 +11,13 @@ page{
     justify-content: flex-end;
     align-items: flex-start;
     width: 100%;
-    height: 200px;
+    height: 140px;
     padding: 10px 0;
 
     >.title{
       padding: 0 20px;
       padding-bottom: 10px;
-      font-size: 16px;
+      font-size: 24px;
       font-weight: bold;
       color: black;
     }
@@ -30,7 +30,7 @@ page{
       justify-content: flex-start;
       align-items: flex-start;
       font-size: 14px;
-      color: #8A8A8A;
+      color: gray;
 
       >.description{
         width: 100%;
@@ -52,6 +52,21 @@ page{
     padding: 10px 10px;
     background-color: white;
     border-radius: 10px;
+
+    >view{
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+
+      >image{
+        width: 30px;
+        height: 30px;
+      }
+      >text{
+        font-size: 14px;
+      }
+    }
   }
 
   >.members{
@@ -272,8 +287,6 @@ page{
     align-items: center;
     width: 92%;
     margin: 5px 4%;
-    padding-bottom: 20px;
-    padding: 5px 0;
     background-color: white;
     border-radius: 10px;
 
@@ -372,15 +385,19 @@ page{
     <!-- 模块入口 -->
     <view class="modules-container">
       <view bindtap="goto('/pages/groupCheckForms?group_id={{groupId}}')">
+        <image src="../static/icons/position.png"></image>
         <text>签到</text>
       </view>
       <view>
+        <image src="../static/icons/ideas.png"></image>
         <text>讨论</text>
       </view>
       <view>
+        <image src="../static/icons/files.png"></image>
         <text>文件</text>
       </view>
       <view bindtap="goto('/pages/groupUsers?group_id={{groupId}}')">
+        <image src="../static/icons/users.png"></image>
         <text>成员</text>
       </view>
     </view>
@@ -409,7 +426,7 @@ page{
           <text class="title">{{ checkForm.title }}</text>
           <text class="status">{{ checkForm.statusWords }}</text>
         </view>
-        <text>{{ checkForm.createAt }} - {{ checkForm.endTime }}</text>
+        <text>{{ checkForm.createAt }} - {{ checkForm.endAt }}</text>
       </view>
       <view class="member" wx:if="{{ !!checkForm }}">
         <!-- 成功签到 -->
@@ -474,8 +491,7 @@ page{
       <!-- 普通用户 功能 -->
       <button hover-class="none" wx:if="{{ !groupInfo.userLevel && groupInfo.userLevel!=0 && groupInfo.status != -1 }}" bindtap="joinGroup">申请加群</button>
       <text class="disable" disabled="{{ true }}" hover-class="none" wx:if="{{ !groupInfo.userLevel && groupInfo.userLevel!=0 && groupInfo.status == -1 }}">加入已关闭，无法加入</text>
-      <button hover-class="none" wx:if="{{ canCheck }}" bindtap="createCheck">立即签到</button>
-      <button hover-class="none" wx:if="{{ groupInfo.userLevel == 0}}" bindtap="toogleExitModal">退出</button>
+      <!-- <button hover-class="none" wx:if="{{ groupInfo.userLevel == 0}}" bindtap="toogleExitModal">退出</button> -->
       <!-- 拥有者 功能 -->
       <button hover-class="none" wx:if="{{ groupInfo.userLevel == 1 && !canCheck && canCreateCheck }}" bindtap="goto('/pages/createCheckForm?group_id={{groupId}}')">开启签到</button>
       <button hover-class="none" wx:if="{{ groupInfo.userLevel == 1 }}" bindtap="goto('/pages/editGroupInfo?group_id={{groupId}}')">修改信息</button>
@@ -560,6 +576,9 @@ page{
                 break
               }
             }
+
+            res.data.checkForm.createAt = util.getTime(new Date(res.data.checkForm.create_at))
+            res.data.checkForm.endAt = util.getTime(new Date(res.data.checkForm.end_at))
 
             self.checkForm = res.data.checkForm
             self.$apply()            
@@ -649,78 +668,6 @@ page{
       goto(url){
         wx.navigateTo({url})
       },
-      createCheck(){
-        let self = this
-        
-        let ownerPosition = self.checkForm.position.split('-')
-
-        // 获取经纬度坐标
-        wx.getLocation({
-          type: 'wgs84',
-          success (res) {
-            let now = new Date()
-            /**
-             * @form_id
-             * @user_id
-             * @position
-             * @check_at
-             * @status: Number,     1 to success, -1 to fail because of the position
-             */
-            
-            let data = {
-              checkFormId: self.checkForm._id,
-              userId: self.userInfo.userId,
-              checkAt: Date.now(),
-              position: res.latitude + '-' + res.longitude
-            }
-
-            if(self.checkForm.distance == -1){
-              data.status = 1
-            }
-            else{
-              let distance = getGreatCircleDistance(res.latitude, res.longitude, ownerPosition[0], ownerPosition[1])
-              data.status = distance <= self.checkForm.distance?1:-1
-            }
-
-            request.post('/createCheck', data)
-            .then(res=>{              
-              wx.showToast({
-                title: '签到成功！',
-                icon: 'success',
-                duration: 1500,
-                mask: true
-              })
-              self.onShow()
-              self.canCheck = false
-
-            })
-            
-            // 通过经纬度获取距离（单位：米）
-            function getGreatCircleDistance(lat1,lng1,lat2,lng2){
-              var EARTH_RADIUS = 6378137.0;
-
-              var radLat1 = lat1*Math.PI/180.0;
-              var radLat2 = lat2*Math.PI/180.0;
-              
-              var a = radLat1 - radLat2;
-              var b = lng1*Math.PI/180.0 - lng2*Math.PI/180.0;
-              
-              var s = 2*Math.asin(Math.sqrt(Math.pow(Math.sin(a/2),2) + Math.cos(radLat1)*Math.cos(radLat2)*Math.pow(Math.sin(b/2),2)));
-              s = s*EARTH_RADIUS;
-              s = Math.round(s*10000)/10000.0;
-                      
-              return s;
-            }
-          },
-          fail (res){
-            wx.showToast({
-              title: '获取地址失败，请前往小程序设置页面开启权限！',
-              icon: 'none',
-              duration: 2000
-            })
-          }
-        })
-      }
     }
 
     // 下拉刷新
