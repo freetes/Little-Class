@@ -72,17 +72,17 @@ page{
         text-align: right;
       }
     }
-    >button{
-      padding: 10px 7%;
-      width: 86%;
-      margin-top: 20px;
-      margin-bottom: 20px;
+    >.button{
+      margin: 20px 0;
+      width: 100%;
+      text-align: center;
+      line-height: 30px;
+      padding: 10px 0;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      color: black;
       background-color: white;
-      border-top: 1px solid #fafafa;
-      border-bottom: 1px solid #fafafa;
-    }
-    >button::after{
-      border: none;
     }
   }
 }
@@ -112,7 +112,7 @@ page{
           </view>
         </picker>
       </view>
-      <button bindtap="createCheckForm">确定创建</button>
+      <text class="button" bindtap="createCheckForm">确定创建</text>
     </view>
 
   </view>
@@ -134,7 +134,7 @@ page{
       durationIndex: 1,
       distanceArray: ['50米', '100米', '200米', '不限'],
       distanceIndex: 0,
-      title: util.getDate(new Date()),
+      title: util.moment().format('YYYY年M月D日'),
       groupInfo: {
         name: '',
         description: '',
@@ -221,7 +221,7 @@ page{
 
       request.post('/getCheckFormsByGroupId', {groupId, userId})
       .then(res=>{
-        self.title += `第${res.data.length + 1}次签到`
+        self.title += ` 第${res.data.length + 1}次签到`
         self.$apply()
       })
     }

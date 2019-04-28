@@ -257,7 +257,7 @@ page{
         <button hover-class="none" bindtap="createCheck" disabled="{{!canCheck}}">立即签到</button>
       </block>
       <!-- 拥有者 功能 -->
-      <text class="a" wx:if="{{ groupInfo.userLevel == 1 && !canCheck }}" bindtap="goto('/pages/createCheckForm?group_id={{groupId}}')">开启签到</text>
+      <text class="a" wx:if="{{ groupInfo.userLevel == 1 && canCreateCheck }}" bindtap="goto('/pages/createCheckForm?group_id={{groupId}}')">开启签到</text>
     </view>
 
     <!-- 签到表 信息 -->
@@ -273,7 +273,7 @@ page{
           <text class="title">{{ checkForm.title }}</text>
           <text class="status">{{ checkForm.statusWords }}</text>
         </view>
-        <text>{{ checkForm.createAt }} - {{ checkForm.endTime }}</text>
+        <text>{{ checkForm.createAt }} - {{ checkForm.endAt }}</text>
       </view>
       <view class="member" wx:if="{{ !!checkForm }}">
         <!-- 成功签到 -->
@@ -284,7 +284,7 @@ page{
         <view class="status">
           <view wx:for="{{ checkForm.success }}" wx:key="user_id">
             <image class="avatar" src="{{ item.wxInfo.avatarUrl }}"></image>
-            <text class="name">{{ item.name }}</text>
+            <text class="name">{{ item.nickname || item.name }}</text>
           </view>
         </view>
 
@@ -296,7 +296,7 @@ page{
         <view class="status">
           <view wx:if="{{ checkForm.fail.length!=0 }}" wx:for="{{ checkForm.fail }}" wx:key="user_id">
             <image class="avatar" src="{{ item.wxInfo.avatarUrl }}"></image>
-            <text class="name">{{ item.name }}</text>
+            <text class="name">{{ item.nickname || item.name }}</text>
           </view>
         </view>
         <!-- 未签到 -->
@@ -307,7 +307,7 @@ page{
         <view class="status">
           <view wx:for="{{ checkForm.none }}" wx:key="user_id">
             <image class="avatar" src="{{ item.wxInfo.avatarUrl }}"></image>
-            <text class="name">{{ item.name }}</text>
+            <text class="name">{{ item.nickname || item.name }}</text>
           </view>
         </view>
       </view>
@@ -357,6 +357,7 @@ page{
       checkForms: [],
       checkForm: undefined,
       canCheck: false,
+      canCreateCheck: false
     }
 
     computed = {
@@ -386,13 +387,15 @@ page{
             }
 
             // 判断能否签到
-            if(util.isAfter(res.data.checkForm.end_at)){
+            if(util.moment().isSameOrBefore(res.data.checkForm.end_at)){
               res.data.checkForm.statusWords = '进行中'
               self.canCheck = true
+              self.canCreateCheck = false
             }
             else{
               res.data.checkForm.statusWords = '已结束'
               self.canCheck = false
+              self.canCreateCheck = true
             }
 
             // 判断是否已经签到
@@ -403,6 +406,9 @@ page{
                 break
               }
             }
+
+            res.data.checkForm.createAt = util.moment(new Date(res.data.checkForm.create_at)).format('YYYY/M/D hh:mm:ss')
+            res.data.checkForm.endAt = util.moment(new Date(res.data.checkForm.end_at)).format('YYYY/M/D hh:mm:ss')
 
             self.checkForm = res.data.checkForm
             self.$apply()            
@@ -470,7 +476,6 @@ page{
             }
             else{
               let distance = getGreatCircleDistance(res.latitude, res.longitude, ownerPosition[0], ownerPosition[1])
-              console.log(distance)
               data.status = distance <= self.checkForm.distance?1:-1
             }
 

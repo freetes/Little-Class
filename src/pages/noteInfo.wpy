@@ -351,11 +351,10 @@ page{
                     duration: 1000
                   })
                   setTimeout(()=>{
-                    wx.switchTab({
-                      url: '/pages/notes'
+                    wx.navigateBack({
+                      delta: 1
                     })
                   }, 1000)
-                  
                 })
               } 
             }
@@ -558,7 +557,7 @@ page{
         if(res.data.filePath){
           res.data.filePath = 'https://api.grayclass.site:2333' + res.data.filePath
         }
-        res.data.create_at = util.getTime(new Date(res.data.create_at))
+        res.data.create_at = util.moment(new Date(res.data.create_at)).format('YYYY/M/D hh:mm:ss')
         self.noteInfo = res.data
 
         self.$apply()

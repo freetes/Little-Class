@@ -56,17 +56,17 @@ page{
     width: 86%;
     font-size: 16px;
   }
-  >button{
-    padding: 10px 7%;
+  >.button{
+    margin: 20px 7%;
     width: 86%;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    text-align: center;
+    line-height: 30px;
+    padding: 10px 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: black;
+    border-radius: 10px;
     background-color: white;
-    border-top: 1px solid #fafafa;
-    border-bottom: 1px solid #fafafa;
-  }
-  >button::after{
-    border: none;
   }
 }
 </style>
@@ -87,7 +87,7 @@ page{
       <text bindtap="toggleVisible">{{ noteInfo.visible?'公共':'私有' }}</text>
     </view>
 
-    <button bindtap="createNote">确定</button>
+    <text class="button" bindtap="createNote">确定</text>
   </view>
 </template>
 
@@ -102,6 +102,7 @@ page{
     }
 
     data = {
+      groupId: '',
       userId: '',
       noteInfo: {
         title: '',
@@ -138,6 +139,7 @@ page{
           visible: JSON.stringify(self.noteInfo.visible),
           tags: self.noteInfo.tags?JSON.stringify(self.noteInfo.tags.split(/\s+/)):JSON.stringify([]),
           userId: self.userId,
+          groupId: self.groupId,
         }
 
         if(self.noteInfo.filePath){
@@ -153,8 +155,8 @@ page{
                 duration: 1000
               })
               setTimeout(() => {
-                wx.switchTab({
-                  url: '/pages/notes'
+                wx.navigateBack({
+                  delta: 1
                 })
               }, 1000);
             }
@@ -169,8 +171,8 @@ page{
               duration: 1000
             })
             setTimeout(() => {
-              wx.switchTab({
-                url: '/pages/notes'
+              wx.navigateBack({
+                delta: 1
               })
             }, 1000);
           })
@@ -181,16 +183,16 @@ page{
 
         wx.chooseImage({
           count: 1,
+          sizeType: ['original', 'compressed'],
           success(res) {
-
-            self.noteInfo.filePath = res.tempFilePaths[0]
-            self.$apply()
-
             // 压缩图片
             if(res.tempFilePaths.length > 0){
+              self.noteInfo.filePath = res.tempFilePaths[0]
+              self.$apply()
+
               wx.compressImage({
                 src: res.tempFilePaths[0],
-                quality: 75,
+                quality: 50,
                 success(res){
 
                   self.noteInfo.filePath = res.tempFilePath
@@ -218,6 +220,12 @@ page{
       toggleVisible(){
         this.noteInfo.visible = !this.noteInfo.visible
       },
+    }
+
+    onLoad(option){
+      let self = this
+
+      self.groupId = option.group_id
     }
 
     onShow() {

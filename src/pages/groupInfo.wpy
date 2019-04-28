@@ -45,11 +45,12 @@ page{
   >.modules-container{
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: flex-start;
     align-items: flex-start;
-    width: 92%;
-    margin: 5px 4%;
-    padding: 10px 10px;
+    flex-wrap: wrap;
+    width: 90%;
+    margin: 5px 5%;
+    padding: 10px;
     background-color: white;
     border-radius: 10px;
 
@@ -58,10 +59,13 @@ page{
       flex-direction: column;
       justify-content: space-around;
       align-items: center;
+      width: 25%;
+      padding: 10px;
 
       >image{
-        width: 30px;
-        height: 30px;
+        width: 24px;
+        height: 24px;
+        margin-bottom: 5px;
       }
       >text{
         font-size: 14px;
@@ -74,13 +78,13 @@ page{
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    width: 92%;
-    margin: 5px 4%;
-    padding: 10px 10px;
+    width: 90%;
+    margin: 5px 5%;
+    padding: 20px;
     background-color: white;
     border-radius: 10px;
 
-    >view.title{
+    >.module-title{
       display: flex;
       flex-direction: row;
       justify-content: space-between;
@@ -90,11 +94,11 @@ page{
 
       >text{
         font-size: 14px;
-        color: #8A8A8A;
+        color: gray;
       }
       >text.assist{
         font-size: 12px;
-        color: #8A8A8A;
+        color: gray;
         font-weight: normal;
       }
     }
@@ -123,13 +127,13 @@ page{
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    width: 92%;
-    margin: 5px 4%;
-    padding: 10px 10px;
+    width: 90%;
+    margin: 5px 5%;
+    padding: 20px;
     background-color: white;
     border-radius: 10px;
 
-    >view.title{
+    >.module-title{
       display: flex;
       flex-direction: row;
       justify-content: space-between;
@@ -139,21 +143,20 @@ page{
 
       >text{
         font-size: 14px;
-        color: #8A8A8A;
+        color: gray;
       }
       >text.assist{
         font-size: 12px;
-        color: #8A8A8A;
+        color: gray;
         font-weight: normal;
       }
     }
 
-    >view.info{
+    >.form-info{
       display: flex;
-      flex-direction: row;
+      flex-direction: column;
       justify-content: flex-start;
       align-items: flex-start;
-      flex-wrap: wrap;
       width: 100%;
       font-size: 14px;
 
@@ -164,36 +167,48 @@ page{
         justify-content: space-between;
         align-items: center;
 
-        >text.title{
+        >.form-title{
+          font-size: 18px;
           font-weight: bold;
         }
+
+        >.form-status{
+          font-size: 14px;
+        }
+        >.green{
+          color: green;
+        }
+        >.gray{
+          color: gray;
+        }
+      }
+
+      >.form-time{
+        color: gray;
+        font-size: 12px;
+        margin: 5px 0;
       }
     }
 
-    >view.member{
+    >.member{
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
       align-items: flex-start;
       width: 100%;
-      margin: 10px 0;
+      margin-top: 10px;
 
-      >view.title{
+      >.title{
         font-size: 14px;
-        color: #8A8A8A;
+        color: black;
 
         >text.assist{
-          background-color: light#8A8A8A;
-          color: black;
-          padding: 5px 10px;
-          border-radius: 10px;
-          line-height: 20px;
-          text-align: center;
+          color: gray;
           margin-left: 10px;
         }
       }
 
-      >view.status{
+      >.status{
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
@@ -204,78 +219,26 @@ page{
         >view{
           display: flex;
           flex-direction: row;
-          justify-content: space-between;
+          justify-content: flex-start;
           align-items: center;
           width: 100%;
           margin: 5px 0;
           font-size: 14px;
+
+          >.count{
+            margin-right: 10px;
+            color: #a5a5a5;
+          }
+          >image.avatar{
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 10px;
+          }
+          >.name{
+            font-size: 14px;
+          }
         }
-      }
-    }
-  }
-
-  >.check-history{
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    width: 92%;
-    margin: 5px 4%;
-    padding: 10px 10px;
-    background-color: white;
-    border-radius: 10px;
-
-    >view.title{
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-      margin-bottom: 10px;
-
-      >text{
-        font-size: 14px;
-        color: #8A8A8A;
-      }
-      >text.assist{
-        font-size: 12px;
-        color: #8A8A8A;
-        font-weight: normal;
-      }
-    }
-
-    >view.history{
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: flex-start;
-      width: 100%;
-      margin: 10px 0;
-
-      >view.title{
-        font-size: 14px;
-        color: black;
-        font-weight: bold;
-
-        >text.assist{
-          background-color: light#8A8A8A;
-          color: black;
-          padding: 5px 10px;
-          border-radius: 10px;
-          line-height: 20px;
-          text-align: center;
-          margin-left: 10px;
-        }
-      }
-
-      >view.status{
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-        margin-bottom: 10px;
-        font-size: 14px;
       }
     }
   }
@@ -285,24 +248,24 @@ page{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 92%;
-    margin: 5px 4%;
+    width: 90%;
+    margin: 5px 5%;
     background-color: white;
     border-radius: 10px;
 
-    >button{
-      padding: 5px 0%;
+    >text{
+      line-height: 30px;
+      padding: 5px 10px;
       background-color: white;
       font-size: 14px;
       font-weight: bold;
-    }
-    >button::after{
-      border: none;
+      text-align: center;
     }
     >.disable{
       color: #8A8A8A;
     }
   }
+
   .modal-container{
     position: absolute;
     top: 0;
@@ -388,13 +351,21 @@ page{
         <image src="../static/icons/position.png"></image>
         <text>签到</text>
       </view>
-      <view>
+      <view bindtap="goto('/pages/groupNotes?group_id={{groupId}}')">
         <image src="../static/icons/ideas.png"></image>
-        <text>讨论</text>
+        <text>话题</text>
       </view>
       <view>
         <image src="../static/icons/files.png"></image>
         <text>文件</text>
+      </view>
+      <view>
+        <image src="../static/icons/files.png"></image>
+        <text>互动</text>
+      </view>
+      <view>
+        <image src="../static/icons/files.png"></image>
+        <text>通知</text>
       </view>
       <view bindtap="goto('/pages/groupUsers?group_id={{groupId}}')">
         <image src="../static/icons/users.png"></image>
@@ -404,7 +375,7 @@ page{
 
     <!-- 成员 信息 -->
     <view class="members" wx:if="{{ groupInfo.userLevel == 1 }}">
-      <view class="title">
+      <view class="module-title">
         <text>成员</text>
         <text class="assist">{{ members.length==0?'空空无人':'共' + members.length + '人'}}</text>
       </view>
@@ -415,95 +386,70 @@ page{
 
     <!-- 签到表 信息 -->
     <view class="check-form" bindtap="goto('/pages/checkFormInfo?group_id={{groupId}}&checkForm_id={{checkForm._id}}')">
-      <view class="title">
+      <view class="module-title">
         <text>最近签到记录</text>
       </view>
       <view class="blank" wx:if="{{ !checkForm }}">
         <text>空</text>
       </view>
-      <view class="info" wx:if="{{ !!checkForm }}">
-        <view>
-          <text class="title">{{ checkForm.title }}</text>
-          <text class="status">{{ checkForm.statusWords }}</text>
-        </view>
-        <text>{{ checkForm.createAt }} - {{ checkForm.endAt }}</text>
-      </view>
-      <view class="member" wx:if="{{ !!checkForm }}">
-        <!-- 成功签到 -->
-        <view class="title">
-          <text>签到成功</text>
-          <text class="assist">{{ checkForm.success.length }}</text>
-        </view>
-        <view class="status">
-          <view wx:for="{{ checkForm.success }}" wx:key="user_id">
-            <text>{{ item.name }}</text>
-            <text>{{ '签到成功' }}</text>
+      <block wx:else>
+        <view class="form-info">
+          <view>
+            <text class="form-title">{{ checkForm.title }}</text>
+            <text class="form-status {{checkForm.status == 1?'green':'gray'}}">{{ checkForm.statusWords }}</text>
           </view>
+          <text class="form-time">{{ checkForm.createAt }} - {{ checkForm.endAt }}</text>
         </view>
+        <view class="member">
+          <!-- 成功签到 -->
+          <view class="title">
+            <text>签到成功</text>
+            <text class="assist">{{ checkForm.success.length }}</text>
+          </view>
+          <view class="status">
+            <view wx:for="{{ checkForm.success }}" wx:key="user_id">
+              <text class="count">{{ index+1 }}.</text>
+              <image class="avatar" src="{{ item.wxInfo.avatarUrl }}"></image>
+              <text>{{ item.nickname || item.name }}</text>
+            </view>
+          </view>
 
-        <!-- 签到失败。不在有效范围 -->
-        <view wx:if="{{ checkForm.fail.length!=0 }}" class="title">
-          <text>签到失败，不在有效范围内</text>
-          <text class="assist">{{ checkForm.fail.length }}</text>
-        </view>
-        <view class="status">
-          <view wx:if="{{ checkForm.fail.length!=0 }}" wx:for="{{ checkForm.fail }}" wx:key="user_id">
-            <text>{{ item.name }}</text>
-            <text>{{ '距离太远' }}</text>
+          <!-- 签到失败。不在有效范围 -->
+          <view wx:if="{{ checkForm.fail.length!=0 }}" class="title">
+            <text>签到失败，不在有效范围内</text>
+            <text class="assist">{{ checkForm.fail.length }}</text>
+          </view>
+          <view class="status">
+            <view wx:if="{{ checkForm.fail.length!=0 }}" wx:for="{{ checkForm.fail }}" wx:key="user_id">
+              <image class="avatar" src="{{ item.wxInfo.avatarUrl }}"></image>
+              <text>{{ item.nickname || item.name }}</text>
+            </view>
+          </view>
+          <!-- 未签到 -->
+          <view class="title">
+            <text>未签到</text>
+            <text class="assist">{{ checkForm.none.length }}</text>
+          </view>
+          <view class="status">
+            <view wx:for="{{ checkForm.none }}" wx:key="user_id">
+              <image class="avatar" src="{{ item.wxInfo.avatarUrl }}"></image>
+              <text>{{ item.nickname || item.name }}</text>
+            </view>
           </view>
         </view>
-        <!-- 未签到 -->
-        <view class="title">
-          <text>未签到</text>
-          <text class="assist">{{ checkForm.none.length }}</text>
-        </view>
-        <view class="status">
-          <view wx:for="{{ checkForm.none }}" wx:key="user_id">
-            <text>{{ item.name }}</text>
-            <text>{{ '未签到' }}</text>
-          </view>
-        </view>
-      </view>
+      </block>
     </view>
-
-    <!-- 历史签到表 信息 
-    <view class="check-history">
-      <view class="title">
-        <text>历史签到</text>
-      </view>
-      <view class="blank" wx:if="{{checkForms.length == 0}}">
-        <text>空</text>
-      </view>
-      <view class="history" wx:for="{{checkForms}}" bindtap="goto('/pages/checkFormInfo?group_id={{groupId}}&checkForm_id={{item._id}}')">
-        <view class="title">
-          <text>{{ item.title }}</text>
-        </view>
-        <view class="status">
-          <text>{{ item.createAt }}</text>
-          <text wx:if="{{ groupInfo.userLevel == 1 }}">{{ item.successCount + '/' + members.length }}</text>
-          <text wx:else>{{item.checkStatus == 1?'签到成功':item.checkStatus == -1?'签到失败，不在规定范围':'未签到'}}</text>
-        </view>
-      </view>
-    </view>
-    -->
 
     <view class="btns">
       <!-- 普通用户 功能 -->
-      <button hover-class="none" wx:if="{{ !groupInfo.userLevel && groupInfo.userLevel!=0 && groupInfo.status != -1 }}" bindtap="joinGroup">申请加群</button>
-      <text class="disable" disabled="{{ true }}" hover-class="none" wx:if="{{ !groupInfo.userLevel && groupInfo.userLevel!=0 && groupInfo.status == -1 }}">加入已关闭，无法加入</text>
-      <!-- <button hover-class="none" wx:if="{{ groupInfo.userLevel == 0}}" bindtap="toogleExitModal">退出</button> -->
+      <text wx:if="{{ !groupInfo.userLevel && groupInfo.userLevel!=0 && groupInfo.status != -1 }}" bindtap="joinGroup">立即加入</text>
+      <text class="disable" disabled="{{ true }}" wx:if="{{ !groupInfo.userLevel && groupInfo.userLevel!=0 && groupInfo.status == -1 }}">加入已关闭，无法加入</text>
+      <!-- <button wx:if="{{ groupInfo.userLevel == 0}}" bindtap="toogleExitModal">退出</button> -->
       <!-- 拥有者 功能 -->
-      <button hover-class="none" wx:if="{{ groupInfo.userLevel == 1 && !canCheck && canCreateCheck }}" bindtap="goto('/pages/createCheckForm?group_id={{groupId}}')">开启签到</button>
-      <button hover-class="none" wx:if="{{ groupInfo.userLevel == 1 }}" bindtap="goto('/pages/editGroupInfo?group_id={{groupId}}')">修改信息</button>
+      <text wx:if="{{ groupInfo.userLevel == 1 && !canCheck && canCreateCheck }}" bindtap="goto('/pages/createCheckForm?group_id={{groupId}}')">开启签到</text>
+      <text wx:if="{{ groupInfo.userLevel == 1 }}" bindtap="goto('/pages/editGroupInfo?group_id={{groupId}}')">修改信息</text>
     </view>
 
-    <!-- 退出群组弹出框 -->
-    <view wx:if="{{ showExitView }}" bindtap="toogleExitModal" class="modal-container">
-      <view class="modal-main" catchtap>
-        <text class="modal-title">退出群组</text>
-        <button bindtap="exitGroup">确定退出！</button>
-      </view>
-    </view>
   </view>
 </template>
 
@@ -528,7 +474,7 @@ page{
       checkForms: [],
       checkForm: undefined,
       canCheck: false,
-      canCreateCheck: true,
+      canCreateCheck: false,
       showExitView: false
     }
 
@@ -559,14 +505,17 @@ page{
             }
 
             // 判断能否签到
-            if(util.isAfter(res.data.checkForm.end_at)){
+            if(util.moment().isSameOrBefore(res.data.checkForm.end_at)){
               res.data.checkForm.statusWords = '进行中'
+              res.data.checkForm.status = 1
               self.canCheck = true
               self.canCreateCheck = false
             }
             else{
               res.data.checkForm.statusWords = '已结束'
+              res.data.checkForm.status = -1
               self.canCheck = false
+              self.canCreateCheck = true
             }
 
             // 判断是否已经签到
@@ -577,8 +526,8 @@ page{
               }
             }
 
-            res.data.checkForm.createAt = util.getTime(new Date(res.data.checkForm.create_at))
-            res.data.checkForm.endAt = util.getTime(new Date(res.data.checkForm.end_at))
+            res.data.checkForm.createAt = util.moment(new Date(res.data.checkForm.create_at)).format('YYYY/M/D hh:mm:ss')
+            res.data.checkForm.endAt = util.moment(new Date(res.data.checkForm.end_at)).format('YYYY/M/D hh:mm:ss')
 
             self.checkForm = res.data.checkForm
             self.$apply()            
@@ -675,7 +624,6 @@ page{
       this.onShow()
       wx.stopPullDownRefresh()
     }
-
 
     onLoad(option) {
       let self = this, userId = wx.getStorageSync('userId'), groupId = option.group_id

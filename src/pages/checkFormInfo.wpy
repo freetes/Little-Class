@@ -29,9 +29,20 @@ page{
       padding: 50px;
     }
 
-    >.code{
+    >.code-container{
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
       padding-bottom: 10px;
-      color: #be1a1d;
+
+      >.code{
+        color: #be1a1d;
+      }
+      >.goto{
+        color: blue;
+      }
     }
     >.date{
       font-size: 12px;
@@ -151,7 +162,10 @@ page{
     <!-- 签到表 信息 -->
     <view class="main-top">
       <text class="status-words">{{ checkForm.statusWords }}</text>
-      <text class="code">签到码：{{ checkForm.code }}</text>
+      <view class="code-container">
+        <text class="code">签到码：{{ checkForm.code }}</text>
+        <text class="goto" bindtap="goto('/pages/groupCheckForms?group_id={{groupId}}')" wx:if="{{ canCheck }}">前去签到</text>
+      </view>
       <text class="title">{{ checkForm.title }}</text>
       <text class="date">{{ checkForm.createAt }} - {{ checkForm.endAt }}</text>
     </view>
@@ -203,7 +217,8 @@ page{
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '签到信息',
-      navigationBarBackgroundColor: '#fafafa'
+      navigationBarBackgroundColor: '#fafafa',
+      enablePullDownRefresh: true
     }
 
     data = {
@@ -217,12 +232,16 @@ page{
       userId: '',
       groupId: '',
       checkFormId: '',
+      canCheck: false
     }
 
     computed = {
     }
 
     methods = {
+      goto(url){
+        wx.navigateTo({url})
+      },
     }
 
     onLoad(option) {
@@ -258,7 +277,7 @@ page{
         }
 
         // 判断能否签到
-        if(util.isAfter(res.data.checkForm.end_at)){
+        if(util.moment().isSameOrBefore(res.data.checkForm.end_at)){
           res.data.checkForm.statusWords = '进行中'
           self.canCheck = true
         }
@@ -267,12 +286,18 @@ page{
           self.canCheck = false
         }
 
-        res.data.checkForm.createAt = util.getTime(new Date(res.data.checkForm.create_at))
-        res.data.checkForm.endAt = util.getTime(new Date(res.data.checkForm.end_at))
+        res.data.checkForm.createAt = util.moment(new Date(res.data.checkForm.create_at)).format('YYYY/M/D hh:mm:ss')
+        res.data.checkForm.endAt = util.moment(new Date(res.data.checkForm.end_at)).format('YYYY/M/D hh:mm:ss')
 
         self.checkForm = res.data.checkForm
         self.$apply()            
       })
+    }
+
+    // 下拉刷新
+    onPullDownRefresh() {
+      this.onShow()
+      wx.stopPullDownRefresh()
     }
   }
 </script>

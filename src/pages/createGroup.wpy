@@ -77,17 +77,17 @@ page{
       }
     }
   }
-  >button{
-    padding: 10px 7%;
+  >.button{
+    margin: 20px 7%;
     width: 86%;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    text-align: center;
+    line-height: 30px;
+    padding: 10px 0;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 10px;
+    color: black;
     background-color: white;
-    border-top: 1px solid #fafafa;
-    border-bottom: 1px solid #fafafa;
-  }
-  >button::after{
-    border: none;
   }
 }
 </style>
@@ -95,11 +95,11 @@ page{
   <view class="container">
     <view class="header">
       <text>基本信息</text>
-      <input placeholder="群名称" maxlength="20" data-key="groupInfo.name" value="{{ groupInfo.name }}" bindchange="inputChange" />
-      <textarea data-key="groupInfo.description" value="{{ groupInfo.description }}" bindinput="inputChange" auto-height placeholder="群描述" />
+      <input placeholder="名称" maxlength="20" data-key="groupInfo.name" value="{{ groupInfo.name }}" bindchange="inputChange" />
+      <textarea data-key="groupInfo.description" value="{{ groupInfo.description }}" bindinput="inputChange" auto-height placeholder="描述" />
     </view>
 
-    <button bindtap="createGroup">确定创建</button>
+    <text class="button" bindtap="createGroup">确定创建</text>
   </view>
 </template>
 
@@ -147,7 +147,7 @@ page{
 
         if(self.groupInfo.name == ''){
           return wx.showToast({
-            title: '群名称不能为空！',
+            title: '名称不能为空！',
             icon: 'none',
             duration: 1000
           })
@@ -161,17 +161,16 @@ page{
 
         request.post('/createGroup', data)
         .then(res=>{
-          console.log(res)
           wx.showToast({
             title: '创建成功！',
             icon: 'success',
             duration: 1000
           })
-          // setTimeout(() => {
-          //   wx.redirectTo({
-          //     url: 'groupInfo?_id=' + res._id
-          //   })
-          // }, 1000);
+          setTimeout(() => {
+            wx.redirectTo({
+              url: 'groupInfo?group_id=' + res.data._id
+            })
+          }, 1000);
         })
       }
     }

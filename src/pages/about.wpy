@@ -136,8 +136,6 @@
     </view>
     <view class="futures">
       <text class="title">FUTURES：</text>
-      <text>‘一言’模块</text>
-      <!-- <text></text> -->
     </view>
   </view>
 </template>
