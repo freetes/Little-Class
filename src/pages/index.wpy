@@ -3,7 +3,6 @@ page{
 }
 
 .container{
-
   .buttons{
     position: fixed;
     right: 20px;
@@ -35,7 +34,6 @@ page{
       }
     }
   }
-
   .modal-container{
     position: absolute;
     top: 0;
@@ -94,25 +92,36 @@ page{
     }
   }
 
+  .module-title{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    padding: 10px 5%;
+    background-color: white;
+    z-index: 100;
+
+    >text{
+      font-size: 14px;
+      line-height: 23px;
+      color: gray;
+    }
+    >icon{
+      font-size: 28px;
+      line-height: 23px;
+      color: gray;
+    }
+  }
   .group-list{
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
     width: 100%;
-    padding: 20px 5%;
-    animation: showIn 0.5s ease;
-
-    @keyframes showIn {
-      from {
-        margin-top: 40px;
-        opacity: 0;
-      }
-      to {
-        margin-top: 0px;
-        opacity: 1;
-      }
-    }
+    padding: 0 5%;
+    background-color: white;
+    border-bottom: 1px solid lightgray;
 
     >.group-item{
       display: flex;
@@ -120,25 +129,53 @@ page{
       justify-content: flex-start;
       align-items: flex-start;
       width: 100%;
-      padding: 15px;
+      padding: 5px 10px;
       border: none;
       border-radius: 5px;
-      margin-bottom: 20px;
-      background-color: white;
-      
-      >.title{
-        font-size: 16px;
-        padding-bottom: 10px;
-        color: #333333;
-        font-weight: bold;
+      margin-bottom: 10px;
+      animation: showIn 0.7s ease;
+
+      @keyframes showIn {
+        from {
+          margin-top: -80px;
+          opacity: 0;
+        }
+        to {
+          margin-top: 0px;
+          opacity: 1;
+        }
       }
-      >view{
+      
+      >.group-top{
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 10px;
+
+        >.group-avatar{
+          width: 40px;
+          height: 40px;
+          margin-right: 10px;
+          border-radius: 50%;
+          background-color: lightgray;
+        }
+        >.group-title{
+          font-size: 16px;
+          padding-bottom: 10px;
+          color: #333333;
+          font-weight: bold;
+        }
+      }
+      >.group-bottom{
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
         width: 100%;
         font-size: 12px;
+        padding-left: 50px;
         color: gray;
       }
     }
@@ -215,26 +252,47 @@ page{
       <image src="../static/icons/more.png" bindtap="toggleBtns"></image>
     </view>
 
-    <view class="group-list" wx:if="{{ groups.length != 0 }}">
+    <view bindtap="toggleMyGroups" class="module-title" wx:if="{{ !loading }}">
+      <text>我创建的</text>
+      <icon class="iconfont {{ showMyGroups?'icon-jiantou_liebiaozhankai':'icon-jiantou_liebiaoxiangyou' }}"></icon>
+    </view>
+    <view class="group-list" wx:if="{{ myGroups.length != 0  && showMyGroups}}">
+      <view class="group-item" wx:for="{{ myGroups }}" wx:key="group" bindtap="goto('/pages/groupInfo?group_id={{item._id}}')">
+        <view class="group-top">
+          <image class="group-avatar" src="{{item.filePath}}" mode="aspectFill" lazy-load></image>
+          <text class="group-titile">{{ item.name }}</text>
+        </view>
+        <view class="group-bottom">
+          <text>{{ item.formCount == 0?'无签到记录':'上次签到: '+item.lastEndAt }}</text>
+        </view>
+      </view>
+    </view>
+
+    <view bindtap="toggleGroups" class="module-title" wx:if="{{ !loading }}">
+      <text>我加入的</text>
+      <icon class="iconfont {{ showGroups?'icon-jiantou_liebiaozhankai':'icon-jiantou_liebiaoxiangyou' }}"></icon>
+    </view>
+    <view class="group-list" wx:if="{{ groups.length != 0 && showGroups}}">
       <view class="group-item" wx:for="{{ groups }}" wx:key="group" bindtap="goto('/pages/groupInfo?group_id={{item._id}}')">
-        <text class="title">{{ item.name }}</text>
-        <view>
-          <text>{{ item.formCount == 0?'无签到记录':item.formCount + '次签到' }}</text>
-          <text>{{ item.userCount == 0?'空空无人':'共' + item.userCount + '人' }}</text>
-          <text wx:if="{{ item.userLevel == 1 }}">创建者</text>
+        <view class="group-top">
+          <image class="group-avatar" src="https://api.grayclass.site:2333{{item.filePath}}" mode="aspectFill" lazy-load></image>
+          <text class="group-titile">{{ item.name }}</text>
+        </view>
+        <view class="group-bottom">
+          <text>{{ item.formCount == 0?'无签到记录':'上次签到: '+item.lastEndAt }}</text>
         </view>
       </view>
     </view>
 
     <!-- 为空时 -->
-    <view class="blank" wx:if="{{ !loading && groups.length == 0 }}">
+    <view class="blank" wx:if="{{ !loading && myGroups.length == 0 && groups.length == 0 }}">
       <text class="logo">空</text>
       <block wx:if="{{ !userId }}">
         <text>您还没有登录</text>
         <text>请先登录</text>
       </block>
       <block wx:else>
-        <text>您还没有签到群组</text>
+        <text>您还没有群组</text>
         <text>点击「+」新建一个试试吧</text>
       </block>
     </view>
@@ -257,6 +315,7 @@ page{
 <script>
   import wepy from 'wepy'
   import request from '@/utils/request.js'
+  import util from '@/utils/util'
 
   export default class Index extends wepy.page {
     config = {
@@ -272,15 +331,24 @@ page{
         showJoinView: false,
         message: ''
       },
+      myGroups: [],
       groups: [],
       showBtns: false,
       loading: true,
+      showMyGroups: true,
+      showGroups: true
     }
 
     computed = {
     }
 
     methods = {
+      toggleMyGroups(){
+        this.showMyGroups = !this.showMyGroups
+      },
+      toggleGroups(){
+        this.showGroups = !this.showGroups
+      },
       async searchGroup(){
         let self = this
         
@@ -335,7 +403,6 @@ page{
     }
 
     onLoad(){
-
     }
 
     // 下拉刷新
@@ -356,7 +423,28 @@ page{
 
         request.post('/getAllGroupsByUserId', {userId})
         .then(res=>{
-          self.groups = res.data
+          let myGroups = [], groups = []
+
+          for(let item of res.data){
+            // 解析图片文件
+            if(item.filePath && item.filePath != ''){
+              item.filePath = 'https://api.grayclass.site:2333' + item.filePath
+            }
+            
+            if(item.lastEndAt){
+              item.lastEndAt = util.moment(item.lastEndAt).fromNow()
+            }
+            // 分类
+            if(item.userLevel == 1){
+              myGroups.push(item)
+            }
+            else{
+              groups.push(item)
+            }
+          }
+
+          self.myGroups = myGroups
+          self.groups = groups
           self.loading = false
           self.$apply()
         })

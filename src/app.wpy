@@ -1,17 +1,12 @@
 <style lang="less">
-@font-face {
-  font-family: 'Patrick Hand SC';
-  src: "BASE64";
-  font-weight: normal;
-  font-style: normal;
-}
+@import (css) './static/iconfont/iconfont.wxss';
+
 page{
   width: 100%;
   height: auto;
   min-height: 100%;
   background-color: #ededed;
   webkit-overflow-scrolling: touch;
-  font-family: "-apple-system","PingFang SC",Helvetica,Tahoma,Arial,"Microsoft YaHei","微软雅黑","黑体","Heiti",sans-serif,"SimSun",serif;
 }
 .container {
   position: absolute;

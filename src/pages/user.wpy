@@ -76,9 +76,8 @@ page{
       width: 100%;
       padding: 10px 20px;
 
-      >image{
-        width: 24px;
-        height: 24px;
+      >icon{
+        font-size: 24px;
         margin-right: 10px;
       }
       >text{
@@ -103,26 +102,27 @@ page{
 
     <view class="btns">
       <view class="btn-container" bindtap="goto('/pages/userInfo')">
-        <image src="../static/icons/userinfo.png"></image>
+        <icon class="iconfont icon-gerenxinxi"></icon>
+        <!-- <image src="../static/icons/userinfo.png"></image> -->
         <text>个人信息</text>
       </view>
       <view class="btn-container" bindtap="goto('/pages/notes')">
-        <image src="../static/icons/ideas.png"></image>
+        <icon class="iconfont icon-linggan"></icon>
         <text>我的话题</text>
       </view>
       <view class="btn-container" bindtap="signout">
-        <image src="../static/icons/signout.png"></image>
+        <icon class="iconfont icon-anniu_guanbi"></icon>
         <text>退出登录</text>
       </view>
     </view>
 
     <view class="btns">
       <view class="btn-container" bindtap="goto('/pages/about')">
-        <image src="../static/icons/about.png"></image>
+        <icon class="iconfont icon-anniu_gerenzhongxin"></icon>
         <text>使用手册</text>
       </view>
       <view class="btn-container" bindtap="goto('/pages/about')">
-        <image src="../static/icons/about.png"></image>
+        <icon class="iconfont icon-xinxi"></icon>
         <text>关于</text>
       </view>
     </view>

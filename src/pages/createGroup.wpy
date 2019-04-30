@@ -18,6 +18,14 @@ page{
     margin: 10px 7%;
     width: 86%;
 
+    >.avatar{
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: lightgray;
+      margin: 10px 0;
+      align-self: center;
+    }
     >text{
       color: #8a8a8a;
       font-size: 12px;
@@ -94,6 +102,8 @@ page{
 <template>
   <view class="container">
     <view class="header">
+      <image class="avatar" bindtap="chooseImage" mode="aspectFill" src="{{ groupInfo.filePath }}"></image>
+
       <text>基本信息</text>
       <input placeholder="名称" maxlength="20" data-key="groupInfo.name" value="{{ groupInfo.name }}" bindchange="inputChange" />
       <textarea data-key="groupInfo.description" value="{{ groupInfo.description }}" bindinput="inputChange" auto-height placeholder="描述" />
@@ -119,29 +129,13 @@ page{
       groupInfo: {
         name: '',
         description: '',
+        filePath: ''
       },
       openid: '',
       userId: ''
     }
 
-    computed = {
-      now () {
-        return new Date()
-      }
-    }
-
     methods = {
-      inputChange(e){
-        let self = this
-        const keyArr = e.currentTarget.dataset.key.split('.')
-
-        if(keyArr.length == 2){
-          this[keyArr[0]][keyArr[1]] = e.detail.value
-        }
-        else if(keyArr.length == 3){
-          this[keyArr[0]][keyArr[1]][keyArr[2]] = e.detail.value
-        }
-      },
       createGroup(){
         let self = this
 
@@ -159,20 +153,79 @@ page{
           description: self.groupInfo.description
         }
 
-        request.post('/createGroup', data)
-        .then(res=>{
-          wx.showToast({
-            title: '创建成功！',
-            icon: 'success',
-            duration: 1000
+        if(self.groupInfo.filePath){
+          console.log('here')
+          const uploadTask = wx.uploadFile({
+            url: 'https://api.grayclass.site:2333/api/createGroup',
+            filePath: self.groupInfo.filePath,
+            name: 'file',
+            formData: data,
+            success(res) {
+              wx.showToast({
+                title: '创建成功～',
+                icon: 'success',
+                duration: 1000
+              })
+              setTimeout(() => {
+                wx.navigateBack({
+                  delta: 1
+                })
+              }, 1000);
+            }
           })
-          setTimeout(() => {
-            wx.redirectTo({
-              url: 'groupInfo?group_id=' + res.data._id
+        }
+        else{
+          request.post('/createGroup', data)
+          .then(res=>{
+            wx.showToast({
+              title: '创建成功！',
+              icon: 'success',
+              duration: 1000
             })
-          }, 1000);
+            setTimeout(() => {
+              wx.redirectTo({
+                url: 'groupInfo?group_id=' + res.data._id
+              })
+            }, 1000);
+          })
+        }
+      },
+      chooseImage(){
+        let self = this
+
+        wx.chooseImage({
+          count: 1,
+          sizeType: ['original', 'compressed'],
+          success(res) {
+            // 压缩图片
+            if(res.tempFilePaths.length > 0){
+              wx.compressImage({
+                src: res.tempFilePaths[0],
+                quality: 50,
+                success(res){
+                  self.groupInfo.filePath = res.tempFilePath
+                  self.$apply()
+                },
+                fail(){
+                  self.groupInfo.filePath = res.tempFilePaths[0]
+                  self.$apply()
+                }
+              })
+            }
+          }
         })
-      }
+      },
+      inputChange(e){
+        let self = this
+        const keyArr = e.currentTarget.dataset.key.split('.')
+
+        if(keyArr.length == 2){
+          this[keyArr[0]][keyArr[1]] = e.detail.value
+        }
+        else if(keyArr.length == 3){
+          this[keyArr[0]][keyArr[1]][keyArr[2]] = e.detail.value
+        }
+      },
     }
 
     onShow() {

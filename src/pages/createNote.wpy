@@ -187,15 +187,15 @@ page{
           success(res) {
             // 压缩图片
             if(res.tempFilePaths.length > 0){
-              self.noteInfo.filePath = res.tempFilePaths[0]
-              self.$apply()
-
               wx.compressImage({
                 src: res.tempFilePaths[0],
                 quality: 50,
                 success(res){
-
                   self.noteInfo.filePath = res.tempFilePath
+                  self.$apply()
+                },
+                fail(){
+                  self.noteInfo.filePath = res.tempFilePaths[0]
                   self.$apply()
                 }
               })

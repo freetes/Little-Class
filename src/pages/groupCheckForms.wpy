@@ -33,12 +33,11 @@ page{
       }
     }
 
-    >view.info{
+    >.form-info{
       display: flex;
-      flex-direction: row;
+      flex-direction: column;
       justify-content: flex-start;
       align-items: flex-start;
-      flex-wrap: wrap;
       width: 100%;
       font-size: 14px;
 
@@ -49,36 +48,48 @@ page{
         justify-content: space-between;
         align-items: center;
 
-        >text.title{
+        >.form-title{
+          font-size: 18px;
           font-weight: bold;
         }
+
+        >.form-status{
+          font-size: 14px;
+        }
+        >.green{
+          color: green;
+        }
+        >.gray{
+          color: gray;
+        }
+      }
+
+      >.form-time{
+        color: gray;
+        font-size: 12px;
+        margin: 5px 0;
       }
     }
 
-    >view.member{
+    >.member{
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
       align-items: flex-start;
       width: 100%;
-      margin: 10px 0;
+      margin-top: 10px;
 
-      >view.title{
+      >.title{
         font-size: 14px;
-        color: #8A8A8A;
+        color: black;
 
         >text.assist{
-          background-color: light#8A8A8A;
-          color: black;
-          padding: 5px 10px;
-          border-radius: 10px;
-          line-height: 20px;
-          text-align: center;
+          color: gray;
           margin-left: 10px;
         }
       }
 
-      >view.status{
+      >.status{
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
@@ -131,7 +142,7 @@ page{
       margin-bottom: 10px;
 
       >text{
-        font-size: 14px;
+        font-size: 12px;
         color: gray;
       }
       >text.assist{
@@ -169,8 +180,9 @@ page{
         justify-content: space-between;
         align-items: center;
         width: 100%;
-        margin-bottom: 10px;
+        margin: 5px 0;
         font-size: 14px;
+        color: gray;
       }
     }
     >.history:last-child{
@@ -186,39 +198,52 @@ page{
     width: 100%;
     height: 300px;
     padding-bottom: 20px;
-    background-color: #fafafa;
+    background-color: white;
     border-radius: 10px;
 
     >input{
       font-size: 16px;
-      padding: 4px 4px;
+      padding: 5px 0;
       width: 100px;
+      height: 30px;
+      box-sizing: border-box;
       text-align: center;
-      line-height: 24px;
-      margin-bottom: 10px;
+      line-height: 20px;
+      border: none;
+      border-bottom: 1px solid lightgray;
+      margin-bottom: 15px;
+    }
+
+    >.button{
+      font-size: 14px;
+      padding: 4px 4px;
+      width: 110px;
+      height: 30px;
+      box-sizing: border-box;
+      text-align: center;
+      line-height: 20px;
+      border-radius: 16px;
+      margin-bottom: 15px;
+    }
+    >.can-check{
+      color: black;
+      font-weight: bold;
+      border: 1px solid black;
+      box-shadow: 0 5px 5px gray;
+    }
+    >.cannot-check{
+      color: lightgray;
       border: 1px solid lightgray;
     }
 
-    >button{
-      padding: 0 10px;
-      color: white;
-      background-color: green;
-      font-size: 14px;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-    button[disabled] {
-      color:rgba(255, 255, 255, 0.6);
-      background-color: lightgray;
-    }
-
-    >button::after{
-      border: none;
-    }
-
     >.a{
-      font-size: 16px;
+      font-size: 14px;
       color: blue;
+      padding: 3px;
+      text-align: center;
+      line-height: 20px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid blue;
     }
   }
 
@@ -251,13 +276,13 @@ page{
   <view class="container">
 
     <view class="btns">
-      <!-- 普通用户 功能 -->
+      <!-- 通用功能 -->
       <block>
-        <input type="number" maxlength="5" data-key="checkCode" bindinput="inputChange" placeholder="输入签到码" disabled="{{!canCheck}}" />
-        <button hover-class="none" bindtap="createCheck" disabled="{{!canCheck}}">立即签到</button>
+        <input wx:if="{{ checkForm && checkForm.code }}" type="number" maxlength="5" data-key="checkCode" bindinput="inputChange" placeholder="输入签到码" disabled="{{!canCheck}}" />
+        <text class="button {{ canCheck?'can-check':'cannot-check' }}" bindtap="createCheck">立即签到</text>
       </block>
       <!-- 拥有者 功能 -->
-      <text class="a" wx:if="{{ groupInfo.userLevel == 1 && canCreateCheck }}" bindtap="goto('/pages/createCheckForm?group_id={{groupId}}')">开启签到</text>
+      <text class="a" wx:if="{{ groupInfo.userLevel == 1 && canCreateCheck }}" bindtap="goto('/pages/createCheckForm?group_id={{groupId}}')">前往开启签到</text>
     </view>
 
     <!-- 签到表 信息 -->
@@ -268,49 +293,52 @@ page{
       <view class="blank" wx:if="{{ !checkForm }}">
         <text>空</text>
       </view>
-      <view class="info" wx:if="{{ !!checkForm }}">
-        <view>
-          <text class="title">{{ checkForm.title }}</text>
-          <text class="status">{{ checkForm.statusWords }}</text>
-        </view>
-        <text>{{ checkForm.createAt }} - {{ checkForm.endAt }}</text>
-      </view>
-      <view class="member" wx:if="{{ !!checkForm }}">
-        <!-- 成功签到 -->
-        <view class="title">
-          <text>签到成功</text>
-          <text class="assist">{{ checkForm.success.length }}</text>
-        </view>
-        <view class="status">
-          <view wx:for="{{ checkForm.success }}" wx:key="user_id">
-            <image class="avatar" src="{{ item.wxInfo.avatarUrl }}"></image>
-            <text class="name">{{ item.nickname || item.name }}</text>
+      <block wx:else>
+        <view class="form-info">
+          <view>
+            <text class="form-title">{{ checkForm.title }}</text>
+            <text class="form-status {{checkForm.status == 1?'green':'gray'}}">{{ checkForm.statusWords }}</text>
           </view>
+          <text class="form-time">{{ checkForm.duration }}</text>
         </view>
+        <view class="member">
+          <!-- 成功签到 -->
+          <view class="title">
+            <text>签到成功</text>
+            <text class="assist">{{ checkForm.success.length }}</text>
+          </view>
+          <view class="status">
+            <view wx:for="{{ checkForm.success }}" wx:key="user_id">
+              <text class="count">{{ index+1 }}.</text>
+              <image class="avatar" src="{{ item.wxInfo.avatarUrl }}"></image>
+              <text>{{ item.nickname || item.name }}</text>
+            </view>
+          </view>
 
-        <!-- 签到失败。不在有效范围 -->
-        <view wx:if="{{ checkForm.fail.length!=0 }}" class="title">
-          <text>签到失败，不在有效范围内</text>
-          <text class="assist">{{ checkForm.fail.length }}</text>
-        </view>
-        <view class="status">
-          <view wx:if="{{ checkForm.fail.length!=0 }}" wx:for="{{ checkForm.fail }}" wx:key="user_id">
-            <image class="avatar" src="{{ item.wxInfo.avatarUrl }}"></image>
-            <text class="name">{{ item.nickname || item.name }}</text>
+          <!-- 签到失败。不在有效范围 -->
+          <view wx:if="{{ checkForm.fail.length!=0 }}" class="title">
+            <text>签到失败，不在有效范围内</text>
+            <text class="assist">{{ checkForm.fail.length }}</text>
+          </view>
+          <view class="status">
+            <view wx:if="{{ checkForm.fail.length!=0 }}" wx:for="{{ checkForm.fail }}" wx:key="user_id">
+              <image class="avatar" src="{{ item.wxInfo.avatarUrl }}"></image>
+              <text>{{ item.nickname || item.name }}</text>
+            </view>
+          </view>
+          <!-- 未签到 -->
+          <view class="title">
+            <text>未签到</text>
+            <text class="assist">{{ checkForm.none.length }}</text>
+          </view>
+          <view class="status">
+            <view wx:for="{{ checkForm.none }}" wx:key="user_id">
+              <image class="avatar" src="{{ item.wxInfo.avatarUrl }}"></image>
+              <text>{{ item.nickname || item.name }}</text>
+            </view>
           </view>
         </view>
-        <!-- 未签到 -->
-        <view class="title">
-          <text>未签到</text>
-          <text class="assist">{{ checkForm.none.length }}</text>
-        </view>
-        <view class="status">
-          <view wx:for="{{ checkForm.none }}" wx:key="user_id">
-            <image class="avatar" src="{{ item.wxInfo.avatarUrl }}"></image>
-            <text class="name">{{ item.nickname || item.name }}</text>
-          </view>
-        </view>
-      </view>
+      </block>
     </view>
 
     <!-- 历史签到表 信息 -->
@@ -326,7 +354,7 @@ page{
           <text>{{ item.title }}</text>
         </view>
         <view class="status">
-          <text>{{ item.createAt }}</text>
+          <text>{{ item.duration }}</text>
           <text wx:if="{{ groupInfo.userLevel == 1 }}">签到成功人数：{{ item.successCount }}</text>
           <text wx:else>{{item.checkStatus == 1?'签到成功':item.checkStatus == -1?'签到失败，不在规定范围':'未签到'}}</text>
         </view>
@@ -343,7 +371,7 @@ page{
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '签到',
-      navigationBarBackgroundColor: '#fafafa',
+      navigationBarBackgroundColor: 'white',
       enablePullDownRefresh: true
     }
 
@@ -407,8 +435,7 @@ page{
               }
             }
 
-            res.data.checkForm.createAt = util.moment(new Date(res.data.checkForm.create_at)).format('YYYY/M/D hh:mm:ss')
-            res.data.checkForm.endAt = util.moment(new Date(res.data.checkForm.end_at)).format('YYYY/M/D hh:mm:ss')
+            res.data.checkForm.duration = util.moment(res.data.checkForm.end_at).fromNow()
 
             self.checkForm = res.data.checkForm
             self.$apply()            
@@ -438,7 +465,11 @@ page{
       createCheck(){
         let self = this
 
-        if(self.checkCode != self.checkForm.code){
+        if(!self.canCheck){
+          return
+        }
+
+        if(self.checkForm.code && self.checkCode != self.checkForm.code){
           wx.showToast({
             title: '签到码错误！',
             icon: 'none',
@@ -549,6 +580,9 @@ page{
         // 获取签到表信息
         request.post('/getCheckFormsByGroupId', {groupId: self.groupId, userId: self.userInfo.userId})
         .then(res=>{
+          for(let item of res.data){
+            item.duration = util.moment(item.end_at).fromNow()
+          }
           self.checkForms = res.data
           self.$apply()
         })

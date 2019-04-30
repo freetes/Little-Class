@@ -1,14 +1,13 @@
 <style lang="less">
 page{
-  background-color: #fafafa;
+  background-color: #ededed;
 }
 .container{
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  width: 90%;
-  margin: 5px 5%;
+  width: 100%;
 
   >.main-top{
     display: flex;
@@ -16,7 +15,9 @@ page{
     justify-content: flex-start;
     align-items: flex-start;
     width: 100%;
+    padding: 5px 5%;
     margin-bottom: 10px;
+    background-color: #fafafa;
 
     >text{
       font-size: 16px;
@@ -24,9 +25,9 @@ page{
     }
 
     >.status-words{
-      font-size: 24px;
+      font-size: 30px;
       align-self: center;
-      padding: 50px;
+      padding: 100px;
     }
 
     >.code-container{
@@ -38,15 +39,28 @@ page{
       padding-bottom: 10px;
 
       >.code{
-        color: #be1a1d;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        font-size: 16px;
+
+        >.number{
+          padding: 0px 8px;
+          background-color: black;
+          color: white;
+          font-weight: bold;
+          letter-spacing: 3px;
+        }
       }
       >.goto{
         color: blue;
       }
     }
     >.date{
-      font-size: 12px;
+      font-size: 14px;
       color: gray;
+      font-weight: lighter;
     }
     
   }
@@ -58,7 +72,9 @@ page{
     align-items: flex-start;
     flex-wrap: wrap;
     width: 100%;
+    padding: 5px 5%;
     font-size: 14px;
+    background-color: #fafafa;
 
     >view{
       width: 100%;
@@ -79,6 +95,7 @@ page{
     justify-content: flex-start;
     align-items: flex-start;
     width: 100%;
+    padding: 5px 5%;
     margin: 10px 0;
 
     >view.title{
@@ -163,11 +180,14 @@ page{
     <view class="main-top">
       <text class="status-words">{{ checkForm.statusWords }}</text>
       <view class="code-container">
-        <text class="code">签到码：{{ checkForm.code }}</text>
+        <view class="code" wx:if="{{ checkForm.code }}">
+          <text>签到码：</text>
+          <text class="number">{{ checkForm.code }}</text>
+        </view>
         <text class="goto" bindtap="goto('/pages/groupCheckForms?group_id={{groupId}}')" wx:if="{{ canCheck }}">前去签到</text>
       </view>
       <text class="title">{{ checkForm.title }}</text>
-      <text class="date">{{ checkForm.createAt }} - {{ checkForm.endAt }}</text>
+      <text class="date">{{ checkForm.duration }}</text>
     </view>
     <view class="member">
       <!-- 成功签到 -->
@@ -286,8 +306,9 @@ page{
           self.canCheck = false
         }
 
-        res.data.checkForm.createAt = util.moment(new Date(res.data.checkForm.create_at)).format('YYYY/M/D hh:mm:ss')
-        res.data.checkForm.endAt = util.moment(new Date(res.data.checkForm.end_at)).format('YYYY/M/D hh:mm:ss')
+        res.data.checkForm.duration = util.moment(res.data.checkForm.end_at).fromNow()
+        // res.data.checkForm.createAt = util.moment(new Date(res.data.checkForm.create_at)).format('YYYY/M/D hh:mm:ss')
+        // res.data.checkForm.endAt = util.moment(new Date(res.data.checkForm.end_at)).format('YYYY/M/D hh:mm:ss')
 
         self.checkForm = res.data.checkForm
         self.$apply()            

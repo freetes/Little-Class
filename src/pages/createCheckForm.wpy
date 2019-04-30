@@ -71,6 +71,9 @@ page{
         font-size: 16px;
         text-align: right;
       }
+      >icon{
+        font-size: 24px;
+      }
     }
     >.button{
       margin: 20px 0;
@@ -112,6 +115,10 @@ page{
           </view>
         </picker>
       </view>
+      <view class="input-container">
+        <text>开启签到码</text>
+        <icon bindtap="toggleCheckCode" class="iconfont {{checkCode?'icon-anniu_xuanzhong':'icon-danxuanweixuanzhong'}}"></icon>
+      </view>
       <text class="button" bindtap="createCheckForm">确定创建</text>
     </view>
 
@@ -135,6 +142,7 @@ page{
       distanceArray: ['50米', '100米', '200米', '不限'],
       distanceIndex: 0,
       title: util.moment().format('YYYY年M月D日'),
+      checkCode: false,
       groupInfo: {
         name: '',
         description: '',
@@ -147,6 +155,9 @@ page{
     }
 
     methods = {
+      toggleCheckCode(){
+        this.checkCode = !this.checkCode
+      },
       inputChange(e){
         let self = this
         const keyArr = e.currentTarget.dataset.key.split('.')
@@ -182,9 +193,12 @@ page{
                         self.distanceIndex == 2?200:-1,
               groupId: self.groupId,
               userId: self.userId,
-              code: Math.ceil(Math.random()*100000),
               createAt: now,
               endAt: new Date( now.getTime() + minutes*60*1000 )
+            }
+            
+            if(self.checkCode){
+              data.code = Math.ceil(Math.random()*100000)
             }
 
             request.post('/createCheckForm', data)

@@ -398,7 +398,7 @@ page{
             <text class="form-title">{{ checkForm.title }}</text>
             <text class="form-status {{checkForm.status == 1?'green':'gray'}}">{{ checkForm.statusWords }}</text>
           </view>
-          <text class="form-time">{{ checkForm.createAt }} - {{ checkForm.endAt }}</text>
+          <text class="form-time">{{ checkForm.duration }}</text>
         </view>
         <view class="member">
           <!-- 成功签到 -->
@@ -442,8 +442,8 @@ page{
 
     <view class="btns">
       <!-- 普通用户 功能 -->
-      <text wx:if="{{ !groupInfo.userLevel && groupInfo.userLevel!=0 && groupInfo.status != -1 }}" bindtap="joinGroup">立即加入</text>
-      <text class="disable" disabled="{{ true }}" wx:if="{{ !groupInfo.userLevel && groupInfo.userLevel!=0 && groupInfo.status == -1 }}">加入已关闭，无法加入</text>
+      <text wx:if="{{ !groupInfo.userLevel && groupInfo.userLevel!=0 && groupInfo.status == 0 }}" bindtap="joinGroup">立即加入</text>
+      <text class="disable" disabled="{{ true }}" wx:if="{{ !groupInfo.userLevel && groupInfo.userLevel!=0 && groupInfo.status == 1 }}">加入已关闭，无法加入</text>
       <!-- <button wx:if="{{ groupInfo.userLevel == 0}}" bindtap="toogleExitModal">退出</button> -->
       <!-- 拥有者 功能 -->
       <text wx:if="{{ groupInfo.userLevel == 1 && !canCheck && canCreateCheck }}" bindtap="goto('/pages/createCheckForm?group_id={{groupId}}')">开启签到</text>
@@ -526,8 +526,7 @@ page{
               }
             }
 
-            res.data.checkForm.createAt = util.moment(new Date(res.data.checkForm.create_at)).format('YYYY/M/D hh:mm:ss')
-            res.data.checkForm.endAt = util.moment(new Date(res.data.checkForm.end_at)).format('YYYY/M/D hh:mm:ss')
+            res.data.checkForm.duration = util.moment(res.data.checkForm.end_at).fromNow()
 
             self.checkForm = res.data.checkForm
             self.$apply()            
@@ -652,6 +651,12 @@ page{
         request.post('/getCheckFormsByGroupId', {groupId: self.groupId, userId: self.userInfo.userId})
         .then(res=>{
           self.checkForms = res.data
+
+          // 无签到数据时
+          if(res.data.length == 0){
+            self.canCheck = false
+            self.canCreateCheck = true
+          }
           self.$apply()
         })
 
