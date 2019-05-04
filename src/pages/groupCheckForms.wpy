@@ -13,6 +13,7 @@ page{
     width: 100%;
     padding: 10px 5%;
     background-color: #ededed;
+    border-bottom: 1px solid lightgray;
 
     >view.title{
       display: flex;
@@ -142,12 +143,12 @@ page{
       margin-bottom: 10px;
 
       >text{
-        font-size: 12px;
-        color: gray;
+        font-size: 14px;
+        color: #8A8A8A;
       }
       >text.assist{
         font-size: 12px;
-        color: gray;
+        color: #8A8A8A;
         font-weight: normal;
       }
     }
@@ -181,7 +182,7 @@ page{
         align-items: center;
         width: 100%;
         margin: 5px 0;
-        font-size: 14px;
+        font-size: 12px;
         color: gray;
       }
     }
@@ -216,7 +217,7 @@ page{
 
     >.button{
       font-size: 14px;
-      padding: 4px 4px;
+      padding: 4px;
       width: 110px;
       height: 30px;
       box-sizing: border-box;
@@ -288,7 +289,7 @@ page{
     <!-- 签到表 信息 -->
     <view class="check-form" wx:if="{{ groupInfo.userLevel == 1 }}" bindtap="goto('/pages/checkFormInfo?group_id={{groupId}}&checkForm_id={{checkForm._id}}')">
       <view class="title">
-        <text>最近签到记录</text>
+        <text>最近签到</text>
       </view>
       <view class="blank" wx:if="{{ !checkForm }}">
         <text>空</text>
@@ -349,16 +350,18 @@ page{
       <view class="blank" wx:if="{{checkForms.length == 0}}">
         <text>空</text>
       </view>
-      <view class="history" wx:for="{{checkForms}}" bindtap="goto('/pages/checkFormInfo?group_id={{groupId}}&checkForm_id={{item._id}}')">
-        <view class="title">
-          <text>{{ item.title }}</text>
+      <block wx:else>
+        <view class="history" wx:for="{{checkForms}}" bindtap="goto('/pages/checkFormInfo?group_id={{groupId}}&checkForm_id={{item._id}}')">
+          <view class="title">
+            <text>{{ item.title }}</text>
+          </view>
+          <view class="status">
+            <text>{{ item.duration }}</text>
+            <text wx:if="{{ groupInfo.userLevel == 1 }}">签到成功人数：{{ item.successCount }}</text>
+            <text wx:else>{{item.checkStatus == 1?'签到成功':item.checkStatus == -1?'签到失败，不在规定范围':'未签到'}}</text>
+          </view>
         </view>
-        <view class="status">
-          <text>{{ item.duration }}</text>
-          <text wx:if="{{ groupInfo.userLevel == 1 }}">签到成功人数：{{ item.successCount }}</text>
-          <text wx:else>{{item.checkStatus == 1?'签到成功':item.checkStatus == -1?'签到失败，不在规定范围':'未签到'}}</text>
-        </view>
-      </view>
+      </block>
     </view>
   </view>
 </template>

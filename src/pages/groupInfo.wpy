@@ -255,7 +255,7 @@ page{
 
     >text{
       line-height: 30px;
-      padding: 5px 10px;
+      padding: 10px 10px;
       background-color: white;
       font-size: 14px;
       font-weight: bold;
@@ -377,8 +377,8 @@ page{
     <!-- 成员 信息 -->
     <view class="members" wx:if="{{ groupInfo.userLevel == 1 }}">
       <view class="module-title">
-        <text>成员</text>
-        <text class="assist">{{ members.length==0?'空空无人':'共' + members.length + '人'}}</text>
+        <text>群组成员</text>
+        <text class="assist iconfont">{{ members.length==0?'空空无人':'共' + members.length + '人'}} &#xeb99;</text>
       </view>
       <view wx:if="{{ members.length != 0 }}" wx:key="user_id">
         <image mode="widthFix" wx:for="{{ members }}" wx:key="{{ members }}" src="{{ item.wxInfo.avatarUrl }}"></image>
@@ -388,7 +388,8 @@ page{
     <!-- 签到表 信息 -->
     <view class="check-form" bindtap="goto('/pages/checkFormInfo?group_id={{groupId}}&checkForm_id={{checkForm._id}}')">
       <view class="module-title">
-        <text>最近签到记录</text>
+        <text>最近签到</text>
+        <text class="assist iconfont">&#xeb99;</text>
       </view>
       <view class="blank" wx:if="{{ !checkForm }}">
         <text>空</text>

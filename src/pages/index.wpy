@@ -34,6 +34,7 @@ page{
       }
     }
   }
+
   .modal-container{
     position: absolute;
     top: 0;
@@ -115,6 +116,7 @@ page{
       color: gray;
     }
   }
+
   .group-list{
     display: flex;
     flex-direction: column;
@@ -165,8 +167,7 @@ page{
         }
         >.group-title{
           font-size: 16px;
-          padding-bottom: 10px;
-          color: #333333;
+          color: black;
           font-weight: bold;
         }
       }
@@ -262,7 +263,7 @@ page{
       <view class="group-item" wx:for="{{ myGroups }}" wx:key="group" bindtap="goto('/pages/groupInfo?group_id={{item._id}}')">
         <view class="group-top">
           <image class="group-avatar" src="{{item.filePath}}" mode="aspectFill" lazy-load></image>
-          <text class="group-titile">{{ item.name }}</text>
+          <text class="group-title">{{ item.name }}</text>
         </view>
         <view class="group-bottom">
           <text>{{ item.formCount == 0?'无签到记录':'上次签到: '+item.lastEndAt }}</text>
@@ -278,7 +279,7 @@ page{
       <view class="group-item" wx:for="{{ groups }}" wx:key="group" bindtap="goto('/pages/groupInfo?group_id={{item._id}}')">
         <view class="group-top">
           <image class="group-avatar" src="https://api.grayclass.site:2333{{item.filePath}}" mode="aspectFill" lazy-load></image>
-          <text class="group-titile">{{ item.name }}</text>
+          <text class="group-title">{{ item.name }}</text>
         </view>
         <view class="group-bottom">
           <text>{{ item.formCount == 0?'无签到记录':'上次签到: '+item.lastEndAt }}</text>
@@ -431,6 +432,9 @@ page{
             // 解析图片文件
             if(item.filePath && item.filePath != ''){
               item.filePath = 'https://api.grayclass.site:2333' + item.filePath
+            }
+            else{
+              item.filePath = '../static/icons/users.png'
             }
             
             if(item.lastEndAt){
