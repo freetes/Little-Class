@@ -51,10 +51,30 @@ page{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     margin: 10px 7%;
     width: 86%;
-    font-size: 16px;
+    font-size: 14px;
+
+    .iconfont{
+      font-size: 26px;
+      color: black;
+    }
+    >view{
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+
+      >image{
+        height: 30px; 
+        width: 50px;
+      }
+
+      >.iconfont{
+        color: gray;
+      }
+    }
   }
   >.button{
     margin: 20px 7%;
@@ -78,13 +98,13 @@ page{
     </view>
     <input class="tagsInput" placeholder="标签，用空格隔开" data-key="noteInfo.tags" value="{{ noteInfo.tags }}" bindchange="inputChange" />
     <view class="others">
-      <text wx:if="{{ noteInfo.filePath=='' }}" bindtap="chooseImage">选择图片</text>
+      <text class="iconfont" wx:if="{{ noteInfo.filePath=='' }}" bindtap="chooseImage">&#xeb8d;</text>
       <view wx:else>
-        <image mode="aspectFill" src="{{ noteInfo.filePath }}" style="height: 30px; width: 30px;"></image>
-        <text bindtap="clearFile">清空图片</text>
+        <image bindtap="previewImage" mode="aspectFill" src="{{ noteInfo.filePath }}"></image>
+        <text class="iconfont" bindtap="clearFile">&#xebab;</text>
       </view>
 
-      <text bindtap="toggleVisible">{{ noteInfo.visible?'公共':'私有' }}</text>
+      <text bindtap="toggleVisible" class="iconfont">{{noteInfo.visible?'&#xebcc;':'&#xebcd;' }}</text>
     </view>
 
     <text class="button" bindtap="createNote">确定</text>
@@ -114,6 +134,11 @@ page{
     }
 
     methods = {
+      previewImage(){
+        wx.previewImage({
+          urls: [this.noteInfo.filePath]
+        })
+      },
       createNote(){
         let self = this
 

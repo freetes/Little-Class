@@ -50,7 +50,7 @@ page{
       width: 80%;
       font-size: 16px;
       color: black;
-      font-weight: lighter;
+      font-weight: normal;
       line-height: 20px;
     }
 
@@ -82,13 +82,18 @@ page{
     padding-bottom: 20px;
     font-size: 14px;
     color: gray;
+    font-weight: lighter;
+
+    >.iconfont{
+      font-size: 22px;
+    }
 
     >text.tag{
       background-color: gray;
       color: white;
       padding: 1px 3px;
       font-size: 12px;
-      margin-left: 10px;
+      margin-left: 5px;
     }
   }
   >.comments-container{
@@ -115,10 +120,10 @@ page{
       margin: 10px 0;
       width: 100%;
       color: black;
-      font-size: 14px;
+      font-size: 12px;
 
       >.comment{
-        font-size: 14px;
+        font-size: 12px;
         margin-top: 5px;
       }
       >.user-info{
@@ -135,14 +140,29 @@ page{
           margin-right: 10px;
         }
         >.user-name{
-          font-size: 14px;
-          margin-right: 10px;
+          font-size: 12px;
+          margin-right: 5px;
+          line-height: 24px;
         }
         >.user-feeling{
           font-size: 14px;
+          line-height: 24px;
         }
       }
     }
+  }
+  >.create-commit-button{
+    position: fixed;
+    right: 40px;
+    bottom: 40px;
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+    line-height: 40px;
+    text-align: center;
+    border-radius: 50%;
+    background-color: lightgray;
+    color: white;
   }
   >.create-comment-container{
     position: fixed;
@@ -163,8 +183,7 @@ page{
 
     >textarea{
       width: 100%;
-      min-height: 30px;
-      max-height: 80px;
+      height: 80px;
       font-size: 16px;
       padding: 0 3px;
       box-sizing: border-box;
@@ -228,9 +247,9 @@ page{
 }
 </style>
 <template>
-  <view class="container">
+  <view class="container" bindtap="hideCommitModal">
     <view class="header">
-      <image bindtap="showNoteCover" wx:if="{{ noteInfo.filePath }}" class="note-cover" src="{{ noteInfo.filePath }}" mode="aspectFill" lazy-load></image>
+      <image bindtap="previewImage" wx:if="{{ noteInfo.filePath }}" class="note-cover" src="{{ noteInfo.filePath }}" mode="aspectFill" lazy-load></image>
       <text class="note-title" bindlongpress="deleteNote">{{ noteInfo.title }}</text>
       <view class="note-info">
         <text>{{ noteInfo.create_at }}</text>
@@ -245,7 +264,7 @@ page{
     </view>
 
     <view class="tags-container">
-      <text class="title">tags:</text>
+      <text class="iconfont">&#xeb84;</text>
       <text class="tag" wx:for="{{ noteInfo.tags }}">{{ item }}</text>
     </view>
 
@@ -255,16 +274,17 @@ page{
         <view class="user-info">
           <image src="{{ item.avatarUrl }}"></image>
           <text class="user-name">{{ item.userName }}</text>
-          <text class="feeling">{{ item.feeling }}</text>
+          <text class="user-feeling">{{ item.feeling }}</text>
         </view>
         <text class="comment">{{ item.content }}</text>
       </view>
     </view>
 
     <!-- 后期优化细节 -->
+
     <!-- 新增评论输入框 -->
-    <view class="create-comment-container" catchtap="" style="bottom: {{keyboardHeight}}px">
-      <textarea bindblur="hideKeyboard" maxlength="{{ 100 }}" auto-height="{{ true }}" bindfocus="keyboard" data-key="comment.content" bindinput="inputChange" fixed show-confirm-bar="{{ false }}" adjust-position="{{ false }}"></textarea>
+    <view class="create-comment-container" wx:if="{{ showCreateCommit }}" catchtap="showCommitModal" style="bottom: {{keyboardHeight}}px">
+      <textarea value="{{ comment.content }}" maxlength="{{ 100 }}" bindfocus="showCommitModal" data-key="comment.content" bindinput="inputChange" fixed show-confirm-bar="{{ false }}" auto-focus adjust-position="{{ false }}"></textarea>
       <view>
         <picker bindchange="feelingChange" value="{{comment.feelingIndex}}" range="{{feelings}}">
           <view class="feeling-words">
@@ -274,6 +294,8 @@ page{
         <image src="../static/icons/send.png" bindtap="createComment"></image>
       </view>
     </view>
+
+    <view class="create-commit-button iconfont" wx:else catchtap="showCommitModal">&#xeaff;</view>
 
     <!-- 编辑笔记 后期开发
     <block wx:else>
@@ -314,6 +336,7 @@ page{
       userId: '',
       noteId: '',
       editNote: false,
+      showCreateCommit: false,
       keyboardHeight: 0,
 
       feelings: ['😄', '😕', '👍', '👎', '🎉', '👀'],
@@ -334,6 +357,15 @@ page{
     }
 
     methods = {
+      hideCommitModal(){
+        this.showCreateCommit = false
+      },
+      showCommitModal(e){
+        if(e){
+          this.keyboardHeight = e.detail.height
+        }
+        this.showCreateCommit = true
+      },
       deleteNote(){
         let self = this
 
@@ -414,11 +446,11 @@ page{
         this.comment.feelingIndex = e.detail.value
         this.comment.feeling = this.feelings[e.detail.value]
       },
-      hideKeyboard(){
-        this.keyboardHeight = 0
-      },
-      keyboard(e){
-        this.keyboardHeight = e.detail.height
+      showCommitModal(e){
+        if(e){
+          this.keyboardHeight = e.detail.height
+        }
+        this.showCreateCommit = true
       },
       editNote(){
         let self = this
@@ -504,7 +536,7 @@ page{
           }
         })
       },
-      showNoteCover(){
+      previewImage(){
         wx.previewImage({
           urls: [this.noteInfo.filePath]
         })

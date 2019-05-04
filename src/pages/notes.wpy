@@ -171,17 +171,32 @@ page{
   <view class="container">
 
     <view class="header">
-      <view class="time-container" bindlongpress="gotoTimePage">
+      <view class="time-container" bindlongpress="goto('/pages/grayClock')">
         <text class="date">{{ time }}</text>
         <text class="week">{{ ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][week] }}</text>
       </view>
       <view class="tabs">
-        <image class="create-icon" src="../static/icons/add.png" bindtap="goto('/pages/createNote?group_id={{groupId}}')"></image>
+        <text wx:if="{{ showMyNotes }}" bindtap="toggleNotes">我的</text>
+        <text wx:else bindtap="toggleNotes">全部</text>
+
+        <image class="create-icon" src="../static/icons/add.png" bindtap="goto('/pages/createNote')"></image>
       </view>
     </view>
 
-    <swiper class="notes-container" previous-margin="30px" next-margin="30px" style="height: {{ swiperHeight + 'px'}}" circular="{{ true }}">
-      <block wx:for="{{ notes }}" wx:key="note">
+    <swiper wx:if="{{ showMyNotes }}" class="notes-container" previous-margin="30px" next-margin="30px" style="height: {{ swiperHeight + 'px'}}" circular="{{ true }}">
+      <block wx:for="{{ myNotes }}" wx:key="note">
+        <swiper-item class="note-item" bindtap="goto('/pages/noteInfo?note_id={{item._id}}')">
+          <text class="title">{{ item.title }}</text>
+          <text class="content">{{ item.content }}</text>
+          <view class="others">
+            <text>浏览次数：{{ item.view_count }}</text>
+          </view>
+        </swiper-item>
+      </block>
+    </swiper>
+
+    <swiper wx:else class="notes-container" previous-margin="30px" next-margin="30px" style="height: {{ swiperHeight + 'px'}}" circular="{{ true }}">
+      <block wx:for="{{ allNotes }}" wx:key="note">
         <swiper-item class="note-item" bindtap="goto('/pages/noteInfo?note_id={{item._id}}')">
           <text class="title">{{ item.title }}</text>
           <text class="content">{{ item.content }}</text>
@@ -213,17 +228,18 @@ page{
 
   export default class Index extends wepy.page {
     config = {
-      navigationBarTitleText: '我的话题',
+      navigationBarTitleText: '我的笔记',
       enablePullDownRefresh: true
     }
 
     data = {
-      groupId: '',
       userId: '',
-      notes: [],
+      myNotes: [],
+      allNotes: [],
       loading: true,
       showInput: false,
       swiperHeight: 600,
+      showMyNotes: true,
       time: (new Date()).getDate(),
       week: (new Date()).getDay()
     }
@@ -232,8 +248,8 @@ page{
     }
 
     methods = {
-      gotoTimePage(){
-        wx.navigateTo({url: '/pages/grayClock'})
+      toggleNotes(){
+        this.showMyNotes = !this.showMyNotes
       },
       goto(url){
         wx.navigateTo({url})
@@ -257,11 +273,8 @@ page{
       },
     }
 
-    onLoad(option){
-      let self = this, systemInfo = wx.getSystemInfoSync()
+    onLoad(){
 
-      // 响应式设置高度
-      self.swiperHeight = systemInfo.windowHeight - 160
     }
 
     // 下拉刷新
@@ -276,17 +289,32 @@ page{
     onShow() {
       let self = this, userId = wx.getStorageSync('userId')
 
-      // 群组话题
-      self.userId = userId
+      // 判断是否登录
+      if(userId){
+        self.userId = userId
 
-      request.post('/getNotesByUserId', {userId})
+        request.post('/getNotesByUserId', {userId})
+        .then(res=>{
+          self.myNotes = res.data
+
+          self.$apply()
+        })
+      }
+      else{
+      }
+
+      request.post('/getAllNotes', {})
       .then(res=>{
-        self.notes = res.data
-        self.loading = false
+        self.allNotes = res.data
 
         self.$apply()
       })
 
+      // 响应式设置高度
+      const res = wx.getSystemInfoSync()
+      self.swiperHeight = res.windowHeight - 160
+      
+      self.loading = false
     }
   }
 </script>

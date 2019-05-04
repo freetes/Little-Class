@@ -277,6 +277,7 @@ page{
     justify-content: center;
     align-items: center;
     background-color: rgba(0, 0, 0, 0.7);
+    z-index: 100;
 
     >.modal-main{
       background-color: #fff;
@@ -351,14 +352,14 @@ page{
         <image src="../static/icons/position.png"></image>
         <text>签到</text>
       </view>
-      <view bindtap="goto('/pages/groupNotes?group_id={{groupId}}')">
+      <!-- <view bindtap="goto('/pages/groupNotes?group_id={{groupId}}')">
         <image src="../static/icons/ideas.png"></image>
         <text>话题</text>
       </view>
       <view>
         <image src="../static/icons/files.png"></image>
         <text>文件</text>
-      </view>
+      </view> -->
       <view>
         <image src="../static/icons/files.png"></image>
         <text>互动</text>
