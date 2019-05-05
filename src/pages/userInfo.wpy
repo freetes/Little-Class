@@ -130,7 +130,7 @@ page{
         <input placeholder="难道">
       </view>
       <view class="input-container">
-        <text>班级</text>
+        <text>群组</text>
         <input placeholder="难道">
       </view>
     </view> -->
@@ -207,10 +207,12 @@ page{
     methods = {
       inputChange(e){
         let self = this
-
         const keyArr = e.currentTarget.dataset.key.split('.')
 
-        if(keyArr.length == 2){
+        if(keyArr.length == 1){
+          this[keyArr[0]] = e.detail.value
+        }
+        else if(keyArr.length == 2){
           this[keyArr[0]][keyArr[1]] = e.detail.value
         }
         else if(keyArr.length == 3){

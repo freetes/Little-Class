@@ -96,10 +96,19 @@ page{
         font-size: 14px;
         color: gray;
       }
-      >text.assist{
+      >.assist{
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
         font-size: 12px;
         color: gray;
         font-weight: normal;
+        line-height: 20px;
+
+        >.iconfont{
+          font-size: 24px;
+        }
       }
     }
 
@@ -145,10 +154,19 @@ page{
         font-size: 14px;
         color: gray;
       }
-      >text.assist{
+      >.assist{
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
         font-size: 12px;
         color: gray;
         font-weight: normal;
+
+        >.iconfont{
+          font-size: 26px;
+          line-height: 20px;
+        }
       }
     }
 
@@ -239,6 +257,75 @@ page{
             font-size: 14px;
           }
         }
+      }
+    }
+  }
+
+  >.notice-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 90%;
+    margin: 5px 5%;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+
+    >.module-title{
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      margin-bottom: 10px;
+
+      >text{
+        font-size: 14px;
+        color: gray;
+      }
+      >.assist{
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
+        font-size: 12px;
+        color: gray;
+        font-weight: normal;
+
+        >.iconfont{
+          font-size: 26px;
+          line-height: 20px;
+        }
+      }
+    }
+
+    >.notice-info{
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      width: 100%;
+      font-size: 14px;
+
+      >.notice-title{
+        font-size: 18px;
+        font-weight: bold;
+      }
+
+      >.notice-content{
+        font-size: 14px;
+        color: gray;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+      }
+
+      >.notice-time{
+        color: gray;
+        font-size: 12px;
+        margin: 5px 0;
       }
     }
   }
@@ -360,12 +447,12 @@ page{
         <image src="../static/icons/files.png"></image>
         <text>文件</text>
       </view> -->
-      <view>
-        <image src="../static/icons/files.png"></image>
+      <view bindtap="goto('/pages/groupOneWords?group_id={{groupId}}')">
+        <image src="../static/icons/ideas.png"></image>
         <text>互动</text>
       </view>
-      <view>
-        <image src="../static/icons/files.png"></image>
+      <view bindtap="goto('/pages/groupNotices?group_id={{groupId}}')">
+        <image src="../static/icons/notice.png"></image>
         <text>通知</text>
       </view>
       <view bindtap="goto('/pages/groupUsers?group_id={{groupId}}')">
@@ -374,22 +461,33 @@ page{
       </view>
     </view>
 
-    <!-- 成员 信息 -->
-    <view class="members" wx:if="{{ groupInfo.userLevel == 1 }}">
+    <!-- 签到表 信息 -->
+    <view class="notice-container" bindtap="goto('/pages/groupNotices?group_id={{groupId}}&checkForm_id={{checkForm._id}}')">
       <view class="module-title">
-        <text>群组成员</text>
-        <text class="assist iconfont">{{ members.length==0?'空空无人':'共' + members.length + '人'}} &#xeb99;</text>
+        <text>通知</text>
+        <view class="assist">
+          <text class="iconfont">&#xeb99;</text>
+        </view>
       </view>
-      <view wx:if="{{ members.length != 0 }}" wx:key="user_id">
-        <image mode="widthFix" wx:for="{{ members }}" wx:key="{{ members }}" src="{{ item.wxInfo.avatarUrl }}"></image>
+      <view class="blank" wx:if="{{ notices.length==0 }}">
+        <text>空</text>
       </view>
+      <block wx:else>
+        <view class="notice-info">
+          <text class="notice-title">{{ notices[0].title }}</text>
+          <text class="notice-content">{{ notices[0].content }}</text>
+          <text class="notice-time">{{ notices[0].createAt }}</text>
+        </view>
+      </block>
     </view>
 
     <!-- 签到表 信息 -->
     <view class="check-form" bindtap="goto('/pages/checkFormInfo?group_id={{groupId}}&checkForm_id={{checkForm._id}}')">
       <view class="module-title">
         <text>最近签到</text>
-        <text class="assist iconfont">&#xeb99;</text>
+        <view class="assist">
+          <text class="iconfont">&#xeb99;</text>
+        </view>
       </view>
       <view class="blank" wx:if="{{ !checkForm }}">
         <text>空</text>
@@ -442,6 +540,20 @@ page{
       </block>
     </view>
 
+    <!-- 成员 信息 -->
+    <view class="members">
+      <view class="module-title" bindtap="goto('/pages/groupUsers?group_id={{groupId}}')">
+        <text>群组成员</text>
+        <view class="assist">
+          <text>{{ members.length==0?'空空无人':'共' + members.length + '人'}}</text>
+          <text class="iconfont">&#xeb99;</text>
+        </view>
+      </view>
+      <view wx:if="{{ members.length != 0 }}" wx:key="user_id">
+        <image mode="widthFix" wx:for="{{ members }}" wx:key="{{ members }}" src="{{ item.wxInfo.avatarUrl }}"></image>
+      </view>
+    </view>
+
     <view class="btns">
       <!-- 普通用户 功能 -->
       <text wx:if="{{ !groupInfo.userLevel && groupInfo.userLevel!=0 && groupInfo.status == 0 }}" bindtap="joinGroup">立即加入</text>
@@ -474,6 +586,7 @@ page{
       },
       members: [],
       checkForms: [],
+      notices: [],
       checkForm: undefined,
       canCheck: false,
       canCreateCheck: false,
@@ -542,7 +655,10 @@ page{
         let self = this
         const keyArr = e.currentTarget.dataset.key.split('.')
 
-        if(keyArr.length == 2){
+        if(keyArr.length == 1){
+          this[keyArr[0]] = e.detail.value
+        }
+        else if(keyArr.length == 2){
           this[keyArr[0]][keyArr[1]] = e.detail.value
         }
         else if(keyArr.length == 3){
@@ -649,6 +765,18 @@ page{
       })
 
       if(self.userInfo.userId){
+
+        // 获取通知
+        request.post('/getNoticesByGroupId', {groupId: self.groupId})
+        .then(res=>{
+          for(let item of res.data){
+            item.createAt = util.moment(item.create_at).fromNow()
+          }
+          self.notices = res.data
+          
+          self.$apply()
+        })
+
         // 获取签到表信息
         request.post('/getCheckFormsByGroupId', {groupId: self.groupId, userId: self.userInfo.userId})
         .then(res=>{

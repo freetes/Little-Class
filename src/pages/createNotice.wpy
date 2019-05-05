@@ -1,0 +1,194 @@
+<style lang="less">
+page{
+  background-color: #fafafa;
+}
+
+.container{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+
+  >.header{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin: 10px 7%;
+    width: 86%;
+
+    >text{
+      color: #8a8a8a;
+      font-size: 12px;
+    }
+    >input{
+      width: 100%;
+      padding: 10px 0;
+      border-bottom: 1px solid #8A8A8A;
+      font-size: 16px;
+      font-weight: bold;
+      color: black;
+    }
+    >textarea{
+      width: 100%;
+      padding: 10px 0;
+      height: 250px;
+      font-size: 16px;
+      color: black;
+    }
+  }
+  >.tagsInput{
+    margin: 10px 7%;
+    width: 86%;
+    padding: 10px 0;
+    border-bottom: 1px solid #8A8A8A;
+    font-size: 16px;
+    font-weight: bold;
+    color: black;
+  }
+  >.others{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 7%;
+    width: 86%;
+    font-size: 14px;
+
+    .iconfont{
+      font-size: 26px;
+      color: black;
+    }
+    >view{
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+
+      >image{
+        height: 30px; 
+        width: 50px;
+      }
+
+      >.iconfont{
+        color: gray;
+      }
+    }
+  }
+  >.button{
+    margin: 20px 7%;
+    width: 86%;
+    text-align: center;
+    line-height: 30px;
+    padding: 10px 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: black;
+    border-radius: 10px;
+    background-color: white;
+  }
+}
+</style>
+<template>
+  <view class="container">
+    <view class="header">
+      <input placeholder="标题" data-key="notice.title" value="{{ notice.title }}" bindchange="inputChange" />
+      <textarea data-key="notice.content" value="{{ notice.content }}" bindinput="inputChange" placeholder="内容" />
+    </view>
+
+    <text class="button" bindtap="createNotice">确定</text>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import request from '@/utils/request.js'
+
+  export default class CreateNotice extends wepy.page {
+    config = {
+      navigationBarTitleText: '创建通知',
+      navigationBarBackgroundColor: '#fafafa'
+    }
+
+    data = {
+      groupId: '',
+      userId: '',
+      notice: {
+        title: '',
+        content: '',
+      },
+    }
+
+    methods = {
+      createNotice(){
+        let self = this
+
+        if(self.notice.title == ''){
+          return wx.showToast({
+            title: '标题不能为空！',
+            icon: 'none',
+            duration: 1000
+          })
+        }
+
+        if(self.notice.content == ''){
+          return wx.showToast({
+            title: '内容不能为空！',
+            icon: 'none',
+            duration: 1000
+          })
+        }
+
+        let data = {
+          title: self.notice.title,
+          content: self.notice.content,
+          userId: self.userId,
+          groupId: self.groupId,
+        }
+
+        request.post('/createNotice', data)
+        .then(res=>{
+          wx.showToast({
+            title: '新增成功～',
+            icon: 'success',
+            duration: 1000
+          })
+          setTimeout(() => {
+            wx.navigateBack({
+              delta: 1
+            })
+          }, 1000);
+        })
+      },
+      inputChange(e){
+        let self = this
+        const keyArr = e.currentTarget.dataset.key.split('.')
+
+        if(keyArr.length == 1){
+          this[keyArr[0]] = e.detail.value
+        }
+        else if(keyArr.length == 2){
+          this[keyArr[0]][keyArr[1]] = e.detail.value
+        }
+        else if(keyArr.length == 3){
+          this[keyArr[0]][keyArr[1]][keyArr[2]] = e.detail.value
+        }
+      },
+    }
+
+    onLoad(option){
+      let self = this
+
+      self.groupId = option.group_id
+    }
+
+    onShow() {
+      let self = this, userId = wx.getStorageSync('userId')
+
+      if(userId){
+        self.userId = userId
+      }
+    }
+  }
+</script>

@@ -1,0 +1,204 @@
+<style lang="less">
+page{
+  background-color: #fafafa;
+}
+
+.container{
+  height: 100%;
+
+  >.oneWords-container{
+    display: flex;
+    flex-direction: column;;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin: 10px 5%;
+    height: 100%;
+    width: 90%;
+    padding: 30px 0;
+    overflow: auto;
+
+    >.oneWord-container{
+      flex: 0 0 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      padding: 5px 15px;
+      margin-top: 10px;
+      width: auto;
+      animation: showIn 0.4s ease;
+      border: 1px solid lightgray;
+      border-radius: 10px;
+      background-color: white;
+
+      @keyframes showIn {
+        from {
+          margin-left: -100%;
+          opacity: 0;
+        }
+        to {
+          margin-left: 0px;
+          opacity: 1;
+        }
+      }
+
+      >.content{
+        width: 100%;
+        font-size: 16px;
+        color: black;
+        line-height: 20px;
+      }
+    }
+  }
+  >.oneWord-inputs{
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: 94%;
+    margin: 0 3%;
+    padding: 5px;
+    background-color: white;
+    border-radius: 10px;
+    line-height: 20px;
+
+    >input{
+      flex: 1 0 auto;
+      padding: 0 5px;
+      font-size: 14px;
+      border-right: 1px solid lightgray;
+    }
+    >text{
+      flex: 0 0 auto;
+      font-size: 14px;
+      padding: 5px;
+    }
+  }
+
+}
+</style>
+<template>
+  <view class="container">
+
+    <view class="oneWord-inputs">
+      <input placeholder="OneWords" data-key="oneWord" value="{{ oneWord }}" bindinput="inputChange" />
+      <text bindtap="createOneWord">发送</text>
+    </view>
+
+    <!-- 弹幕 信息 -->
+    <view class="oneWords-container">
+      <view class="oneWord-container" wx:for="{{ oneWords }}" wx:key="{{ item._id }}">
+        <text class="content">{{ item.content }}</text>
+      </view>
+    </view>
+
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import request from '@/utils/request.js'
+  import util from '@/utils/util.js'
+
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '互动',
+      navigationBarBackgroundColor: '#fafafa'
+    }
+
+    data = {
+      groupId: '',
+      userId: '',
+      oneWords: [],
+      oneWord: '',
+      oneWordsInterval: null
+    }
+
+    methods = {
+      createOneWord(){
+        let self = this
+
+        if(self.oneWord == ''){
+          return wx.showToast({
+            title: '内容不能为空！',
+            icon: 'none',
+            duration: 1000
+          })
+        }
+
+        let data = {
+          content: self.oneWord,
+          userId: self.userId,
+          groupId: self.groupId,
+        }
+
+        self.oneWords.push(data)
+        self.oneWord = ''
+
+        request.post('/createOneWord', data)
+        .then(res=>{
+          // wx.showToast({
+          //   title: '新增成功～',
+          //   icon: 'success',
+          //   duration: 1000
+          // })
+        })
+      },
+      goto(url){
+        wx.navigateTo({url})
+      },
+      inputChange(e){
+        let self = this
+        const keyArr = e.currentTarget.dataset.key.split('.')
+
+        if(keyArr.length == 1){
+          this[keyArr[0]] = e.detail.value
+        }
+        else if(keyArr.length == 2){
+          this[keyArr[0]][keyArr[1]] = e.detail.value
+        }
+        else if(keyArr.length == 3){
+          this[keyArr[0]][keyArr[1]][keyArr[2]] = e.detail.value
+        }
+      },
+    }
+
+    onLoad(option) {
+      let self = this
+
+      self.groupId = option.group_id
+    }
+
+    onUnload(){
+      clearInterval(this.oneWordsInterval)
+    }
+
+    onShow(){
+      let self = this, userId = wx.getStorageSync('userId')
+
+      self.userId = userId
+
+      let time = Date.now() - 2000
+
+      self.oneWordsInterval = setInterval(() => {
+        time = Date.now() - 2000
+
+        request.post('/getOneWordsByGroupId', {userId, groupId: self.groupId, time: util.moment(time).toISOString()})
+        .then(res=>{
+          for(let item of res.data){
+            item.createAt = util.moment(item.create_at).fromNow()
+          }
+
+          self.oneWords = self.oneWords.concat(res.data)
+          
+          self.$apply()
+        })
+      }, 2000);
+
+    }
+  }
+</script>

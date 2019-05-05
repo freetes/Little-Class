@@ -232,7 +232,10 @@ page{
         let self = this
         const keyArr = e.currentTarget.dataset.key.split('.')
 
-        if(keyArr.length == 2){
+        if(keyArr.length == 1){
+          this[keyArr[0]] = e.detail.value
+        }
+        else if(keyArr.length == 2){
           this[keyArr[0]][keyArr[1]] = e.detail.value
         }
         else if(keyArr.length == 3){

@@ -295,7 +295,7 @@ page{
         <text>请先登录</text>
       </block>
       <block wx:else>
-        <text>您还没有群组</text>
+        <text>您还没有加入任何群组</text>
         <text>点击「+」新建一个试试吧</text>
       </block>
     </view>
@@ -396,7 +396,10 @@ page{
         let self = this
         const keyArr = e.currentTarget.dataset.key.split('.')
 
-        if(keyArr.length == 2){
+        if(keyArr.length == 1){
+          this[keyArr[0]] = e.detail.value
+        }
+        else if(keyArr.length == 2){
           this[keyArr[0]][keyArr[1]] = e.detail.value
         }
         else if(keyArr.length == 3){

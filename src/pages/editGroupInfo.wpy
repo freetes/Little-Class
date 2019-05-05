@@ -240,7 +240,6 @@ page{
       deleteIndex: ''
     }
 
-    /*
     watch = {
       groupInfo (newValue, oldValue) {
         let self = this
@@ -292,8 +291,6 @@ page{
         }
       }
     }
-    */
-
 
     methods = {
       updateGroupInfo(self){
@@ -388,14 +385,15 @@ page{
         let self = this
         const keyArr = e.currentTarget.dataset.key.split('.')
 
-        if(keyArr.length == 2){
-          self[keyArr[0]][keyArr[1]] = e.detail.value
+        if(keyArr.length == 1){
+          this[keyArr[0]] = e.detail.value
+        }
+        else if(keyArr.length == 2){
+          this[keyArr[0]][keyArr[1]] = e.detail.value
         }
         else if(keyArr.length == 3){
-          self[keyArr[0]][keyArr[1]][keyArr[2]] = e.detail.value
+          this[keyArr[0]][keyArr[1]][keyArr[2]] = e.detail.value
         }
-
-        self.methods.updateGroupInfo(self)
       },
       disbandGroup(){
         let self = this

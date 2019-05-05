@@ -47,6 +47,9 @@ export default class extends wepy.app {
       'pages/noteInfo',
       'pages/grayClock',
       'pages/about',
+      'pages/groupNotices',
+      'pages/createNotice',
+      'pages/groupOneWords',
     ],
     window: {
       backgroundTextStyle: 'dark',
