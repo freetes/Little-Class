@@ -17,7 +17,6 @@ page{
     background-clip: border-box;
     background-position: center;
     background-size: cover;
-    background-color: lightgray;
     color: white;
 
     >.title{
@@ -55,13 +54,13 @@ page{
     >.description{
       margin-bottom: 5px;
       width: 100%;
-      font-size: 14px;
+      font-size: 12px;
+      text-shadow: rgb(0, 0, 0) 1px 0px 1px, rgb(0, 0, 0) 0px 1px 1px, rgb(0, 0, 0) 0px -1px 1px, rgb(0, 0, 0) -1px 0px 1px;
       display: -webkit-box;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 3;
       overflow: hidden;
     }
-
   }
 
   >.modules-container{
@@ -86,8 +85,8 @@ page{
       padding: 10px;
 
       >image{
-        width: 24px;
-        height: 24px;
+        width: 30px;
+        height: 30px;
         margin-bottom: 5px;
       }
       >text{
@@ -369,7 +368,7 @@ page{
       line-height: 30px;
       padding: 5px 20px;
       background-color: white;
-      font-size: 14px;
+      font-size: 16px;
       font-weight: bold;
       text-align: center;
     }
@@ -454,8 +453,8 @@ page{
       <text class="title">{{ groupInfo.name }}</text>
       <view class="creater">
         <text class="id">ID: {{ groupInfo.code }}</text>
-        <image mode="widthFix" src="{{ groupInfo.creater.wxInfo.avatarUrl }}"></image>
-        <text>{{ groupInfo.creater.name }}</text>
+        <!-- <image mode="widthFix" src="{{ groupInfo.creater.wxInfo.avatarUrl }}"></image>
+        <text>{{ groupInfo.creater.name }}</text> -->
       </view>
       <text class="description">{{ groupInfo.description }}</text>
     </view>
@@ -790,13 +789,6 @@ page{
         
         self.$apply()
       })
-
-      // 获取群员
-      request.post('/getUsersByGroupId', {groupId})
-      .then(res=>{
-        self.members = res.data
-        self.$apply()
-      })
     }
 
     onShow(){
@@ -830,6 +822,13 @@ page{
       else{
         self.userLevel = -1
       }
+
+      // 获取群员
+      request.post('/getUsersByGroupId', {groupId: self.groupId})
+      .then(res=>{
+        self.members = res.data
+        self.$apply()
+      })
     }
 
     onShareAppMessage() {

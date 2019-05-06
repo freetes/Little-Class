@@ -111,7 +111,8 @@ page{
       line-height: 30px;
       padding: 5px 10px;
       background-color: white;
-      font-size: 14px;
+      color: brown;
+      font-size: 16px;
       font-weight: bold;
       text-align: center;
     }
@@ -207,15 +208,7 @@ page{
 
     <view class="btns">
       <!-- <button bindtap="">保存修改</button> -->
-      <text bindtap="showDisbandView">解散</text>
-    </view>
-
-    <!-- 解散群组弹出框 -->
-    <view wx:if="{{ showDisbandView }}" bindtap="hideDisbandView" class="modal-container">
-      <view class="modal-main" catchtap>
-        <text class="modal-title">解散群组</text>
-        <button bindtap="disbandGroup">确定解散！</button>
-      </view>
+      <text bindtap="disbandGroup">解散</text>
     </view>
   </view>
 </template>
@@ -235,9 +228,6 @@ page{
       groupInfo: {},
       message: '',
       joinGroupArray: ['任何人都可以加入', '不允许加入'],
-      showDisbandView: false,
-      showDeleteView: false,
-      deleteIndex: ''
     }
 
     watch = {
@@ -367,14 +357,6 @@ page{
           }
         })
       },
-
-      showDeleteView(e){
-        this.deleteIndex = e.currentTarget.dataset.index
-        this.showDeleteView = true
-      },
-      hideDeleteView(){
-        this.showDeleteView = false
-      },
       showDisbandView(){
         this.showDisbandView = true
       },
@@ -398,24 +380,30 @@ page{
       disbandGroup(){
         let self = this
 
-        // 请求参数
-        let data = {
-          groupId: self.groupId,
-        }
-
-        request.post('/disbandGroup', data)
-        .then(res=>{
-          wx.showToast({
-            title: '解散成功！',
-            icon: 'success',
-            duration: 1000,
-            mask: true
-          })
-          setTimeout(()=>{
-            wx.switchTab({
-              url: '/pages/index'
-            })
-          }, 1000)
+        wx.showModal({
+          title: '提示',
+          content: `确定解散群组？`,
+          success(res) {
+            if (res.confirm) {
+              // 请求参数
+              let data = {
+                groupId: self.groupId,
+              }
+              request.post('/disbandGroup', data)
+              .then(res=>{
+                wx.showToast({
+                  title: '解散成功！',
+                  icon: 'success',
+                  duration: 1000
+                })
+                setTimeout(() => {
+                  wx.switchTab({
+                    url: '/pages/index'
+                  })
+                }, 1000);
+              })
+            } 
+          }
         })
       }
     }

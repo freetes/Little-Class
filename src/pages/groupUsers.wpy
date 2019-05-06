@@ -172,8 +172,9 @@ page{
     >button{
       padding: 5px 0%;
       background-color: white;
-      font-size: 14px;
+      font-size: 16px;
       font-weight: bold;
+      color: brown;
     }
     >button::after{
       border: none;
@@ -207,16 +208,8 @@ page{
         <view class="userInfo" wx:for="{{ members }}">
           <image mode="widthFix" src="{{ item.wxInfo.avatarUrl }}"></image>
           <text class="username">{{ item.nickname || item.name }}</text>
-          <text wx:if="{{ isOwner && item.userLevel != 1 }}" class="delete-button" bindtap="showDeleteView({{ index }})">删除</text>
+          <text wx:if="{{ userLevel == 1 && item.userLevel != 1 }}" class="delete-button" bindtap="deleteMember({{ index }})">删除</text>
         </view>
-      </view>
-    </view>
-
-    <!-- 删除群员弹出框 -->
-    <view wx:if="{{ showDeleteView }}" bindtap="hideDeleteView" class="modal-container">
-      <view class="modal-main" catchtap>
-        <text class="modal-title">删除群员</text>
-        <button bindtap="deleteMember">确定删除 {{ members[deleteIndex].user_info.name }}?</button>
       </view>
     </view>
 
@@ -243,9 +236,7 @@ page{
       members: [],
       userInfo: {},
       message: '',
-      showDeleteView: false,
-      isOwner: false,
-      deleteIndex: ''
+      userLevel: 0,
     }
 
     watch = {
@@ -270,36 +261,33 @@ page{
 
 
     methods = {
-      deleteMember(){
-        let self = this
+      deleteMember(index){
+        let self = this, memberInfo = self.members[index]
 
-        wx.cloud.callFunction({
-          name: 'exitGroup',
-          data: {group_id: self._id, user_id: self.groupInfo.members[self.deleteIndex].user_id}
-        }).then(res=>{
-          console.log(res)
-          if(res.result.stats.updated == 1){
-            wx.showToast({
-              title: '删除成功！',
-              icon: 'success',
-              duration: 1000
-            })
-            setTimeout(() => {
-              self.deleteIndex = ''
-              self.showDeleteView = false
-              self.$apply()
-              self.onShow()
-            }, 1000);
+        wx.showModal({
+          title: '提示',
+          content: `确定删除 ${memberInfo.nickname}？`,
+          success(res) {
+            if (res.confirm) {
+              // 请求参数
+              let data = {
+                groupId: self.groupId,
+                userId: memberInfo._id,
+              }
+              request.post('/exitGroup', data)
+              .then(res=>{
+                wx.showToast({
+                  title: '删除成功！',
+                  icon: 'success',
+                  duration: 1000
+                })
+                setTimeout(() => {
+                  self.onShow()
+                }, 1000);
+              })
+            } 
           }
         })
-      },
-      showDeleteView(index){
-        
-        this.deleteIndex = index
-        this.showDeleteView = true
-      },
-      hideDeleteView(){
-        this.showDeleteView = false
       },
       inputChange(e){
         let self = this
@@ -355,14 +343,12 @@ page{
       let self = this, userId = wx.getStorageSync('userId')
 
       self.userId = userId
-      
+
       request.post('/getUsersByGroupId', {groupId: self.groupId})
       .then(res=>{
         for(let item of res.data){
           if(item._id == userId){
-            if(item.userLevel == 1){
-              self.isOwner = true
-            }
+            self.userLevel = item.userLevel
             self.userInfo = item
             break
           }

@@ -108,10 +108,9 @@ page{
       font-size: 14px;
       line-height: 24px;
       color: gray;
-      font-weight: bold;
     }
     >icon{
-      font-size: 28px;
+      font-size: 26px;
       line-height: 23px;
       color: gray;
     }
@@ -164,7 +163,7 @@ page{
           background-color: lightgray;
         }
         >.group-title{
-          font-size: 18px;
+          font-size: 16px;
           color: black;
           font-weight: bold;
         }
@@ -229,18 +228,6 @@ page{
     >image{
       width: 80px;
       height: 80px;
-    }
-  }
-
-  .time{
-    margin-top: -40px;
-    padding:0 5%;
-    color: #8A8A8A;
-    font-weight: lighter;
-
-    >text.date{
-      font-size: 40px;
-      letter-spacing: 5px;
     }
   }
 }
