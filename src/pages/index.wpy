@@ -101,7 +101,7 @@ page{
     align-items: center;
     width: 100%;
     padding: 10px 5%;
-    background-color: white;
+    background-color: #ededed;
     z-index: 100;
 
     >text{
@@ -122,10 +122,8 @@ page{
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    width: 100%;
-    padding: 0 5%;
-    background-color: white;
-    border-bottom: 1px solid lightgray;
+    width: 90%;
+    margin: 0 5%;
 
     >.group-item{
       display: flex;
@@ -133,15 +131,15 @@ page{
       justify-content: flex-start;
       align-items: flex-start;
       width: 100%;
-      padding: 5px 10px;
-      border: none;
-      border-radius: 5px;
+      padding: 15px;
+      border-radius: 15px;
+      background-color: white;
       margin-bottom: 10px;
       animation: showIn 0.7s ease;
 
       @keyframes showIn {
         from {
-          margin-top: -80px;
+          margin-top: -40px;
           opacity: 0;
         }
         to {
@@ -159,14 +157,14 @@ page{
         margin-bottom: 10px;
 
         >.group-avatar{
-          width: 40px;
-          height: 40px;
+          width: 30px;
+          height: 30px;
           margin-right: 10px;
           border-radius: 50%;
           background-color: lightgray;
         }
         >.group-title{
-          font-size: 16px;
+          font-size: 18px;
           color: black;
           font-weight: bold;
         }
@@ -178,7 +176,7 @@ page{
         align-items: center;
         width: 100%;
         font-size: 12px;
-        padding-left: 50px;
+        padding-left: 40px;
         color: gray;
       }
     }
@@ -278,7 +276,7 @@ page{
     <view class="group-list" wx:if="{{ groups.length != 0 && showGroups}}">
       <view class="group-item" wx:for="{{ groups }}" wx:key="group" bindtap="goto('/pages/groupInfo?group_id={{item._id}}')">
         <view class="group-top">
-          <image class="group-avatar" src="https://api.grayclass.site:2333{{item.filePath}}" mode="aspectFill" lazy-load></image>
+          <image class="group-avatar" src="{{item.filePath}}" mode="aspectFill" lazy-load></image>
           <text class="group-title">{{ item.name }}</text>
         </view>
         <view class="group-bottom">

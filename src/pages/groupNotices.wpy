@@ -28,8 +28,10 @@ page{
       justify-content: flex-start;
       align-items: flex-start;
       flex-wrap: wrap;
-      padding: 5px 0;
-      margin-bottom: 5px;
+      background-color: white;
+      padding: 15px;
+      border-radius: 15px;
+      margin-bottom: 10px;
       width: 100%;
 
       >.top{
@@ -40,20 +42,33 @@ page{
         width: 100%;
 
         >.title{
+          width: 100%;
           font-size: 18px;
-          line-height: 20px;
-          margin-bottom: 5px;
+          line-height: 24px;
+          height: 24px;
         }
       }
 
       >.content{
         width: 100%;
         font-size: 14px;
+        line-height: 18px;
+        margin: 10px 0;
         color: gray;
         display: -webkit-box;
         -webkit-box-orient: vertical;
-        -webkit-line-clamp: 4;
+        -webkit-line-clamp: 2;
         overflow: hidden;
+      }
+
+      >.footer{
+        width: 100%;
+        font-size: 12px;
+        color: gray;
+
+        >.count{
+          margin-left: 10px;
+        }
       }
     }
   }
@@ -69,7 +84,7 @@ page{
 
     >text{
       line-height: 30px;
-      padding: 10px 10px;
+      padding: 5px 20px;
       background-color: white;
       font-size: 14px;
       font-weight: bold;
@@ -86,8 +101,12 @@ page{
     left: 0;
     width: 100%;
     min-height: 100%;
-    padding: 20px;
-    background-color: #ededed;
+    padding: 15px;
+    background-color: #ededed90;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
 
     >view{
       width: 100%;
@@ -99,11 +118,12 @@ page{
       flex-direction: column;
       justify-content: flex-start;
       align-items: flex-start;
+      box-shadow: 0 10px 10px lightgray;
       animation: showIn 0.7s ease;
 
       @keyframes showIn {
         from {
-          margin-left: -100%;
+          margin-top: -100%;
           opacity: 0;
         }
         to {
@@ -135,6 +155,7 @@ page{
         line-height: 30px;
         height: 30px;
         margin-top: 10px;
+        font-weight: bold;
       }
 
       >.content{
@@ -161,7 +182,7 @@ page{
 <template>
   <view class="container">
 
-    <view class="btns" wx:if="{{ isCreater }}">
+    <view class="btns" wx:if="{{ userLevel==1 }}">
       <text bindtap="goto('/pages/createNotice?group_id={{groupId}}')">创建通知</text>
     </view>
 
@@ -170,11 +191,15 @@ page{
       <view class="title">
         <text>所有通知</text>
       </view>
-      <view class="notice-container" bindtap="showNotice('{{ index }}')" wx:if="{{ notices.length!=0 }}" wx:for="{{ notices }}" wx:key="{{ item._id }}">
+      <view class="notice-container" bindlongpress="deleteNotice('{{ index }}')" bindtap="showNotice('{{ index }}')" wx:if="{{ notices.length!=0 }}" wx:for="{{ notices }}" wx:key="{{ item._id }}">
         <view class="top">
           <text class="title">{{ item.title }}</text>
         </view>
         <text class="content">{{ item.content }}</text>
+        <view class="footer">
+          <text>{{ item.createAt }}</text>
+          <!-- <text class="count">浏览次数：{{ item.view_count }}</text> -->
+        </view>
       </view>
     </view>
 
@@ -214,13 +239,34 @@ page{
       userId: '',
       notices: [],
       message: '',
-      isCreater: false,
+      userLevel: 0,
       selectIndex: -1
     }
 
     methods = {
       hideNotice(index){
         this.selectIndex = -1
+      },
+      deleteNotice(index){
+        let self = this
+
+        if(self.userLevel != 1){
+          return
+        }
+
+        wx.showModal({
+          title: '提示',
+          content: '确定删除通知？',
+          success(res) {
+            if (res.confirm) {
+              request.post('/deleteNotice', {noticeId: self.notices[index]._id})
+              .then(res=>{
+
+                self.onShow()
+              })
+            } 
+          }
+        })
       },
       showNotice(index){
         let self = this
@@ -273,9 +319,9 @@ page{
         self.$apply()
       })
 
-      request.post('/isGroupCreater', {groupId: self.groupId, userId})
+      request.post('/getUserLevel', {groupId: self.groupId, userId})
       .then(res=>{
-        self.isCreater = res.data
+        self.userLevel = res.data
         
         self.$apply()
       })

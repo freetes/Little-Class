@@ -14,23 +14,19 @@ page{
     margin: 10px 5%;
     height: 100%;
     width: 90%;
-    padding: 30px 0;
+    padding: 40px 0;
     overflow: auto;
 
     >.oneWord-container{
-      flex: 0 0 auto;
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       justify-content: flex-start;
       align-items: flex-start;
-      flex-wrap: wrap;
-      padding: 5px 15px;
-      margin-top: 10px;
-      width: auto;
+      margin-top: 5px;
+      padding: 5px 0;
       animation: showIn 0.4s ease;
-      border: 1px solid lightgray;
-      border-radius: 10px;
-      background-color: white;
+      width: 100%;
+      overflow: auto;
 
       @keyframes showIn {
         from {
@@ -43,11 +39,24 @@ page{
         }
       }
 
+      >image{
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        margin-right: 10px;
+        flex: 0 0 auto;
+      }
+
       >.content{
-        width: 100%;
+        width: auto;
+        padding: 5px 15px;
         font-size: 16px;
+        line-height: 20px;
         color: black;
         line-height: 20px;
+        border: 1px solid lightgray;
+        border-radius: 15px;
+        background-color: white;
       }
     }
   }
@@ -61,10 +70,11 @@ page{
     align-items: center;
     width: 94%;
     margin: 0 3%;
-    padding: 5px;
+    padding: 5px 10px;
     background-color: white;
-    border-radius: 10px;
+    border-radius: 20px;
     line-height: 20px;
+    box-shadow: 0 5px 5px lightgray;
 
     >input{
       flex: 1 0 auto;
@@ -78,24 +88,23 @@ page{
       padding: 5px;
     }
   }
-
 }
 </style>
 <template>
   <view class="container">
 
     <view class="oneWord-inputs">
-      <input placeholder="OneWords" data-key="oneWord" value="{{ oneWord }}" bindinput="inputChange" />
+      <input placeholder="在此输入话语" data-key="oneWord" value="{{ oneWord }}" bindinput="inputChange" />
       <text bindtap="createOneWord">发送</text>
     </view>
 
     <!-- 弹幕 信息 -->
     <view class="oneWords-container">
       <view class="oneWord-container" wx:for="{{ oneWords }}" wx:key="{{ item._id }}">
+        <image mode="widthFix" src="{{ item.creater.wxInfo.avatarUrl }}"></image>
         <text class="content">{{ item.content }}</text>
       </view>
     </view>
-
   </view>
 </template>
 
@@ -115,6 +124,7 @@ page{
       userId: '',
       oneWords: [],
       oneWord: '',
+      userInfo: {},
       oneWordsInterval: null
     }
 
@@ -134,6 +144,7 @@ page{
           content: self.oneWord,
           userId: self.userId,
           groupId: self.groupId,
+          creater: self.userInfo
         }
 
         self.oneWords.push(data)
@@ -182,6 +193,14 @@ page{
 
       self.userId = userId
 
+      // 获取用户信息
+      request.post('/getUserInfoById', {userId})
+      .then(res=>{
+        self.userInfo = res.data
+        self.$apply()
+      })
+
+      // 定时器获取弹幕
       let time = Date.now() - 2000
 
       self.oneWordsInterval = setInterval(() => {

@@ -40,7 +40,6 @@ page{
       max-height: 200px;
       font-size: 16px;
       color: #555;
-      font-weight: lighter;
       margin: 15px 0;
       display: -webkit-box;
       -webkit-line-clamp: 10;
@@ -54,7 +53,6 @@ page{
       text-align: right;
       font-size: 14px;
       color: #555;
-      font-weight: lighter;
       display: flex;
       flex-direction: row;
       justify-content: flex-end;
@@ -123,7 +121,6 @@ page{
 
     >.time-container{
       color: #8A8A8A;
-      font-weight: lighter;
 
       >text.date{
         font-size: 40px;

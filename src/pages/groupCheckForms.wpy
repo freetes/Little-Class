@@ -162,8 +162,9 @@ page{
       margin: 10px 0;
 
       >view.title{
-        font-size: 14px;
+        font-size: 16px;
         color: black;
+        font-weight: bold;
 
         >text.assist{
           color: black;
@@ -283,11 +284,11 @@ page{
         <text class="button {{ canCheck?'can-check':'cannot-check' }}" bindtap="createCheck">立即签到</text>
       </block>
       <!-- 拥有者 功能 -->
-      <text class="a" wx:if="{{ groupInfo.userLevel == 1 && canCreateCheck }}" bindtap="goto('/pages/createCheckForm?group_id={{groupId}}')">前往开启签到</text>
+      <text class="a" wx:if="{{ userLevel == 1 && canCreateCheck }}" bindtap="goto('/pages/createCheckForm?group_id={{groupId}}')">前往开启签到</text>
     </view>
 
     <!-- 签到表 信息 -->
-    <view class="check-form" wx:if="{{ groupInfo.userLevel == 1 }}" bindtap="goto('/pages/checkFormInfo?group_id={{groupId}}&checkForm_id={{checkForm._id}}')">
+    <view class="check-form" wx:if="{{ userLevel == 1 }}" bindtap="goto('/pages/checkFormInfo?group_id={{groupId}}&checkForm_id={{checkForm._id}}')">
       <view class="title">
         <text>最近签到</text>
       </view>
@@ -357,7 +358,7 @@ page{
           </view>
           <view class="status">
             <text>{{ item.duration }}</text>
-            <text wx:if="{{ groupInfo.userLevel == 1 }}">签到成功人数：{{ item.successCount }}</text>
+            <text wx:if="{{ userLevel == 1 }}">签到成功人数：{{ item.successCount }}</text>
             <text wx:else>{{item.checkStatus == 1?'签到成功':item.checkStatus == -1?'签到失败，不在规定范围':'未签到'}}</text>
           </view>
         </view>
@@ -380,10 +381,9 @@ page{
 
     data = {
       groupId: '',
+      userId: '',
+      userLevel: -1,
       groupInfo: {},
-      userInfo: {
-        userId: ''
-      },
       checkCode: '',
       checkForms: [],
       checkForm: undefined,
@@ -431,7 +431,7 @@ page{
 
             // 判断是否已经签到
             for(let item of res.data.checkForm.success){
-              if(self.userInfo.userId == item._id){
+              if(self.userId == item._id){
                 self.canCheck = false
                 res.data.checkForm.statusWords = '已签到'
                 break
@@ -443,6 +443,10 @@ page{
             self.checkForm = res.data.checkForm
             self.$apply()            
           })
+        }
+        else{
+          self.canCheck = false
+          self.canCreateCheck = true
         }
       }
     }
@@ -500,7 +504,7 @@ page{
             
             let data = {
               checkFormId: self.checkForm._id,
-              userId: self.userInfo.userId,
+              userId: self.userId,
               checkAt: Date.now(),
               position: res.latitude + '-' + res.longitude
             }
@@ -561,9 +565,14 @@ page{
       let self = this, userId = wx.getStorageSync('userId'), groupId = option.group_id
 
       if(userId){
-        self.userInfo.userId = userId
-      }
-      else{
+        self.userId = userId
+        // 获取用户类型
+        request.post('/getUserLevel', {groupId, userId})
+        .then(res=>{
+          self.userLevel = res.data
+          
+          self.$apply()
+        })
       }
 
       self.groupId = groupId
@@ -573,20 +582,25 @@ page{
       let self = this
 
       // 获取群组信息
-      request.post('/getGroupInfoById', {groupId: self.groupId, userId: self.userInfo.userId})
+      request.post('/getGroupInfoById', {groupId: self.groupId, userId: self.userId})
       .then(res=>{
         self.groupInfo = res.data
         self.$apply()
       })
 
-      if(self.userInfo.userId){
+      if(self.userId){
         // 获取签到表信息
-        request.post('/getCheckFormsByGroupId', {groupId: self.groupId, userId: self.userInfo.userId})
+        request.post('/getCheckFormsByGroupId', {groupId: self.groupId, userId: self.userId})
         .then(res=>{
           for(let item of res.data){
             item.duration = util.moment(item.end_at).fromNow()
           }
           self.checkForms = res.data
+          
+          if(res.data.length==0){
+            self.canCheck = false
+            self.canCreateCheck = true
+          }
           self.$apply()
         })
       }

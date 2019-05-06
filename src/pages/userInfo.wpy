@@ -10,7 +10,7 @@ page{
     justify-content: center;
     align-items: center;
     width: 100%;
-    margin: 10px 0;
+    padding: 20px 0;
 
     >image{
       width: 80px;
@@ -19,7 +19,10 @@ page{
       margin-bottom: 10px;
     }
     >text{
-
+      font-weight: bold;
+      color: black;
+      font-size: 20px;
+      line-height: 20px;
     }
   }
   >.inputs{
@@ -83,7 +86,7 @@ page{
   <view class="container">
     <view class="header">
       <image src="{{ wxInfo.avatarUrl }}"></image>
-      <text>{{ wxInfo.nickName }}</text>
+      <text>{{ userInfo.name }}</text>
     </view>
 
     <view class="inputs">
@@ -159,7 +162,8 @@ page{
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '个人信息',
-      navigationBarBackgroundColor: '#fafafa'
+      navigationBarBackgroundColor: '#fafafa',
+      enablePullDownRefresh: false
     }
 
     data = {

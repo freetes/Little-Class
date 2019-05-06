@@ -207,7 +207,7 @@ page{
         <view class="userInfo" wx:for="{{ members }}">
           <image mode="widthFix" src="{{ item.wxInfo.avatarUrl }}"></image>
           <text class="username">{{ item.nickname || item.name }}</text>
-          <text wx:if="{{ isOwner }}" class="delete-button" bindtap="showDeleteView({{ index }})">删除</text>
+          <text wx:if="{{ isOwner && item.userLevel != 1 }}" class="delete-button" bindtap="showDeleteView({{ index }})">删除</text>
         </view>
       </view>
     </view>

@@ -5,41 +5,26 @@ page{
   
   >.header{
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     width: 100%;
-    padding: 10px 5%;
+    padding: 20px 5%;
     border: none;
 
-    >.left{
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: flex-start;
-
-      >.wxName{
-        font-weight: bold;
-        color: black;
-        font-size: 20px;
-      }
-    }
-
-    >.right{
-      border-radius: 50%;
+    >image{
       width: 80px;
       height: 80px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-
-      >image{
-        width: 80px;
-        height: 80px;
-      }
+      border-radius: 50%;
+      margin-bottom: 10px;
     }
+    >.wxName{
+      font-weight: bold;
+      color: black;
+      font-size: 20px;
+      line-height: 20px;
+    }
+    
   }
   >.header::after{
     border: none;
@@ -54,7 +39,7 @@ page{
     padding: 10px 0;
     width: 90%;
     background-color: white;
-    border-radius: 10px;
+    border-radius: 15px;
     animation: showIn 0.8s ease;
 
     @keyframes showIn {
@@ -74,7 +59,7 @@ page{
       justify-content: flex-start;
       align-items: center;
       width: 100%;
-      padding: 10px 20px;
+      padding: 8px 20px;
 
       >image{
         width: 24px;
@@ -84,7 +69,7 @@ page{
       >text{
         font-weight: bold;
         font-size: 14px;
-        line-height: 20px;
+        line-height: 24px;
       }
     }
   }
@@ -93,12 +78,8 @@ page{
 <template>
   <view class="container">
     <button class="header" plain="true" hover-class="none" open-type="getUserInfo" bindgetuserinfo="login">
-      <view class="left">
-        <text class="wxName">{{ wxInfo.nickName }}</text>
-      </view>
-      <view class="right">
-        <image src="{{ wxInfo.avatarUrl }}"></image>
-      </view>
+      <image src="{{ wxInfo.avatarUrl }}"></image>
+      <text class="wxName">{{ wxInfo.nickName }}</text>
     </button>
 
     <view class="btns">

@@ -35,7 +35,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 14,
+			"current": 15,
 			"list": [
 				{
 					"id": -1,
@@ -133,6 +133,12 @@
 					"pathName": "pages/checkFormInfo",
 					"query": "group_id=5cbc2e8799d12004df09cc3c&checkForm_id=5cc3b47eabd84227c77aacbd",
 					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "groupnotices",
+					"pathName": "pages/groupNotices",
+					"query": "group_id=5ccad900d2d29738dfc0b28e"
 				}
 			]
 		}

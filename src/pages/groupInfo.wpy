@@ -5,41 +5,63 @@ page{
   padding-top: 0;
   padding-bottom: 20px;
   
-  >.groupInfo{
+  >.groupInfo-container{
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     align-items: flex-start;
     width: 100%;
-    height: 140px;
-    padding: 10px 0;
+    height: 150px;
+    padding: 0 5%;
+    background-repeat: no-repeat;
+    background-clip: border-box;
+    background-position: center;
+    background-size: cover;
+    background-color: lightgray;
+    color: white;
 
     >.title{
-      padding: 0 20px;
-      padding-bottom: 10px;
+      box-sizing: border-box;
       font-size: 24px;
       font-weight: bold;
-      color: black;
+      color: white;
+      opacity: 1;
+      text-shadow: rgb(0, 0, 0) 1px 0px 1px, rgb(0, 0, 0) 0px 1px 1px, rgb(0, 0, 0) 0px -1px 1px, rgb(0, 0, 0) -1px 0px 1px;
     }
-    >view{
-      width: 100%;
-      padding: 0 20px;
-      padding-bottom: 20px;
+    
+    >.creater{
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       justify-content: flex-start;
       align-items: flex-start;
       font-size: 14px;
-      color: gray;
+      margin-top: 5px;
+      color: white;
 
-      >.description{
-        width: 100%;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 4;
-        overflow: hidden;
+      >.id{
+        font-size: 14px;
+        font-weight: bold;
+        margin-right: 10px;
+        text-shadow: rgb(0, 0, 0) 1px 0px 1px, rgb(0, 0, 0) 0px 1px 1px, rgb(0, 0, 0) 0px -1px 1px, rgb(0, 0, 0) -1px 0px 1px;
+      }
+
+      >image{
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        margin-right: 5px;
       }
     }
+    >.description{
+      margin-bottom: 5px;
+      width: 100%;
+      font-size: 14px;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      overflow: hidden;
+    }
+
   }
 
   >.modules-container{
@@ -49,10 +71,11 @@ page{
     align-items: flex-start;
     flex-wrap: wrap;
     width: 90%;
-    margin: 5px 5%;
+    margin: 0 5%;
+    margin-top: 10px;
     padding: 10px;
     background-color: white;
-    border-radius: 10px;
+    border-radius: 15px;
 
     >view{
       display: flex;
@@ -79,10 +102,11 @@ page{
     justify-content: flex-start;
     align-items: flex-start;
     width: 90%;
-    margin: 5px 5%;
-    padding: 20px;
+    margin: 0 5%;
+    margin-top: 10px;
+    padding: 15px;
     background-color: white;
-    border-radius: 10px;
+    border-radius: 15px;
 
     >.module-title{
       display: flex;
@@ -90,7 +114,6 @@ page{
       justify-content: space-between;
       align-items: center;
       width: 100%;
-      margin-bottom: 10px;
 
       >text{
         font-size: 14px;
@@ -122,11 +145,11 @@ page{
 
       >image{
         display: inline-block;
-        width: 20%;
-        max-height: 70px;
-        margin-left: 4%;
-        margin-bottom: 5px;
         border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        margin-right: 10px;
+        margin-top: 10px;
       }
     }
   }
@@ -137,10 +160,11 @@ page{
     justify-content: flex-start;
     align-items: flex-start;
     width: 90%;
-    margin: 5px 5%;
-    padding: 20px;
+    margin: 0 5%;
+    margin-top: 10px;
+    padding: 15px;
     background-color: white;
-    border-radius: 10px;
+    border-radius: 15px;
 
     >.module-title{
       display: flex;
@@ -148,7 +172,6 @@ page{
       justify-content: space-between;
       align-items: center;
       width: 100%;
-      margin-bottom: 10px;
 
       >text{
         font-size: 14px;
@@ -183,7 +206,8 @@ page{
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-end;
+        padding: 5px 0;
 
         >.form-title{
           font-size: 18px;
@@ -203,8 +227,7 @@ page{
 
       >.form-time{
         color: gray;
-        font-size: 12px;
-        margin: 5px 0;
+        font-size: 14px;
       }
     }
 
@@ -214,7 +237,7 @@ page{
       justify-content: flex-start;
       align-items: flex-start;
       width: 100%;
-      margin-top: 10px;
+      margin-top: 5px;
 
       >.title{
         font-size: 14px;
@@ -232,7 +255,7 @@ page{
         justify-content: flex-start;
         align-items: flex-start;
         width: 100%;
-        margin-bottom: 10px;
+        margin-bottom: 5px;
 
         >view{
           display: flex;
@@ -240,7 +263,7 @@ page{
           justify-content: flex-start;
           align-items: center;
           width: 100%;
-          margin: 5px 0;
+          margin: 3px 0;
           font-size: 14px;
 
           >.count{
@@ -267,10 +290,11 @@ page{
     justify-content: flex-start;
     align-items: flex-start;
     width: 90%;
-    margin: 5px 5%;
-    padding: 20px;
+    margin: 0 5%;
+    margin-top: 10px;
+    padding: 15px;
     background-color: white;
-    border-radius: 10px;
+    border-radius: 15px;
 
     >.module-title{
       display: flex;
@@ -278,7 +302,6 @@ page{
       justify-content: space-between;
       align-items: center;
       width: 100%;
-      margin-bottom: 10px;
 
       >text{
         font-size: 14px;
@@ -311,6 +334,7 @@ page{
       >.notice-title{
         font-size: 18px;
         font-weight: bold;
+        padding: 5px 0;
       }
 
       >.notice-content{
@@ -325,7 +349,6 @@ page{
       >.notice-time{
         color: gray;
         font-size: 12px;
-        margin: 5px 0;
       }
     }
   }
@@ -336,13 +359,15 @@ page{
     justify-content: center;
     align-items: center;
     width: 90%;
-    margin: 5px 5%;
+    margin: 0 5%;
+    margin-top: 10px;
+    margin-bottom: 50px;
     background-color: white;
-    border-radius: 10px;
+    border-radius: 15px;
 
     >text{
       line-height: 30px;
-      padding: 10px 10px;
+      padding: 5px 20px;
       background-color: white;
       font-size: 14px;
       font-weight: bold;
@@ -425,12 +450,14 @@ page{
 <template>
   <view class="container">
     <!-- 群组 信息 -->
-    <view class="groupInfo">
+    <view class="groupInfo-container" style="background-image: url({{groupInfo.filePath}})">
       <text class="title">{{ groupInfo.name }}</text>
-      <view>
-        <text>ID：{{ groupInfo.code }}</text>
-        <text class="description">{{ groupInfo.description }}</text>
+      <view class="creater">
+        <text class="id">ID: {{ groupInfo.code }}</text>
+        <image mode="widthFix" src="{{ groupInfo.creater.wxInfo.avatarUrl }}"></image>
+        <text>{{ groupInfo.creater.name }}</text>
       </view>
+      <text class="description">{{ groupInfo.description }}</text>
     </view>
 
     <!-- 模块入口 -->
@@ -556,14 +583,12 @@ page{
 
     <view class="btns">
       <!-- 普通用户 功能 -->
-      <text wx:if="{{ !groupInfo.userLevel && groupInfo.userLevel!=0 && groupInfo.status == 0 }}" bindtap="joinGroup">立即加入</text>
-      <text class="disable" disabled="{{ true }}" wx:if="{{ !groupInfo.userLevel && groupInfo.userLevel!=0 && groupInfo.status == 1 }}">加入已关闭，无法加入</text>
-      <!-- <button wx:if="{{ groupInfo.userLevel == 0}}" bindtap="toogleExitModal">退出</button> -->
+      <text wx:if="{{ userLevel == -1 && groupInfo.status == 0 }}" bindtap="joinGroup">立即加入</text>
+      <text class="disable" disabled="{{ true }}" wx:if="{{ userLevel == -1 && groupInfo.status == 1 }}">加入已关闭，无法加入</text>
       <!-- 拥有者 功能 -->
-      <text wx:if="{{ groupInfo.userLevel == 1 && !canCheck && canCreateCheck }}" bindtap="goto('/pages/createCheckForm?group_id={{groupId}}')">开启签到</text>
-      <text wx:if="{{ groupInfo.userLevel == 1 }}" bindtap="goto('/pages/editGroupInfo?group_id={{groupId}}')">修改信息</text>
+      <text wx:if="{{ userLevel == 1 && !canCheck && canCreateCheck }}" bindtap="goto('/pages/createCheckForm?group_id={{groupId}}')">开启签到</text>
+      <text wx:if="{{ userLevel == 1 }}" bindtap="goto('/pages/editGroupInfo?group_id={{groupId}}')">修改信息</text>
     </view>
-
   </view>
 </template>
 
@@ -575,18 +600,18 @@ page{
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '群组信息',
+      navigationBarBackgroundColor: '#ededed',
       enablePullDownRefresh: true
     }
 
     data = {
       groupId: '',
+      userId: '',
       groupInfo: {},
-      userInfo: {
-        userId: ''
-      },
       members: [],
       checkForms: [],
       notices: [],
+      userLevel: -1,
       checkForm: undefined,
       canCheck: false,
       canCreateCheck: false,
@@ -635,7 +660,7 @@ page{
 
             // 判断是否已经签到
             for(let item of res.data.checkForm.success){
-              if(self.userInfo.userId == item._id){
+              if(self.userId == item._id){
                 self.canCheck = false
                 break
               }
@@ -669,7 +694,7 @@ page{
         let self = this
 
         // 判断是否登录
-        if(self.userInfo.userId == ''){
+        if(self.userId == ''){
           wx.showToast({
             title: '请先登录',
             icon: 'none',
@@ -693,7 +718,7 @@ page{
         // 请求参数
         let data = {
           groupId: self.groupId,
-          userId: self.userInfo.userId,
+          userId: self.userId,
         }
 
         request.post('/joinGroup', data)
@@ -713,7 +738,7 @@ page{
         // 请求参数
         let data = {
           groupId: self.groupId,
-          userId: self.userInfo.userId,
+          userId: self.userId,
         }
 
         request.post('/exitGroup', data)
@@ -743,42 +768,53 @@ page{
     }
 
     onLoad(option) {
-      let self = this, userId = wx.getStorageSync('userId'), groupId = option.group_id
-
-      if(userId){
-        self.userInfo.userId = userId
-      }
-      else{
-      }
+      let self = this, groupId = option.group_id
 
       self.groupId = groupId
-    }
-
-    onShow(){
-      let self = this
 
       // 获取群组信息
-      request.post('/getGroupInfoById', {groupId: self.groupId, userId: self.userInfo.userId})
+      request.post('/getGroupInfoById', {groupId})
       .then(res=>{
+        res.data.filePath = 'https://api.grayclass.site:2333/' + res.data.filePath
         self.groupInfo = res.data
         self.$apply()
       })
 
-      if(self.userInfo.userId){
+      // 获取通知
+      request.post('/getNoticesByGroupId', {groupId})
+      .then(res=>{
+        for(let item of res.data){
+          item.createAt = util.moment(item.create_at).fromNow()
+        }
+        self.notices = res.data
+        
+        self.$apply()
+      })
 
-        // 获取通知
-        request.post('/getNoticesByGroupId', {groupId: self.groupId})
+      // 获取群员
+      request.post('/getUsersByGroupId', {groupId})
+      .then(res=>{
+        self.members = res.data
+        self.$apply()
+      })
+    }
+
+    onShow(){
+      let self = this, userId = wx.getStorageSync('userId')
+
+      if(userId){
+        self.userId = userId
+
+        // 获取用户类型
+        request.post('/getUserLevel', {groupId: self.groupId, userId})
         .then(res=>{
-          for(let item of res.data){
-            item.createAt = util.moment(item.create_at).fromNow()
-          }
-          self.notices = res.data
+          self.userLevel = res.data
           
           self.$apply()
         })
 
         // 获取签到表信息
-        request.post('/getCheckFormsByGroupId', {groupId: self.groupId, userId: self.userInfo.userId})
+        request.post('/getCheckFormsByGroupId', {groupId: self.groupId, userId: self.userId})
         .then(res=>{
           self.checkForms = res.data
 
@@ -790,12 +826,9 @@ page{
           self.$apply()
         })
 
-        // 获取群员
-        request.post('/getUsersByGroupId', {groupId: self.groupId})
-        .then(res=>{
-          self.members = res.data
-          self.$apply()
-        })
+      }
+      else{
+        self.userLevel = -1
       }
     }
 

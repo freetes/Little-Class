@@ -21,7 +21,7 @@ page{
       width: 100%;
       height: 200px;
     }
-    .note-title{
+    >.note-title{
       margin: 0 10%;
       width: 80%;
       margin-top: 30px;
@@ -29,7 +29,7 @@ page{
       font-weight: bold;
       color: black;
     }
-    .note-info{
+    >.note-writer{
       margin: 0 10%;
       width: 80%;
       display: flex;
@@ -38,7 +38,24 @@ page{
       align-items: center;
       margin-top: 10px;
       font-size: 14px;
-      font-weight: lighter;
+      color: black;
+
+      >image{
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+    }
+    >.note-info{
+      margin: 0 10%;
+      width: 80%;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      margin-top: 10px;
+      font-size: 14px;
       color: gray;
 
       >text{
@@ -82,7 +99,6 @@ page{
     padding-bottom: 20px;
     font-size: 14px;
     color: gray;
-    font-weight: lighter;
 
     >.iconfont{
       font-size: 22px;
@@ -178,7 +194,6 @@ page{
     justify-content: center;
     align-items: flex-end;
     padding: 10px;
-
     z-index: 100;
 
     >textarea{
@@ -251,16 +266,16 @@ page{
     <view class="header">
       <image bindtap="previewImage" wx:if="{{ noteInfo.filePath }}" class="note-cover" src="{{ noteInfo.filePath }}" mode="aspectFill" lazy-load></image>
       <text class="note-title" bindlongpress="deleteNote">{{ noteInfo.title }}</text>
+      <!-- 后期扩展：创作人信息 -->
+      <view class="note-writer">
+        <image mode="widthFix" src="{{ noteInfo.creater.wxInfo.avatarUrl }}"></image>
+        <text>{{ noteInfo.creater.name }}</text>
+      </view>
       <view class="note-info">
         <text>{{ noteInfo.create_at }}</text>
         <text>字数：{{ noteInfo.content.length }}</text>
       </view>
-      <!-- 后期扩展：创作人信息 -->
-      <!-- <view class="note-writer">
-        <text>{{ noteInfo.create_at }}</text>
-        <text>字数：{{ noteInfo.content.length }}</text>
-      </view> -->
-      <text class="note-content">{{ noteInfo.content }}</text>
+      <text class="note-content" selectable>{{ noteInfo.content }}</text>
     </view>
 
     <view class="tags-container">
@@ -280,8 +295,7 @@ page{
       </view>
     </view>
 
-    <!-- 后期优化细节 -->
-
+    <!-- 后期优化 -->
     <!-- 新增评论输入框 -->
     <view class="create-comment-container" wx:if="{{ showCreateCommit }}" catchtap="showCommitModal" style="bottom: {{keyboardHeight}}px">
       <textarea value="{{ comment.content }}" maxlength="{{ 100 }}" bindfocus="showCommitModal" data-key="comment.content" bindinput="inputChange" fixed show-confirm-bar="{{ false }}" auto-focus adjust-position="{{ false }}"></textarea>
