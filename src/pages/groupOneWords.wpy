@@ -1,6 +1,6 @@
 <style lang="less">
 page{
-  background-color: #fafafa;
+  background-color: #ededed;
 }
 
 .container{
@@ -116,7 +116,6 @@ page{
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '互动',
-      navigationBarBackgroundColor: '#fafafa'
     }
 
     data = {
@@ -217,7 +216,6 @@ page{
           self.$apply()
         })
       }, 2000);
-
     }
   }
 </script>

@@ -1,6 +1,6 @@
 <style lang="less">
 page{
-  background-color: #fafafa;
+  background-color: #ededed;
 }
 
 .container{
@@ -57,7 +57,7 @@ page{
     font-size: 14px;
 
     .iconfont{
-      font-size: 26px;
+      font-size: 28px;
       color: black;
     }
     >view{
@@ -107,7 +107,7 @@ page{
       <text bindtap="toggleVisible" class="iconfont">{{noteInfo.visible?'&#xebcc;':'&#xebcd;' }}</text>
     </view>
 
-    <text class="button" bindtap="createNote">确定</text>
+    <button class="button" disabled="{{ loading }}" loading="{{ loading }}" bindtap="createNote">确定</button>
   </view>
 </template>
 
@@ -118,12 +118,12 @@ page{
   export default class CreateNote extends wepy.page {
     config = {
       navigationBarTitleText: '创建笔记',
-      navigationBarBackgroundColor: '#fafafa'
     }
 
     data = {
       groupId: '',
       userId: '',
+      loading: false,
       noteInfo: {
         title: '',
         content: '',
@@ -157,6 +157,8 @@ page{
             duration: 1000
           })
         }
+
+        self.loading = true
 
         let data = {
           title: self.noteInfo.title,

@@ -1,6 +1,6 @@
 <style lang="less">
 page{
-  background-color: #fafafa;
+  background-color: #ededed;
 }
 
 .container{
@@ -62,28 +62,6 @@ page{
       color: #8a8a8a;
       font-size: 12px;
     }
-
-    >.input-container{
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 0;
-      width: 100%;
-      border-bottom: 1px solid #fafafa;
-
-      color: black;
-      font-size: 16px;
-      >text{
-        flex: 0 1 auto;
-        padding-right: 20px;
-      }
-      >input, >picker{
-        flex: 1 0 auto;
-        font-weight: bold;
-        text-align: right;
-      }
-    }
   }
   >.button{
     margin: 20px 7%;
@@ -93,7 +71,8 @@ page{
     padding: 10px 0;
     font-size: 16px;
     font-weight: bold;
-    border-radius: 10px;
+    border-radius: 15px;
+    border: none;
     color: black;
     background-color: white;
   }
@@ -109,7 +88,7 @@ page{
       <textarea data-key="groupInfo.description" value="{{ groupInfo.description }}" bindinput="inputChange" auto-height placeholder="描述" />
     </view>
 
-    <text class="button" bindtap="createGroup">确定创建</text>
+    <button class="button" disabled="{{ loading }}" loading="{{ loading }}" bindtap="createGroup">确定创建</button>
   </view>
 </template>
 
@@ -120,19 +99,16 @@ page{
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '创建群组',
-      navigationBarBackgroundColor: '#fafafa'
     }
 
     data = {
-      sexArray: ['保密', '男', '女'],
-      kindArray: ['学生', '教师'],
       groupInfo: {
         name: '',
         description: '',
         filePath: ''
       },
-      openid: '',
-      userId: ''
+      userId: '',
+      loading: false
     }
 
     methods = {
@@ -146,6 +122,7 @@ page{
             duration: 1000
           })
         }
+        self.loading = true
 
         let data = {
           userId: self.userId,

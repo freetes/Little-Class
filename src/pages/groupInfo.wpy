@@ -17,45 +17,24 @@ page{
     background-clip: border-box;
     background-position: center;
     background-size: cover;
-    color: white;
+    color: black;
 
     >.title{
       box-sizing: border-box;
-      font-size: 24px;
+      font-size: 22px;
       font-weight: bold;
-      color: white;
-      opacity: 1;
-      text-shadow: rgb(0, 0, 0) 1px 0px 1px, rgb(0, 0, 0) 0px 1px 1px, rgb(0, 0, 0) 0px -1px 1px, rgb(0, 0, 0) -1px 0px 1px;
+      color: black;
     }
-    
-    >.creater{
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-start;
-      align-items: flex-start;
-      font-size: 14px;
+    >.id{
+      color: black;
       margin-top: 5px;
-      color: white;
-
-      >.id{
-        font-size: 14px;
-        font-weight: bold;
-        margin-right: 10px;
-        text-shadow: rgb(0, 0, 0) 1px 0px 1px, rgb(0, 0, 0) 0px 1px 1px, rgb(0, 0, 0) 0px -1px 1px, rgb(0, 0, 0) -1px 0px 1px;
-      }
-
-      >image{
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        margin-right: 5px;
-      }
+      font-size: 14px;
     }
     >.description{
-      margin-bottom: 5px;
+      margin: 5px 0;
       width: 100%;
-      font-size: 12px;
-      text-shadow: rgb(0, 0, 0) 1px 0px 1px, rgb(0, 0, 0) 0px 1px 1px, rgb(0, 0, 0) 0px -1px 1px, rgb(0, 0, 0) -1px 0px 1px;
+      font-size: 13px;
+      color: black;
       display: -webkit-box;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 3;
@@ -210,7 +189,7 @@ page{
 
         >.form-title{
           font-size: 18px;
-          font-weight: bold;
+          font-weight: 500;
         }
 
         >.form-status{
@@ -332,7 +311,7 @@ page{
 
       >.notice-title{
         font-size: 18px;
-        font-weight: bold;
+        font-weight: 500;
         padding: 5px 0;
       }
 
@@ -369,56 +348,11 @@ page{
       padding: 5px 20px;
       background-color: white;
       font-size: 16px;
-      font-weight: bold;
+      font-weight: 500;
       text-align: center;
     }
     >.disable{
       color: #8A8A8A;
-    }
-  }
-
-  .modal-container{
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(0, 0, 0, 0.7);
-    z-index: 100;
-
-    >.modal-main{
-      background-color: #fff;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: flex-start;
-      padding: 0 10px;
-      width: 60%;
-      padding-bottom: 0;
-
-      >.modal-title{
-        border-bottom: 1px solid light#8A8A8A;
-        margin: 10px 0;
-        font-size: 12px;
-        color: #8A8A8A;
-      }
-      >button{
-        padding: 5px 10px;
-        margin: 20px 0;
-        align-self: center;
-        border: 1px solid #8a8a8a;
-        background-color: white;
-        font-size: 14px;
-        color: black;
-        font-weight: bold;
-      }
-      >button::after{
-        border: none;
-      }
     }
   }
 }
@@ -451,11 +385,11 @@ page{
     <!-- 群组 信息 -->
     <view class="groupInfo-container" style="background-image: url({{groupInfo.filePath}})">
       <text class="title">{{ groupInfo.name }}</text>
-      <view class="creater">
-        <text class="id">ID: {{ groupInfo.code }}</text>
-        <!-- <image mode="widthFix" src="{{ groupInfo.creater.wxInfo.avatarUrl }}"></image>
-        <text>{{ groupInfo.creater.name }}</text> -->
-      </view>
+      <text class="id">ID: {{ groupInfo.code }}</text>
+      <!-- <view class="creater">
+        <image mode="widthFix" src="{{ groupInfo.creater.wxInfo.avatarUrl }}"></image>
+        <text>{{ groupInfo.creater.name }}</text>
+      </view> -->
       <text class="description">{{ groupInfo.description }}</text>
     </view>
 
@@ -465,14 +399,6 @@ page{
         <image src="../static/icons/position.png"></image>
         <text>签到</text>
       </view>
-      <!-- <view bindtap="goto('/pages/groupNotes?group_id={{groupId}}')">
-        <image src="../static/icons/ideas.png"></image>
-        <text>话题</text>
-      </view>
-      <view>
-        <image src="../static/icons/files.png"></image>
-        <text>文件</text>
-      </view> -->
       <view bindtap="goto('/pages/groupOneWords?group_id={{groupId}}')">
         <image src="../static/icons/ideas.png"></image>
         <text>互动</text>
@@ -485,6 +411,14 @@ page{
         <image src="../static/icons/users.png"></image>
         <text>成员</text>
       </view>
+      <!-- <view bindtap="goto('/pages/groupNotes?group_id={{groupId}}')">
+        <image src="../static/icons/ideas.png"></image>
+        <text>话题</text>
+      </view>
+      <view>
+        <image src="../static/icons/files.png"></image>
+        <text>文件</text>
+      </view> -->
     </view>
 
     <!-- 签到表 信息 -->
@@ -774,7 +708,12 @@ page{
       // 获取群组信息
       request.post('/getGroupInfoById', {groupId})
       .then(res=>{
-        res.data.filePath = 'https://api.grayclass.site:2333/' + res.data.filePath
+        if(res.data.filePath){
+          res.data.filePath = 'https://api.grayclass.site:2333/' + res.data.filePath
+        }
+        else{
+          res.data.filePath = '../static/icons/users.png'
+        }
         self.groupInfo = res.data
         self.$apply()
       })

@@ -1,6 +1,6 @@
 <style lang="less">
 page{
-  background-color: #fafafa;
+  background-color: #ededed;
 }
 
 .container{
@@ -34,7 +34,6 @@ page{
       align-items: center;
       padding: 10px 0;
       width: 100%;
-      border-bottom: 1px solid #fafafa;
 
       >text{
         flex: 0 1 auto;
@@ -80,7 +79,6 @@ page{
       align-items: center;
       padding: 10px 0;
       width: 100%;
-      border-bottom: 1px solid #fafafa;
 
       >text{
         flex: 0 1 auto;
@@ -220,7 +218,6 @@ page{
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '群组信息',
-      navigationBarBackgroundColor: '#fafafa'
     }
 
     data = {

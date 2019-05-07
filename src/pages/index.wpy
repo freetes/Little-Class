@@ -105,7 +105,7 @@ page{
     z-index: 100;
 
     >text{
-      font-size: 14px;
+      font-size: 13px;
       line-height: 24px;
       color: gray;
     }
@@ -165,7 +165,7 @@ page{
         >.group-title{
           font-size: 16px;
           color: black;
-          font-weight: bold;
+          font-weight: normal;
         }
       }
       >.group-bottom{
@@ -174,9 +174,9 @@ page{
         justify-content: space-between;
         align-items: center;
         width: 100%;
-        font-size: 12px;
+        font-size: 13px;
         padding-left: 40px;
-        color: gray;
+        color: lightgray;
       }
     }
   }
@@ -308,7 +308,7 @@ page{
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '我的群组',
-      navigationBarBackgroundColor: '#fafafa',
+      navigationBarBackgroundColor: '#ededed',
       enablePullDownRefresh: true
     }
 

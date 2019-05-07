@@ -25,7 +25,7 @@ page{
     }
 
     >.status-words{
-      font-size: 30px;
+      font-size: 28px;
       align-self: center;
       padding: 100px;
     }

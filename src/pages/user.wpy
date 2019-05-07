@@ -67,7 +67,7 @@ page{
         margin-right: 10px;
       }
       >text{
-        font-weight: bold;
+        font-weight: normal;
         font-size: 16px;
         line-height: 24px;
       }

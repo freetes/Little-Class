@@ -1,6 +1,6 @@
 <style lang="less">
 page{
-  background-color: #fafafa;
+  background-color: #ededed;
 }
 
 .container{
@@ -56,7 +56,6 @@ page{
       align-items: center;
       padding: 20px 0;
       width: 100%;
-      border-bottom: 1px solid #fafafa;
 
       >text{
         flex: 0 1 auto;
@@ -133,7 +132,6 @@ page{
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '创建签到',
-      navigationBarBackgroundColor: '#fafafa'
     }
 
     data = {

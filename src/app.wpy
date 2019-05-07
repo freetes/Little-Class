@@ -22,6 +22,9 @@ page{
 view{
   box-sizing: border-box;
 }
+button::after{
+  border: none;
+}
 </style>
 
 <script>
@@ -50,6 +53,7 @@ export default class extends wepy.app {
       'pages/groupNotices',
       'pages/createNotice',
       'pages/groupOneWords',
+      'pages/groupAllChecks',
     ],
     window: {
       backgroundTextStyle: 'dark',

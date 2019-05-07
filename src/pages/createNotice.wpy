@@ -1,6 +1,6 @@
 <style lang="less">
 page{
-  background-color: #fafafa;
+  background-color: #ededed;
 }
 
 .container{
@@ -57,7 +57,7 @@ page{
     font-size: 14px;
 
     .iconfont{
-      font-size: 26px;
+      font-size: 28px;
       color: black;
     }
     >view{
@@ -97,7 +97,7 @@ page{
       <textarea data-key="notice.content" value="{{ notice.content }}" bindinput="inputChange" placeholder="内容" />
     </view>
 
-    <text class="button" bindtap="createNotice">确定</text>
+    <text class="button" disabled="{{ loading }}" loading="{{ loading }}" bindtap="createNotice">确定</text>
   </view>
 </template>
 
@@ -107,13 +107,13 @@ page{
 
   export default class CreateNotice extends wepy.page {
     config = {
-      navigationBarTitleText: '创建通知',
-      navigationBarBackgroundColor: '#fafafa'
+      navigationBarTitleText: '创建通知'
     }
 
     data = {
       groupId: '',
       userId: '',
+      loading: false,
       notice: {
         title: '',
         content: '',
@@ -139,6 +139,8 @@ page{
             duration: 1000
           })
         }
+
+        self.loading = true
 
         let data = {
           title: self.notice.title,

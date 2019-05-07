@@ -28,7 +28,7 @@ page{
     >.title{
       flex: 0 0 auto;
       width: 100%;
-      font-size: 20px;
+      font-size: 18px;
       color: black;
       font-weight: normal;
       padding: 15px 0;
