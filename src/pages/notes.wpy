@@ -118,6 +118,7 @@ page{
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    z-index: 10;
 
     >.time-container{
       color: #353535;
@@ -193,16 +194,19 @@ page{
       </block>
     </swiper>
 
+    <!-- loading -->
+    <view class="loading" wx:if="{{ loading }}">
+      <image src="../static/imgs/loading.svg"></image>
+    </view>
     <!-- 为空时 -->
-    <view class="blank" wx:if="{{ !loading && groups.length == 0 }}">
+    <view class="blank" wx:if="{{ !loading && ((showMyNotes && myNotes.length == 0) || !showMyNotes && allNotes.length == 0)  }}">
       <text class="logo">空</text>
       <block wx:if="{{ !userId }}">
         <text>您还没有登录</text>
         <text>请先登录</text>
       </block>
       <block wx:else>
-        <text>您还没有笔记</text>
-        <text>点击「+」新建一个试试吧</text>
+        <text>点击「+」新建一个试试吧~</text>
       </block>
     </view>
   </view>
@@ -303,14 +307,14 @@ page{
       .then(res=>{
         self.allNotes = res.data
 
+        self.loading = false
+
         self.$apply()
       })
 
       // 响应式设置高度
       const res = wx.getSystemInfoSync()
       self.swiperHeight = res.windowHeight - 140
-      
-      self.loading = false
     }
   }
 </script>
