@@ -426,7 +426,7 @@ page{
       <view class="module-title">
         <text>通知</text>
         <view class="assist">
-          <text class="iconfont">&#xeb99;</text>
+          <text class="iconfont">&#xeba3;</text>
         </view>
       </view>
       <view class="blank" wx:if="{{ notices.length==0 }}">
@@ -446,7 +446,7 @@ page{
       <view class="module-title">
         <text>最近签到</text>
         <view class="assist">
-          <text class="iconfont">&#xeb99;</text>
+          <text class="iconfont">&#xeba3;</text>
         </view>
       </view>
       <view class="blank" wx:if="{{ !checkForm }}">
@@ -506,7 +506,7 @@ page{
         <text>群组成员</text>
         <view class="assist">
           <text>{{ members.length==0?'空空无人':'共' + members.length + '人'}}</text>
-          <text class="iconfont">&#xeb99;</text>
+          <text class="iconfont">&#xeba3;</text>
         </view>
       </view>
       <view wx:if="{{ members.length != 0 }}" wx:key="user_id">

@@ -71,7 +71,7 @@ page{
     padding: 10px 0;
     font-size: 16px;
     font-weight: bold;
-    border-radius: 15px;
+    border-radius: 10px;
     border: none;
     color: black;
     background-color: white;

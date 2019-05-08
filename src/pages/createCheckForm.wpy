@@ -74,18 +74,19 @@ page{
         font-size: 28px;
       }
     }
-    >.button{
-      margin: 20px 0;
-      width: 100%;
-      text-align: center;
-      line-height: 30px;
-      padding: 10px 0;
-      border-radius: 10px;
-      font-size: 16px;
-      font-weight: bold;
-      color: black;
-      background-color: white;
-    }
+  }
+  >.button{
+    margin: 20px 7%;
+    width: 86%;
+    text-align: center;
+    line-height: 30px;
+    padding: 10px 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: black;
+    background-color: white;
+    border-radius: 10px;
+    border: none;
   }
 }
 </style>
@@ -118,8 +119,8 @@ page{
         <text>开启签到码</text>
         <icon bindtap="toggleCheckCode" class="iconfont {{checkCode?'icon-anniu_xuanzhong':'icon-danxuanweixuanzhong'}}"></icon>
       </view>
-      <text class="button" bindtap="createCheckForm">确定创建</text>
     </view>
+    <button class="button" disabled="{{ loading }}" loading="{{ loading }}" bindtap="createCheckForm">确定创建</button>
 
   </view>
 </template>
@@ -135,6 +136,9 @@ page{
     }
 
     data = {
+      userId: '',
+      groupId: '',
+      loading: false,
       durationArray: ['三分钟', '五分钟', '十分钟', '一小时'],
       durationIndex: 1,
       distanceArray: ['50米', '100米', '200米', '不限'],
@@ -145,8 +149,6 @@ page{
         name: '',
         description: '',
       },
-      userId: '',
-      groupId: ''
     }
 
     computed = {
@@ -173,10 +175,13 @@ page{
       createCheckForm(e){
         let self = this
 
+        self.loading = true
+
         // 获取经纬度坐标
         wx.getLocation({
           type: 'wgs84',
           success (position) {
+            
             let now = new Date()
             let minutes = self.durationIndex == 0?3:
                 self.durationIndex == 1?5:

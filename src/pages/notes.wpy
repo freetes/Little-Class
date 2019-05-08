@@ -8,7 +8,7 @@ page{
     display: flex;
     width: 100%;
     height: 500px;
-    margin: 50px 0;
+    margin: 40px 0;
     box-sizing: border-box;
   }
 
@@ -52,7 +52,7 @@ page{
       width: 100%;
       text-align: right;
       font-size: 14px;
-      color: lightgray;
+      color: #353535;
       display: flex;
       flex-direction: row;
       justify-content: flex-end;
@@ -120,10 +120,10 @@ page{
     align-items: center;
 
     >.time-container{
-      color: #8A8A8A;
+      color: #353535;
 
       >text.date{
-        font-size: 40px;
+        font-size: 28px;
         letter-spacing: 5px;
       }
     }
@@ -134,18 +134,9 @@ page{
       justify-content: flex-end;
       align-items: center;
 
-      >text{
-        font-size: 16px;
-        margin-right: 10px;
-        animation: showBtns 0.5s ease;
-      }
-
-      >.create-icon{
-        width: 20px;
-        height: 20px;
-        padding: 5px 5px;
-        border: 1px solid black;
-        border-radius: 50%;
+      >.iconfont{
+        color: #353535;
+        font-size: 36px;
         animation: showBtns 0.5s ease;
       }
 
@@ -173,10 +164,8 @@ page{
         <text class="week">{{ ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][week] }}</text>
       </view>
       <view class="tabs">
-        <text wx:if="{{ showMyNotes }}" bindtap="toggleNotes">我的</text>
-        <text wx:else bindtap="toggleNotes">全部</text>
-
-        <image class="create-icon" src="../static/icons/add.png" bindtap="goto('/pages/createNote')"></image>
+        <icon class="iconfont" bindtap="toggleNotes">{{ showMyNotes?'&#xebb8;':'&#xebba;'}}</icon>
+        <icon class="iconfont icon-shuliang-zengjia_o" bindtap="goto('/pages/createNote')"></icon>
       </view>
     </view>
 
@@ -247,6 +236,16 @@ page{
     methods = {
       toggleNotes(){
         this.showMyNotes = !this.showMyNotes
+        if(this.showMyNotes){
+          wx.setNavigationBarTitle({
+            title: '我的笔记'
+          })
+        }
+        else{
+          wx.setNavigationBarTitle({
+            title: '全部笔记'
+          })
+        }
       },
       goto(url){
         wx.navigateTo({url})
@@ -309,7 +308,7 @@ page{
 
       // 响应式设置高度
       const res = wx.getSystemInfoSync()
-      self.swiperHeight = res.windowHeight - 160
+      self.swiperHeight = res.windowHeight - 140
       
       self.loading = false
     }

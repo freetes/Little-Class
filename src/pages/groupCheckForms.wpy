@@ -147,9 +147,17 @@ page{
         color: #8A8A8A;
       }
       >.right{
-        font-size: 12px;
+        font-size: 14px;
         color: #8A8A8A;
         font-weight: normal;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
+        
+        >.iconfont{
+          font-size: 24px;
+        }
       }
     }
 
@@ -164,7 +172,6 @@ page{
       >view.title{
         font-size: 16px;
         color: black;
-        font-weight: bold;
 
         >text.assist{
           color: black;
@@ -227,9 +234,9 @@ page{
       margin-bottom: 15px;
     }
     >.can-check{
-      color: black;
+      color: blue;
       font-weight: bold;
-      border: 1px solid black;
+      border: 1px solid blue;
       box-shadow: 0 5px 5px gray;
     }
     >.cannot-check{
@@ -345,11 +352,11 @@ page{
     <!-- 历史签到表 信息 -->
     <view class="check-history">
       <view class="title">
-        <text>历史签到</text>
+        <text>全部签到</text>
 
         <view class="right" bindtap="goto('/pages/groupAllChecks?group_id={{groupId}}')">
           <text>查看详情</text>
-
+          <icon class="iconfont icon-jiantou_liebiaoxiangyou_o"></icon>
         </view>
       </view>
       <view class="blank" wx:if="{{checkForms.length == 0}}">
@@ -361,9 +368,9 @@ page{
             <text>{{ item.title }}</text>
           </view>
           <view class="status">
-            <text>{{ item.duration }}</text>
             <text wx:if="{{ userLevel == 1 }}">签到成功人数：{{ item.successCount }}</text>
             <text wx:else>{{item.checkStatus == 1?'签到成功':item.checkStatus == -1?'签到失败，不在规定范围':'未签到'}}</text>
+            <text>{{ item.duration }}</text>
           </view>
         </view>
       </block>

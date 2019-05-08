@@ -3,6 +3,7 @@ page{
 }
 
 .container{
+  padding-bottom: 100px;
   .buttons{
     position: fixed;
     right: 20px;
@@ -45,9 +46,8 @@ page{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 30;
     background-color: rgba(0, 0, 0, 0.7);
-    z-index: 100;
+    z-index: 30;
 
     >.modal-main{
       background-color: #fff;
@@ -102,7 +102,7 @@ page{
     width: 100%;
     padding: 10px 5%;
     background-color: #ededed;
-    z-index: 100;
+    z-index: 10;
 
     >text{
       font-size: 13px;
@@ -176,7 +176,7 @@ page{
         width: 100%;
         font-size: 13px;
         padding-left: 40px;
-        color: lightgray;
+        color: gray;
       }
     }
   }
@@ -242,7 +242,7 @@ page{
 
     <view bindtap="toggleMyGroups" class="module-title" wx:if="{{ !loading }}">
       <text>我创建的</text>
-      <icon class="iconfont {{ showMyGroups?'icon-jiantou_liebiaozhankai':'icon-jiantou_liebiaoxiangyou' }}"></icon>
+      <icon class="iconfont {{ showMyGroups?'icon-jiantou_liebiaozhankai_o':'icon-jiantou_liebiaoxiangyou_o' }}"></icon>
     </view>
     <view class="group-list" wx:if="{{ myGroups.length != 0  && showMyGroups}}">
       <view class="group-item" wx:for="{{ myGroups }}" wx:key="group" bindtap="goto('/pages/groupInfo?group_id={{item._id}}')">
@@ -258,7 +258,7 @@ page{
 
     <view bindtap="toggleGroups" class="module-title" wx:if="{{ !loading }}">
       <text>我加入的</text>
-      <icon class="iconfont {{ showGroups?'icon-jiantou_liebiaozhankai':'icon-jiantou_liebiaoxiangyou' }}"></icon>
+      <icon class="iconfont {{ showGroups?'icon-jiantou_liebiaozhankai_o':'icon-jiantou_liebiaoxiangyou_o' }}"></icon>
     </view>
     <view class="group-list" wx:if="{{ groups.length != 0 && showGroups}}">
       <view class="group-item" wx:for="{{ groups }}" wx:key="group" bindtap="goto('/pages/groupInfo?group_id={{item._id}}')">
@@ -343,9 +343,14 @@ page{
         request.post('/searchGroupByCode', {code: self.joinView.groupCode})
         .then(res=>{
           // 无记录
-          if(res.data.length == 0){
+          if(res.data.length == 0 || res.data[0].status == -2){
             self.joinView.message = '未找到'
             self.$apply()
+
+            setTimeout(() => {
+              self.joinView.message = ''
+              self.$apply()
+            }, 1500);
           }
           else{
             wx.navigateTo({
