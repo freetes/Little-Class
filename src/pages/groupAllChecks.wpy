@@ -45,7 +45,7 @@ page{
         flex-direction: row;
         justify-content: flex-start;
         align-items: center;
-        font-size: 16px;
+        font-size: 15px;
         color: black;
 
         >image{
@@ -136,7 +136,7 @@ page{
         padding: 10px 0;
 
         >text{
-          font-size: 16px;
+          font-size: 15px;
           color: black;
           line-height: 20px;
         }
@@ -173,7 +173,7 @@ page{
         margin: 10px 0;
 
         >view.title{
-          font-size: 16px;
+          font-size: 15px;
           color: black;
 
           >text.assist{

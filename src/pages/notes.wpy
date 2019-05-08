@@ -38,7 +38,7 @@ page{
       width: 100%;
       line-height: 20px;
       max-height: 200px;
-      font-size: 16px;
+      font-size: 15px;
       color: #353535;
       margin: 15px 0;
       display: -webkit-box;

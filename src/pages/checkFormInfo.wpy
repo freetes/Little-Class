@@ -20,7 +20,7 @@ page{
     background-color: #fafafa;
 
     >text{
-      font-size: 16px;
+      font-size: 15px;
       color: black;
     }
 
@@ -43,7 +43,7 @@ page{
         flex-direction: row;
         justify-content: flex-start;
         align-items: center;
-        font-size: 16px;
+        font-size: 15px;
 
         >.number{
           padding: 0px 8px;

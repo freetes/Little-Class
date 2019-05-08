@@ -170,7 +170,7 @@ page{
       margin: 10px 0;
 
       >view.title{
-        font-size: 16px;
+        font-size: 15px;
         color: black;
 
         >text.assist{
@@ -210,7 +210,7 @@ page{
     background-color: white;
 
     >input{
-      font-size: 16px;
+      font-size: 15px;
       padding: 5px 0;
       width: 100px;
       height: 30px;
@@ -230,7 +230,7 @@ page{
       box-sizing: border-box;
       text-align: center;
       line-height: 20px;
-      border-radius: 16px;
+      border-radius: 15px;
       margin-bottom: 15px;
     }
     >.can-check{

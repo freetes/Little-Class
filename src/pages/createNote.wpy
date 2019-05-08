@@ -26,7 +26,7 @@ page{
       width: 100%;
       padding: 10px 0;
       border-bottom: 1px solid #8A8A8A;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: bold;
       color: black;
     }
@@ -34,7 +34,7 @@ page{
       width: 100%;
       padding: 10px 0 !important;
       height: 300px;
-      font-size: 16px;
+      font-size: 15px;
       color: black;
     }
   }
@@ -42,7 +42,7 @@ page{
     margin: 10px 7%;
     width: 86%;
     border-bottom: 1px solid #8A8A8A;
-    font-size: 16px;
+    font-size: 15px;
     color: black;
   }
   >.others{
@@ -69,8 +69,8 @@ page{
         width: 50px;
       }
 
-      >.iconfont{
-        color: #353535;
+      >text{
+        font-size: 14px;
       }
     }
   }
@@ -80,7 +80,7 @@ page{
     text-align: center;
     line-height: 30px;
     padding: 10px 0;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: bold;
     color: black;
     border-radius: 10px;
@@ -102,7 +102,10 @@ page{
         <text class="iconfont" bindtap="clearFile">&#xeb97;</text>
       </view>
 
-      <text bindtap="toggleVisible" class="iconfont">{{noteInfo.visible?'&#xebcd;':'&#xebcf;' }}</text>
+      <view bindtap="toggleVisible">
+        <!-- <text>是否可见</text> -->
+        <text class="iconfont">{{noteInfo.visible?'&#xebcd;':'&#xebcf;' }}</text>
+      </view>
     </view>
 
     <button class="button" disabled="{{ loading }}" loading="{{ loading }}" bindtap="createNote">确定</button>

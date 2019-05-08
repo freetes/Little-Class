@@ -38,7 +38,7 @@ page{
       width: 100%;
       line-height: 20px;
       max-height: 200px;
-      font-size: 16px;
+      font-size: 15px;
       color: #555;
       font-weight: lighter;
       margin: 15px 0;
@@ -138,7 +138,7 @@ page{
       align-items: center;
 
       >text{
-        font-size: 16px;
+        font-size: 15px;
         margin-right: 10px;
         animation: showBtns 0.5s ease;
       }
