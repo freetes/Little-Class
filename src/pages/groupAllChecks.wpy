@@ -70,7 +70,7 @@ page{
       }
     }
     >.member-container:last-child{
-      padding-bottom: 100px;
+      margin-bottom: 50px;
     }
   }
   >.checks-modal{
@@ -243,7 +243,6 @@ page{
           <view class="right">
             <text>成功：{{ item.checkCounts[0] }}</text>
             <text>未：{{ item.checkCounts[1] }}</text>
-            <text>失败：{{ item.checkCounts[2] }}</text>
           </view>
         </view>
       </block>
@@ -268,7 +267,6 @@ page{
           <view class="content">
             <text>成功：{{ members[selectIndex].checkCounts[0] }}</text>
             <text>未：{{ members[selectIndex].checkCounts[1] }}</text>
-            <text>失败：{{ members[selectIndex].checkCounts[2] }}</text>
           </view>
 
           <view class="history" wx:for="{{members[selectIndex].checkForms}}" bindtap="goto('/pages/checkFormInfo?group_id={{groupId}}&checkForm_id={{item._id}}')">
@@ -277,7 +275,7 @@ page{
             </view>
             <view class="status">
               <text>{{ item.duration }}</text>
-              <text>{{ item.checkStatus == 1?'签到成功':item.checkStatus == -1?'签到失败':'未签到'}} </text>
+              <text class="{{ item.checkStatus == 1?'green':'' }}">{{ item.checkStatus == 1?'签到成功':'未签到'}} </text>
             </view>
           </view>
 
@@ -340,7 +338,7 @@ page{
       request.post('/getUsersByGroupId', {groupId: self.groupId})
       .then(res=>{
         for(let member of res.data){
-          member.checkCounts = [0, 0, 0]
+          member.checkCounts = [0, 0]
           request.post('/getUserChecks', {groupId: self.groupId, userId: member._id})
           .then(res=>{
             res.data.sort((a, b)=>b.checkStatus - a.checkStatus)
@@ -350,17 +348,17 @@ page{
               if(check.checkStatus == 1){
                 member.checkCounts[0] ++
               }
+              // // 失败
+              // else if(check.checkStatus == 0){
+              //   member.checkCounts[1] ++
+              // }
               // 未签到
-              else if(check.checkStatus == 0){
-                member.checkCounts[1] ++
-              }
-              // 失败
               else{
-                member.checkCounts[2] ++
+                member.checkCounts[1] ++
               }
             }
 
-            member.checkForms = res.data
+            member.checkForms = res.data.reverse()
             
             self.members.push(member)
             self.$apply()

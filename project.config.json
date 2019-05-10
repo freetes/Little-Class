@@ -35,7 +35,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 16,
+			"current": 11,
 			"list": [
 				{
 					"id": -1,
@@ -108,10 +108,10 @@
 					"scene": null
 				},
 				{
-					"id": -1,
+					"id": 11,
 					"name": "noteInfo",
 					"pathName": "pages/noteInfo",
-					"query": "note_id=5cc10bd36263691ef1d9285d"
+					"query": "note_id=5cd2b971261a055d6b0b42ea"
 				},
 				{
 					"id": 12,

@@ -210,17 +210,6 @@ page{
         </view>
       </view>
 
-      <!-- 签到失败。不在有效范围 -->
-      <view wx:if="{{ checkForm.fail.length!=0 }}" class="title">
-        <text>签到失败，不在有效范围内</text>
-        <text class="assist">{{ checkForm.fail.length }}</text>
-      </view>
-      <view class="status">
-        <view wx:if="{{ checkForm.fail.length!=0 }}" wx:for="{{ checkForm.fail }}" wx:key="user_id">
-          <image class="avatar" src="{{ item.wxInfo.avatarUrl }}"></image>
-          <text class="name">{{ item.name }}</text>
-        </view>
-      </view>
       <!-- 未签到 -->
       <view class="title">
         <text>未签到</text>
@@ -292,14 +281,11 @@ page{
         res.data.checkForm.none = []
 
         for(let item of res.data.checkForm.members){
-          if(item.checkStatus == 0){
-            res.data.checkForm.none.push(item)
-          }
-          else if(item.checkStatus == 1){
+          if(item.checkStatus == 1){
             res.data.checkForm.success.push(item)
           }
-          else if(item.checkStatus == -1){
-            res.data.checkForm.fail.push(item)
+          else{
+            res.data.checkForm.none.push(item)
           }
         }
 

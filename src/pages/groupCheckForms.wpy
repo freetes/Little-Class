@@ -309,7 +309,7 @@ page{
         <view class="form-info">
           <view>
             <text class="form-title">{{ checkForm.title }}</text>
-            <text class="form-status {{checkForm.status == 1?'green':'gray'}}">{{ checkForm.statusWords }}</text>
+            <text class="form-status {{checkForm.status == 1 || checkForm.checkStatus == 1?'green':'gray'}}">{{ checkForm.statusWords }}</text>
           </view>
           <text class="form-time">{{ checkForm.duration }}</text>
         </view>
@@ -322,18 +322,6 @@ page{
           <view class="status">
             <view wx:for="{{ checkForm.success }}" wx:key="user_id">
               <text class="count">{{ index+1 }}.</text>
-              <image class="avatar" src="{{ item.wxInfo.avatarUrl }}"></image>
-              <text>{{ item.nickname || item.name }}</text>
-            </view>
-          </view>
-
-          <!-- 签到失败。不在有效范围 -->
-          <view wx:if="{{ checkForm.fail.length!=0 }}" class="title">
-            <text>签到失败，不在有效范围内</text>
-            <text class="assist">{{ checkForm.fail.length }}</text>
-          </view>
-          <view class="status">
-            <view wx:if="{{ checkForm.fail.length!=0 }}" wx:for="{{ checkForm.fail }}" wx:key="user_id">
               <image class="avatar" src="{{ item.wxInfo.avatarUrl }}"></image>
               <text>{{ item.nickname || item.name }}</text>
             </view>
@@ -373,7 +361,7 @@ page{
           </view>
           <view class="status">
             <text wx:if="{{ userLevel == 1 }}">签到成功人数：{{ item.successCount }}</text>
-            <text wx:else>{{item.checkStatus == 1?'签到成功':item.checkStatus == -1?'签到失败，不在规定范围':'未签到'}}</text>
+            <text class="{{ item.checkStatus == 1?'green':'' }}" wx:else>{{item.checkStatus == 1?'签到成功':'未签到'}}</text>
             <text>{{ item.duration }}</text>
           </view>
         </view>
@@ -422,14 +410,11 @@ page{
 
             for(let item of res.data.checkForm.members){
 
-              if(item.checkStatus == 0){
-                res.data.checkForm.none.push(item)
-              }
-              else if(item.checkStatus == 1){
+              if(item.checkStatus == 1){
                 res.data.checkForm.success.push(item)
               }
-              else if(item.checkStatus == -1){
-                res.data.checkForm.fail.push(item)
+              else{
+                res.data.checkForm.none.push(item)
               }
             }
 
@@ -447,10 +432,11 @@ page{
 
             request.post('/getGroupUserCheck', {formId: newValue[0]._id, userId: self.userId})
             .then(check=>{
-              if(check.data != 0){
+              if(check.data == 1){
                 self.canCheck = false
-                self.checkForm.statusWords = check.data == 1?'已签到':'签到失败'
+                self.checkForm.statusWords = '签到成功'
               }
+              self.checkForm.checkStatus = check.data
 
               self.$apply()
             })
@@ -495,7 +481,7 @@ page{
 
         if(self.checkForm.code && self.checkCode != self.checkForm.code){
           wx.showToast({
-            title: '签到码错误！',
+            title: '签到码错误，请重试',
             icon: 'none',
             duration: 1000,
             mask: true
@@ -531,7 +517,16 @@ page{
             }
             else{
               let distance = getGreatCircleDistance(res.latitude, res.longitude, ownerPosition[0], ownerPosition[1])
-              data.status = distance <= self.checkForm.distance?1:-1
+              if( distance > self.checkForm.distance ){
+                wx.showToast({
+                  title: '签到失败，不在签到范围',
+                  icon: 'none',
+                  duration: 1500,
+                  mask: true
+                })
+                return
+              }
+              data.status = 1
             }
 
             request.post('/createCheck', data)

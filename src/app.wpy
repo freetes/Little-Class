@@ -25,6 +25,13 @@ view{
 button::after{
   border: none;
 }
+
+.blue{
+  color: blue;
+}
+.green{
+  color: green;
+}
 </style>
 
 <script>

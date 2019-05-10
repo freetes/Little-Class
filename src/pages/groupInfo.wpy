@@ -209,58 +209,6 @@ page{
         font-size: 13px;
       }
     }
-
-    >.member{
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: flex-start;
-      width: 100%;
-      margin-top: 10px;
-
-      >.title{
-        font-size: 13px;
-        color: black;
-
-        >text.assist{
-          color: gray;
-          margin-left: 10px;
-        }
-      }
-
-      >.status{
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: flex-start;
-        width: 100%;
-        margin-bottom: 5px;
-
-        >view{
-          display: flex;
-          flex-direction: row;
-          justify-content: flex-start;
-          align-items: center;
-          width: 100%;
-          margin: 3px 0;
-          font-size: 13px;
-
-          >.count{
-            margin-right: 10px;
-            color: #a5a5a5;
-          }
-          >image.avatar{
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            margin-right: 10px;
-          }
-          >.name{
-            font-size: 15px;
-          }
-        }
-      }
-    }
   }
 
   >.notice-container{
@@ -467,43 +415,6 @@ page{
           </view>
           <text class="form-time">{{ checkForm.duration }}</text>
         </view>
-        <view class="member">
-          <!-- 成功签到 -->
-          <view class="title">
-            <text>签到成功</text>
-            <text class="assist">{{ checkForm.success.length }}</text>
-          </view>
-          <view class="status">
-            <view wx:for="{{ checkForm.success }}" wx:key="user_id">
-              <text class="count">{{ index+1 }}.</text>
-              <image class="avatar" src="{{ item.wxInfo.avatarUrl }}"></image>
-              <text>{{ item.nickname || item.name }}</text>
-            </view>
-          </view>
-
-          <!-- 签到失败。不在有效范围 -->
-          <view wx:if="{{ checkForm.fail.length!=0 }}" class="title">
-            <text>签到失败，不在有效范围内</text>
-            <text class="assist">{{ checkForm.fail.length }}</text>
-          </view>
-          <view class="status">
-            <view wx:if="{{ checkForm.fail.length!=0 }}" wx:for="{{ checkForm.fail }}" wx:key="user_id">
-              <image class="avatar" src="{{ item.wxInfo.avatarUrl }}"></image>
-              <text>{{ item.nickname || item.name }}</text>
-            </view>
-          </view>
-          <!-- 未签到 -->
-          <view class="title">
-            <text>未签到</text>
-            <text class="assist">{{ checkForm.none.length }}</text>
-          </view>
-          <view class="status">
-            <view wx:for="{{ checkForm.none }}" wx:key="user_id">
-              <image class="avatar" src="{{ item.wxInfo.avatarUrl }}"></image>
-              <text>{{ item.nickname || item.name }}</text>
-            </view>
-          </view>
-        </view>
       </block>
     </view>
 
@@ -526,7 +437,7 @@ page{
       <text wx:if="{{ userLevel == -1 && groupInfo.status == 0 }}" bindtap="joinGroup">立即加入</text>
       <text class="disable" disabled="{{ true }}" wx:if="{{ userLevel == -1 && groupInfo.status == 1 }}">加入已关闭，无法加入</text>
       <!-- 拥有者 功能 -->
-      <text wx:if="{{ userLevel == 1 && !canCheck && canCreateCheck }}" bindtap="goto('/pages/createCheckForm?group_id={{groupId}}')">发起签到</text>
+      <text wx:if="{{ userLevel == 1 && canCreateCheck }}" bindtap="goto('/pages/createCheckForm?group_id={{groupId}}')">发起签到</text>
       <text wx:if="{{ userLevel == 1 }}" bindtap="goto('/pages/editGroupInfo?group_id={{groupId}}')">修改信息</text>
     </view>
   </view>
@@ -549,70 +460,11 @@ page{
       userId: '',
       groupInfo: {},
       members: [],
-      checkForms: [],
       notices: [],
       userLevel: -1,
       checkForm: undefined,
-      canCheck: false,
       canCreateCheck: false,
       showExitView: false
-    }
-
-    computed = {
-    }
-
-    watch = {
-      checkForms (newValue, oldValue) {
-        let self = this
-
-        if(newValue.length > 0){
-          request.post('/getCheckFormById', {checkFormId: newValue[0]._id})
-          .then(res=>{
-            res.data.checkForm.success = []
-            res.data.checkForm.fail = []
-            res.data.checkForm.none = []
-
-            for(let item of res.data.checkForm.members){
-              if(item.checkStatus == 0){
-                res.data.checkForm.none.push(item)
-              }
-              else if(item.checkStatus == 1){
-                res.data.checkForm.success.push(item)
-              }
-              else if(item.checkStatus == -1){
-                res.data.checkForm.fail.push(item)
-              }
-            }
-
-            // 判断能否签到
-            if(util.moment().isSameOrBefore(res.data.checkForm.end_at)){
-              res.data.checkForm.statusWords = '进行中'
-              res.data.checkForm.status = 1
-              self.canCheck = true
-              self.canCreateCheck = false
-            }
-            else{
-              res.data.checkForm.statusWords = '已结束'
-              res.data.checkForm.status = -1
-              self.canCheck = false
-              self.canCreateCheck = true
-            }
-
-            // 判断是否已经签到
-            for(let item of res.data.checkForm.success){
-              if(self.userId == item._id){
-                self.canCheck = false
-                break
-              }
-            }
-
-            res.data.checkForm.duration = util.moment(res.data.checkForm.end_at).fromNow()
-
-            self.checkForm = res.data.checkForm
-            self.$apply()            
-          })
-        }
-      }
     }
 
     methods = {
@@ -752,16 +604,38 @@ page{
         })
 
         // 获取签到表信息
-        request.post('/getCheckFormsByGroupId', {groupId: self.groupId, userId: self.userId})
+        request.post('/getNewestCheckFormByGroupId', {groupId: self.groupId})
         .then(res=>{
-          self.checkForms = res.data
-
           // 无签到数据时
-          if(res.data.length == 0){
-            self.canCheck = false
+          if(!res.data){
+            self.canCreateCheck = true
+            self.$apply()
+            return
+          }
+
+          // 判断能否签到
+          if(util.moment().isSameOrBefore(res.data.end_at)){
+            res.data.statusWords = '进行中'
+            res.data.status = 1
+            self.canCreateCheck = false
+          }
+          else{
+            res.data.statusWords = '已结束'
+            res.data.status = -1
             self.canCreateCheck = true
           }
-          self.$apply()
+
+          res.data.duration = util.moment(res.data.end_at).fromNow()
+
+          self.checkForm = res.data
+          self.$apply()     
+
+          // 签到状态
+          request.post('/getUserCheckStatus', {formId: res.data._id, userId})
+          .then(res=>{
+            self.checkForm.userCheckStatus = res.data
+            self.$apply()
+          })
         })
 
       }
