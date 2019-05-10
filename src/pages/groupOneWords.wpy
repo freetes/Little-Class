@@ -124,7 +124,7 @@ page{
   <view class="container">
 
     <view class="oneWord-inputs">
-      <input placeholder="在此输入话语" data-key="oneWord" value="{{ oneWord }}" bindinput="inputChange" />
+      <input placeholder="在此输入话语" maxlength="30" data-key="oneWord" value="{{ oneWord }}" bindinput="inputChange" />
       <text bindtap="createOneWord">发送</text>
     </view>
 

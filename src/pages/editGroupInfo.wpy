@@ -105,7 +105,7 @@ page{
     background-color: white;
     border-radius: 10px;
 
-    >text{
+    >button{
       line-height: 30px;
       padding: 5px 10px;
       background-color: white;
@@ -113,9 +113,6 @@ page{
       font-size: 15px;
       font-weight: bold;
       text-align: center;
-    }
-    >.disable{
-      color: #8A8A8A;
     }
   }
 
@@ -179,14 +176,14 @@ page{
       <text>基本信息</text>
       <view class="input-container">
         <text>群名称</text>
-        <input placeholder="群名称" data-key="groupInfo.name" value="{{ groupInfo.name }}" bindchange="inputChange" />
+        <input placeholder="群名称" maxlength="16" data-key="groupInfo.name" value="{{ groupInfo.name }}" bindchange="inputChange" />
       </view>
       <view class="input-container">
         <text>群ID</text>
         <input value="{{ groupInfo.code }}" disabled="true"/>
       </view>
       <text>群简介</text>
-      <textarea data-key="groupInfo.description" value="{{ groupInfo.description }}" bindblur="inputChange" auto-height placeholder="描述" />
+      <textarea data-key="groupInfo.description" maxlength="100" value="{{ groupInfo.description }}" bindblur="inputChange" auto-height placeholder="描述" />
     </view>
 
     <!-- 其它设置 -->
@@ -206,7 +203,7 @@ page{
 
     <view class="btns">
       <!-- <button bindtap="">保存修改</button> -->
-      <text bindtap="disbandGroup">解散</text>
+      <button disabled="{{ loading }}" loading="{{ loading }}" bindtap="disbandGroup">解散</button>
     </view>
   </view>
 </template>
@@ -224,6 +221,7 @@ page{
       groupId: '',
       groupInfo: {},
       message: '',
+      loading: false,
       joinGroupArray: ['任何人都可以加入', '不允许加入'],
     }
 
@@ -354,12 +352,6 @@ page{
           }
         })
       },
-      showDisbandView(){
-        this.showDisbandView = true
-      },
-      hideDisbandView(){
-        this.showDisbandView = false
-      },
       inputChange(e){
         let self = this
         const keyArr = e.currentTarget.dataset.key.split('.')
@@ -382,6 +374,9 @@ page{
           content: `确定解散群组？`,
           success(res) {
             if (res.confirm) {
+              self.loading = true
+              self.$apply()
+
               // 请求参数
               let data = {
                 groupId: self.groupId,

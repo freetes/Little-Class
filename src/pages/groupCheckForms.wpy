@@ -235,8 +235,10 @@ page{
     }
     >.can-check{
       color: blue;
+;
       font-weight: bold;
       border: 1px solid blue;
+;
       box-shadow: 0 5px 5px gray;
     }
     >.cannot-check{
@@ -247,11 +249,13 @@ page{
     >.a{
       font-size: 14px;
       color: blue;
+;
       padding: 3px;
       text-align: center;
       line-height: 20px;
       margin-bottom: 10px;
       border-bottom: 1px solid blue;
+;
     }
   }
 
@@ -287,10 +291,10 @@ page{
       <!-- 通用功能 -->
       <block>
         <input wx:if="{{ checkForm && checkForm.code }}" type="number" maxlength="5" data-key="checkCode" bindinput="inputChange" placeholder="输入签到码" disabled="{{!canCheck}}" />
-        <text class="button {{ canCheck?'can-check':'cannot-check' }}" bindtap="createCheck">立即签到</text>
+        <button open-type="" class="button {{ canCheck?'can-check':'cannot-check' }}" bindtap="createCheck">立即签到</button>
       </block>
       <!-- 拥有者 功能 -->
-      <text class="a" wx:if="{{ userLevel == 1 && canCreateCheck }}" bindtap="goto('/pages/createCheckForm?group_id={{groupId}}')">前往开启签到</text>
+      <text class="a" wx:if="{{ userLevel == 1 && canCreateCheck }}" bindtap="goto('/pages/createCheckForm?group_id={{groupId}}')">前往创建签到</text>
     </view>
 
     <!-- 签到表 信息 -->
@@ -417,6 +421,7 @@ page{
             res.data.checkForm.none = []
 
             for(let item of res.data.checkForm.members){
+
               if(item.checkStatus == 0){
                 res.data.checkForm.none.push(item)
               }
@@ -440,14 +445,15 @@ page{
               self.canCreateCheck = true
             }
 
-            // 判断是否已经签到
-            for(let item of res.data.checkForm.success){
-              if(self.userId == item._id){
+            request.post('/getGroupUserCheck', {formId: newValue[0]._id, userId: self.userId})
+            .then(check=>{
+              if(check.data != 0){
                 self.canCheck = false
-                res.data.checkForm.statusWords = '已签到'
-                break
+                self.checkForm.statusWords = check.data == 1?'已签到':'签到失败'
               }
-            }
+
+              self.$apply()
+            })
 
             res.data.checkForm.duration = util.moment(res.data.checkForm.end_at).fromNow()
 
@@ -506,11 +512,11 @@ page{
             console.log(res)
             let now = new Date()
             /**
-             * @form_id
-             * @user_id
-             * @position
-             * @check_at
-             * @status: Number,     1 to success, -1 to fail because of the position
+             * @param form_id
+             * @param user_id
+             * @param position
+             * @param check_at
+             * @param status Number, 1 to success, -1 to fail because of the position
              */
             
             let data = {
@@ -549,15 +555,16 @@ page{
                           * Math.cos(theta/ 180 * Math.PI);
 
               dist = Math.acos(dist);
-              dist = dist* 180 / Math.PI;
+              dist = dist * 180 / Math.PI;
 
               var miles = dist * 60 * 1.1515;
+
               return miles;
             }
           },
           fail (res){
             wx.showToast({
-              title: '获取地址失败，请前往小程序设置页面开启权限！',
+              title: '创建失败，请前往「权限设置」开启获取定位权限。',
               icon: 'none',
               duration: 2000
             })

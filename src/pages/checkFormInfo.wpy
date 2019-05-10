@@ -55,11 +55,13 @@ page{
       }
       >.goto{
         color: blue;
+;
         padding: 4px 15px;
         border-radius: 15px;
         line-height: 20px;
         font-size: 14px;
         border: 1px solid blue;
+;
         font-weight: bold;
       }
     }

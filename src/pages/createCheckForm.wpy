@@ -94,7 +94,7 @@ page{
   <view class="container">
     <view class="header">
       <text>标题</text>
-      <input placeholder="签到名称" maxlength="20" data-key="title" value="{{ title }}" bindchange="inputChange" />
+      <input placeholder="签到名称" maxlength="16" data-key="title" value="{{ title }}" bindchange="inputChange" />
     </view>
 
     <view class="inputs">
@@ -221,7 +221,7 @@ page{
 
           fail (res){
             wx.showToast({
-              title: '获取地址失败，请前往小程序设置页面开启权限！',
+              title: '创建失败，请前往「权限设置」开启获取定位权限。',
               icon: 'none',
               duration: 2000
             })

@@ -136,7 +136,7 @@ page{
       <text>我的信息</text>
       <view class="input-container">
         <text>昵称</text>
-        <input placeholder="请输入群昵称" data-key="userInfo.nickname" value="{{ userInfo.nickname }}" bindchange="inputChange" />
+        <input placeholder="请输入群昵称" maxlength="10" data-key="userInfo.nickname" value="{{ userInfo.nickname }}" bindchange="inputChange" />
       </view>
     </view>
 

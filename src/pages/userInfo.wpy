@@ -93,7 +93,7 @@ page{
       <text>基本信息</text>
       <view class="input-container">
         <text>姓名</text>
-        <input placeholder="请输入姓名" data-key="userInfo.name" value="{{ userInfo.name }}" bindchange="inputChange" />
+        <input placeholder="请输入姓名" maxlength="10" data-key="userInfo.name" value="{{ userInfo.name }}" bindchange="inputChange" />
       </view>
       <view class="input-container">
         <text>性别</text>
