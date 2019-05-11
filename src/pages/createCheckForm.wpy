@@ -179,7 +179,7 @@ page{
 
         // 获取经纬度坐标
         wx.getLocation({
-          type: 'wgs84',
+          type: 'gcj02',
           success (position) {
             
             let now = new Date()
@@ -190,7 +190,7 @@ page{
             
             let data = {
               title: self.title,
-              position: position.latitude + '-' + position.longitude,
+              position: position.latitude + ',' + position.longitude,
               distance: self.distanceIndex == 0?50:
                         self.distanceIndex == 1?100:
                         self.distanceIndex == 2?200:-1,

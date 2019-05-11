@@ -374,6 +374,9 @@ page{
   import wepy from 'wepy'
   import request from '@/utils/request.js'
   import util from '@/utils/util.js'
+  import QQMapWX from '@/utils/qqmap-wx-jssdk.js'
+
+  var qqmap
 
   export default class Index extends wepy.page {
     config = {
@@ -488,15 +491,12 @@ page{
           })
           return 
         }
-        
-        let ownerPosition = self.checkForm.position.split('-')
 
         // 获取经纬度坐标
         wx.getLocation({
-          type: 'wgs84',
-          success (res) {
-            console.log(res)
-            let now = new Date()
+          type: 'gcj02',
+          success (position) {
+            // console.log(res)
             /**
              * @param form_id
              * @param user_id
@@ -509,52 +509,64 @@ page{
               checkFormId: self.checkForm._id,
               userId: self.userId,
               checkAt: Date.now(),
-              position: res.latitude + '-' + res.longitude
+              position: position.latitude + ',' + position.longitude
             }
 
             if(self.checkForm.distance == -1){
               data.status = 1
-            }
-            else{
-              let distance = getGreatCircleDistance(res.latitude, res.longitude, ownerPosition[0], ownerPosition[1])
-              if( distance > self.checkForm.distance ){
+              request.post('/createCheck', data)
+              .then(res=>{              
                 wx.showToast({
-                  title: '签到失败，不在签到范围',
-                  icon: 'none',
+                  title: '签到成功！',
+                  icon: 'success',
                   duration: 1500,
                   mask: true
                 })
-                return
-              }
-              data.status = 1
-            }
-
-            request.post('/createCheck', data)
-            .then(res=>{              
-              wx.showToast({
-                title: '签到成功！',
-                icon: 'success',
-                duration: 1500,
-                mask: true
+                self.onShow()
+                self.canCheck = false
+                self.$apply()
               })
-              self.onShow()
-              self.canCheck = false
-            })
-            
-            // 通过经纬度获取距离（单位：米）
-            function getGreatCircleDistance(lat1, lng1, lat2, lng2){
-              var theta = lng1 - lng2;
+            }
+            else{
+              // 计算距离
+              qqmap.calculateDistance({
+                mode: 'straight',
+                from: data.position,
+                to: self.checkForm.position,
+                success: function(res) {
+                  if(res.result.elements[0].distance > self.checkForm.distance + 50){
+                    wx.showToast({
+                      title: '签到失败，不在签到范围',
+                      icon: 'none',
+                      duration: 1500,
+                      mask: true
+                    })
+                    return
+                  }
+                  
+                  data.status = 1
 
-              var dist = Math.sin(lat1/ 180 * Math.PI) * Math.sin(lat2/ 180 * Math.PI)
-                          + Math.cos(lat1/ 180 * Math.PI) * Math.cos(lat2/ 180 * Math.PI)
-                          * Math.cos(theta/ 180 * Math.PI);
+                  request.post('/createCheck', data)
+                  .then(res=>{
+                    wx.showToast({
+                      title: '签到成功！',
+                      icon: 'success',
+                      duration: 1500,
+                      mask: true
+                    })
+                    self.onShow()
+                    self.canCheck = false
+                    self.$apply()
+                  })
 
-              dist = Math.acos(dist);
-              dist = dist * 180 / Math.PI;
-
-              var miles = dist * 60 * 1.1515;
-
-              return miles;
+                },
+                fail: function(error) {
+                  console.error(error);
+                },
+                complete: function(res) {
+                  console.log(res);
+                }
+              });
             }
           },
           fail (res){
@@ -576,6 +588,10 @@ page{
 
     onLoad(option) {
       let self = this, userId = wx.getStorageSync('userId'), groupId = option.group_id
+
+      qqmap = new QQMapWX({
+        key: 'BNZBZ-4FQHF-XSYJZ-NRDA4-YJNTF-LXBYS'
+      })
 
       if(userId){
         self.userId = userId
