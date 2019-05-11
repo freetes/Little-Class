@@ -44,8 +44,7 @@ page{
         >.title{
           width: 100%;
           font-size: 18px;
-          line-height: 24px;
-          height: 24px;
+          line-height: 20px;
         }
       }
 
