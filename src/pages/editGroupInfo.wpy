@@ -176,7 +176,7 @@ page{
       <text>基本信息</text>
       <view class="input-container">
         <text>群名称</text>
-        <input placeholder="群名称" maxlength="16" data-key="groupInfo.name" value="{{ groupInfo.name }}" bindchange="inputChange" />
+        <input placeholder="群名称" maxlength="20" data-key="groupInfo.name" value="{{ groupInfo.name }}" bindchange="inputChange" />
       </view>
       <view class="input-container">
         <text>群ID</text>

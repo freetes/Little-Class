@@ -93,7 +93,7 @@ page{
 <template>
   <view class="container">
     <view class="header">
-      <input placeholder="标题" maxlength="16" data-key="notice.title" value="{{ notice.title }}" bindchange="inputChange" />
+      <input placeholder="标题" maxlength="20" data-key="notice.title" value="{{ notice.title }}" bindchange="inputChange" />
       <textarea data-key="notice.content" maxlength="100" value="{{ notice.content }}" bindinput="inputChange" placeholder="内容" />
     </view>
 

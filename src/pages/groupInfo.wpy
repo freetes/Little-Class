@@ -384,14 +384,14 @@ page{
           <text class="iconfont">&#xeba3;</text>
         </view>
       </view>
-      <view class="blank" wx:if="{{ notices.length==0 }}">
+      <view class="blank" wx:if="{{ !notice }}">
         <text>空</text>
       </view>
       <block wx:else>
         <view class="notice-info">
-          <text class="notice-title">{{ notices[0].title }}</text>
-          <text class="notice-content">{{ notices[0].content }}</text>
-          <text class="notice-time">{{ notices[0].createAt }}</text>
+          <text class="notice-title">{{ notice.title }}</text>
+          <text class="notice-content">{{ notice.content }}</text>
+          <text class="notice-time">{{ notice.createAt }}</text>
         </view>
       </block>
     </view>
@@ -460,8 +460,8 @@ page{
       userId: '',
       groupInfo: {},
       members: [],
-      notices: [],
       userLevel: -1,
+      notice: undefined,
       checkForm: undefined,
       canCreateCheck: false,
       showExitView: false
@@ -585,14 +585,13 @@ page{
         self.userId = userId
 
         // 获取通知
-        request.post('/getNoticesByGroupId', {groupId})
+        request.post('/getNewestNoticeByGroupId', {groupId: self.groupId})
         .then(res=>{
-          for(let item of res.data){
-            item.createAt = util.moment(item.create_at).fromNow()
+          if(res.data){
+            res.data.createAt = util.moment(res.data.create_at).fromNow()
+            self.notice = res.data
+            self.$apply()
           }
-          self.notices = res.data
-          
-          self.$apply()
         })
 
         // 获取用户类型

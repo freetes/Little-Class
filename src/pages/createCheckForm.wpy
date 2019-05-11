@@ -94,7 +94,7 @@ page{
   <view class="container">
     <view class="header">
       <text>标题</text>
-      <input placeholder="签到名称" maxlength="16" data-key="title" value="{{ title }}" bindchange="inputChange" />
+      <input placeholder="签到名称" maxlength="20" data-key="title" value="{{ title }}" bindchange="inputChange" />
     </view>
 
     <view class="inputs">

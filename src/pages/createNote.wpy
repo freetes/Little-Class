@@ -91,10 +91,10 @@ page{
 <template>
   <view class="container">
     <view class="header">
-      <input placeholder="标题" maxlength="16" data-key="noteInfo.title" value="{{ noteInfo.title }}" bindchange="inputChange" />
-      <textarea data-key="noteInfo.content" maxlength="140" value="{{ noteInfo.content }}" bindinput="inputChange" placeholder="内容" />
+      <input placeholder="标题" maxlength="20" data-key="noteInfo.title" value="{{ noteInfo.title }}" bindchange="inputChange" />
+      <textarea data-key="noteInfo.content" maxlength="200" value="{{ noteInfo.content }}" bindinput="inputChange" placeholder="内容" />
     </view>
-    <input class="tagsInput" maxlength="16" placeholder="标签，用空格隔开" data-key="noteInfo.tags" value="{{ noteInfo.tags }}" bindchange="inputChange" />
+    <input class="tagsInput" maxlength="20" placeholder="标签，用空格隔开" data-key="noteInfo.tags" value="{{ noteInfo.tags }}" bindchange="inputChange" />
     <view class="others">
       <text class="iconfont" wx:if="{{ noteInfo.filePath=='' }}" bindtap="chooseImage">&#xeb8d;</text>
       <view wx:else>
