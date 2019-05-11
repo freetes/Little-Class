@@ -576,17 +576,6 @@ page{
         self.groupInfo = res.data
         self.$apply()
       })
-
-      // 获取通知
-      request.post('/getNoticesByGroupId', {groupId})
-      .then(res=>{
-        for(let item of res.data){
-          item.createAt = util.moment(item.create_at).fromNow()
-        }
-        self.notices = res.data
-        
-        self.$apply()
-      })
     }
 
     onShow(){
@@ -594,6 +583,17 @@ page{
 
       if(userId){
         self.userId = userId
+
+        // 获取通知
+        request.post('/getNoticesByGroupId', {groupId})
+        .then(res=>{
+          for(let item of res.data){
+            item.createAt = util.moment(item.create_at).fromNow()
+          }
+          self.notices = res.data
+          
+          self.$apply()
+        })
 
         // 获取用户类型
         request.post('/getUserLevel', {groupId: self.groupId, userId})
