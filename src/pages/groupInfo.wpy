@@ -63,14 +63,14 @@ page{
       width: 25%;
       padding: 10px;
 
-      >image{
-        width: 30px;
-        height: 30px;
-        margin-bottom: 5px;
+      >.iconfont{
+        font-size: 30px;
+        color: black;
       }
       >text{
-        font-size: 15px;
-        color: #353535;
+        font-size: 14px;
+        color: black;
+        font-weight: 500;
       }
     }
   }
@@ -188,6 +188,8 @@ page{
 
       >.form-status{
         font-size: 14px;
+        color: gray;
+        margin-bottom: 5px;
       }
       
       >.form-time{
@@ -247,7 +249,7 @@ page{
       >.notice-title{
         font-size: 18px;
         font-weight: 500;
-        padding: 5px 0;
+        margin: 5px 0;
       }
 
       >.notice-content{
@@ -337,19 +339,19 @@ page{
     <!-- 模块入口 -->
     <view class="modules-container">
       <view bindtap="goto('/pages/groupCheckForms?group_id={{groupId}}')">
-        <image src="../static/icons/position.png"></image>
+        <icon class="iconfont">&#xeb6b;</icon>
         <text>签到</text>
       </view>
       <view bindtap="goto('/pages/groupOneWords?group_id={{groupId}}')">
-        <image src="../static/icons/ideas.png"></image>
+        <icon class="iconfont">&#xeb4c;</icon>
         <text>互动</text>
       </view>
       <view bindtap="goto('/pages/groupNotices?group_id={{groupId}}')">
-        <image src="../static/icons/notice.png"></image>
+        <icon class="iconfont">&#xeb7d;</icon>
         <text>通知</text>
       </view>
       <view bindtap="goto('/pages/groupUsers?group_id={{groupId}}')">
-        <image src="../static/icons/users.png"></image>
+        <icon class="iconfont">&#xeb50;</icon>
         <text>成员</text>
       </view>
       <!-- <view bindtap="goto('/pages/groupNotes?group_id={{groupId}}')">

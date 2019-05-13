@@ -32,6 +32,12 @@ button::after{
 .green{
   color: green;
 }
+.red{
+  color: red;
+}
+.gray{
+  color: gray;
+}
 </style>
 
 <script>

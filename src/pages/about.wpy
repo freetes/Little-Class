@@ -1,3 +1,4 @@
+
 <style lang="less">
 .container{
   display: flex;
@@ -8,6 +9,19 @@
   padding: 10px 5%;
   font-size: 14px;
   color: black;
+
+  >.topics{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+    margin-bottom: 10px;
+
+    >image{
+      width: 100%;
+    }
+  }
 
   >view.update-historys{
     display: flex;
@@ -69,7 +83,7 @@
   <view class="container">
     
     <view class="topics">
-      <!-- <title class="title">什么是灰度大学？</title> -->
+      <image mode="aspectFit" src="../static/imgs/pic1.png"></image>
     </view>
 
     <view class="update-historys">
@@ -135,7 +149,7 @@
       </view>
     </view>
     <view class="futures">
-      <text class="title">FUTURES：</text>
+      <text class="title">made with ❤️</text>
     </view>
   </view>
 </template>

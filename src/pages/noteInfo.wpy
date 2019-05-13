@@ -279,7 +279,7 @@ page{
             {{feelings[comment.feelingIndex]}}
           </view>
         </picker>
-        <icon class="iconfont" bindtap="createComment">&#xeb4c;</icon>
+        <icon class="iconfont" bindtap="createComment">&#xebc9;</icon>
       </view>
     </view>
 

@@ -29,7 +29,7 @@ page{
       width: 100%;
       font-size: 20px;
       color: black;
-      font-weight: normal;
+      font-weight: 500;
       padding: 15px 0;
     }
     >.content{
@@ -120,10 +120,10 @@ page{
     z-index: 10;
 
     >.time-container{
-      color: #353535;
+      color: black;
 
       >text.date{
-        font-size: 28px;
+        font-size: 36px;
         letter-spacing: 5px;
       }
     }
@@ -313,6 +313,7 @@ page{
           }
           else{
             self.myNotes = res.data
+            self.loading = false
           }
 
           self.$apply()
