@@ -341,18 +341,13 @@ page{
           member.checkCounts = [0, 0]
           request.post('/getUserChecks', {groupId: self.groupId, userId: member._id})
           .then(res=>{
-            res.data.sort((a, b)=>b.checkStatus - a.checkStatus)
+            // res.data.sort((a, b)=>b.checkStatus - a.checkStatus)
             for(let check of res.data){
               check.duration = util.moment(check.end_at).fromNow()
               // 签到成功
               if(check.checkStatus == 1){
                 member.checkCounts[0] ++
               }
-              // // 失败
-              // else if(check.checkStatus == 0){
-              //   member.checkCounts[1] ++
-              // }
-              // 未签到
               else{
                 member.checkCounts[1] ++
               }

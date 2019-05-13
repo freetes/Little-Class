@@ -203,7 +203,7 @@ page{
         <text class="assist">{{ checkForm.success.length }}</text>
       </view>
       <view class="status">
-        <view wx:for="{{ checkForm.success }}" wx:key="user_id">
+        <view wx:for="{{ checkForm.success }}" bindtap="changeStauts({{item.index}}, 0)" wx:key="user_id">
           <text class="count">{{ index + 1}}.</text>
           <image class="avatar" src="{{ item.wxInfo.avatarUrl }}"></image>
           <text class="name">{{ item.name }}</text>
@@ -216,7 +216,7 @@ page{
         <text class="assist">{{ checkForm.none.length }}</text>
       </view>
       <view class="status">
-        <view wx:for="{{ checkForm.none }}" wx:key="user_id">
+        <view wx:for="{{ checkForm.none }}" bindtap="changeStauts({{item.index}}, 1)" wx:key="user_id">
           <image class="avatar" src="{{ item.wxInfo.avatarUrl }}"></image>
           <text class="name">{{ item.name }}</text>
         </view>
@@ -238,16 +238,11 @@ page{
     }
 
     data = {
-      groupInfo: {
-        checkForm: [],
-        members: []
-      },
-      checkForm: {
-
-      },
+      checkForm: {},
       userId: '',
       groupId: '',
       checkFormId: '',
+      userLevel: -1,
       canCheck: false
     }
 
@@ -258,6 +253,38 @@ page{
       goto(url){
         wx.navigateTo({url})
       },
+      changeStauts(index, status){
+        let self = this
+
+        if(self.userLevel != 1){
+          return
+        }
+
+        wx.showModal({
+          title: '提示',
+          content: `修改${self.checkForm.members[index].nickname}为 ${status == 1?'签到成功':'未签到'} ?`,
+          success(res) {
+            let data = {
+              userId: self.checkForm.members[index]._id,
+              formId: self.checkForm._id,
+              status
+            }
+
+            if (res.confirm) {
+              request.post('/changeCheckStatus', data)
+              .then(res=>{
+                wx.showToast({
+                  title: '修改成功！',
+                  icon: 'success',
+                  duration: 1500,
+                  mask: true
+                })
+                self.onShow()
+              })
+            }
+          }
+        })
+      }
     }
 
     onLoad(option) {
@@ -274,18 +301,27 @@ page{
     onShow(){
       let self = this
 
+      // 获取用户类型
+      request.post('/getUserLevel', {groupId: self.groupId, userId: self.userId})
+      .then(res=>{
+        self.userLevel = res.data
+        
+        self.$apply()
+      })
+
       request.post('/getCheckFormById', {checkFormId: self.checkFormId})
       .then(res=>{
         res.data.checkForm.success = []
         res.data.checkForm.fail = []
         res.data.checkForm.none = []
 
-        for(let item of res.data.checkForm.members){
-          if(item.checkStatus == 1){
-            res.data.checkForm.success.push(item)
+        for(let i=0; i<res.data.checkForm.members.length; i++){
+          res.data.checkForm.members[i].index = i
+          if(res.data.checkForm.members[i].checkStatus == 1){
+            res.data.checkForm.success.push(res.data.checkForm.members[i])
           }
           else{
-            res.data.checkForm.none.push(item)
+            res.data.checkForm.none.push(res.data.checkForm.members[i])
           }
         }
 
@@ -300,8 +336,6 @@ page{
         }
 
         res.data.checkForm.duration = util.moment(res.data.checkForm.end_at).fromNow()
-        // res.data.checkForm.createAt = util.moment(new Date(res.data.checkForm.create_at)).format('YYYY/M/D hh:mm:ss')
-        // res.data.checkForm.endAt = util.moment(new Date(res.data.checkForm.end_at)).format('YYYY/M/D hh:mm:ss')
 
         self.checkForm = res.data.checkForm
         self.$apply()            

@@ -234,10 +234,10 @@ page{
       })
 
       // 定时器获取弹幕
-      let time = Date.now() - 2000
+      let time = Date.now() - 1000
 
       self.oneWordsInterval = setInterval(() => {
-        time = Date.now() - 2000
+        time = Date.now() - 1000
 
         request.post('/getOneWordsByGroupId', {userId, groupId: self.groupId, time: util.moment(time).toISOString()})
         .then(res=>{
@@ -249,7 +249,7 @@ page{
           
           self.$apply()
         })
-      }, 2000);
+      }, 1000);
     }
   }
 </script>
