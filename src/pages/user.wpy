@@ -83,7 +83,7 @@ page{
     </button>
 
     <view class="btns">
-      <view class="btn-container" bindtap="goto('/pages/userInfo')">
+      <view class="btn-container" bindtap="gotoUserInfo">
         <image src="../static/icons/userinfo.png"></image>
         <text>个人信息</text>
       </view>
@@ -124,6 +124,7 @@ page{
         nickName: '登录',
         avatarUrl: '../static/imgs/user.png'
       },
+      openid: '',
       createdDays: ''
     }
 
@@ -155,6 +156,8 @@ page{
             key: "openid",
             data: openid
           })
+          self.openid = openid
+          self.$apply()
 
           request.post('/login', data)
           .then(res=>{
@@ -168,6 +171,20 @@ page{
           })
         })
       },
+      gotoUserInfo(){
+        if(!this.openid){
+          wx.showToast({
+            title: '请先登录',
+            icon: 'none',
+            duration: 1000
+          })
+          return 
+        }
+
+        wx.navigateTo({
+          url: '/pages/userInfo'
+        })
+      },
       goto(url){
         wx.navigateTo({
           url
@@ -178,6 +195,7 @@ page{
           nickName: '登录',
           avatarUrl: '../static/imgs/user.png'
         }
+        this.openid = ''
 
         wx.clearStorageSync()
       }

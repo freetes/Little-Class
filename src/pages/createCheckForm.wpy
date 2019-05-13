@@ -236,9 +236,9 @@ page{
       self.userId = userId
       self.groupId = groupId
 
-      request.post('/getCheckFormsByGroupId', {groupId, userId})
+      request.post('/getGroupCheckFormsLength', {groupId})
       .then(res=>{
-        self.title += ` 第${res.data.length + 1}次签到`
+        self.title += ` 第${res.data + 1}次签到`
         self.$apply()
       })
     }

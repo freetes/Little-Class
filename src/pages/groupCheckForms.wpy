@@ -27,10 +27,18 @@ page{
         font-size: 14px;
         color: #8A8A8A;
       }
-      >text.assist{
-        font-size: 12px;
+      >.right{
+        font-size: 14px;
         color: #8A8A8A;
         font-weight: normal;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
+        
+        >.iconfont{
+          font-size: 24px;
+        }
       }
     }
 
@@ -42,33 +50,20 @@ page{
       width: 100%;
       font-size: 14px;
 
-      >view{
-        width: 100%;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
 
-        >.form-title{
-          font-size: 18px;
-          font-weight: bold;
-        }
+      >.form-title{
+        font-size: 18px;
+        font-weight: bold;
+      }
 
-        >.form-status{
-          font-size: 14px;
-        }
-        >.green{
-          color: green;
-        }
-        >.gray{
-          color: gray;
-        }
+      >.form-status{
+        margin: 5px 0;
+        font-size: 14px;
       }
 
       >.form-time{
         color: gray;
         font-size: 12px;
-        margin: 5px 0;
       }
     }
 
@@ -298,19 +293,22 @@ page{
     </view>
 
     <!-- 签到表 信息 -->
-    <view class="check-form" wx:if="{{ userLevel == 1 }}" bindtap="goto('/pages/checkFormInfo?group_id={{groupId}}&checkForm_id={{checkForm._id}}')">
+    <view class="check-form" wx:if="{{ userLevel == 1 }}">
       <view class="title">
         <text>最近签到</text>
+
+        <view class="right" bindtap="goto('/pages/checkFormInfo?group_id={{groupId}}&checkForm_id={{checkForm._id}}')">
+          <text>查看详情</text>
+          <icon class="iconfont icon-jiantou_liebiaoxiangyou_o"></icon>
+        </view>
       </view>
       <view class="blank" wx:if="{{ !checkForm }}">
         <text>空</text>
       </view>
       <block wx:else>
         <view class="form-info">
-          <view>
-            <text class="form-title">{{ checkForm.title }}</text>
-            <text class="form-status {{checkForm.status == 1 || checkForm.checkStatus == 1?'green':'gray'}}">{{ checkForm.statusWords }}</text>
-          </view>
+          <text class="form-title">{{ checkForm.title }}</text>
+          <text class="form-status {{checkForm.status == 1 || checkForm.checkStatus == 1?'green':'gray'}}">{{ checkForm.statusWords }}</text>
           <text class="form-time">{{ checkForm.duration }}</text>
         </view>
         <view class="member">
@@ -344,10 +342,10 @@ page{
     <!-- 历史签到表 信息 -->
     <view class="check-history">
       <view class="title">
-        <text>全部签到</text>
+        <text>历史签到</text>
 
         <view class="right" bindtap="goto('/pages/groupAllChecks?group_id={{groupId}}')">
-          <text>查看详情</text>
+          <text>查看全部</text>
           <icon class="iconfont icon-jiantou_liebiaoxiangyou_o"></icon>
         </view>
       </view>

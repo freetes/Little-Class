@@ -8,7 +8,7 @@ page{
 
   >.oneWords-container{
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
     margin: 10px 5%;
@@ -24,21 +24,9 @@ page{
       align-items: flex-start;
       margin-top: 5px;
       padding: 5px 0;
-      animation: showIn 0.4s ease;
       width: 100%;
       overflow: auto;
       flex: 0 0 auto;
-
-      @keyframes showIn {
-        from {
-          margin-left: -100%;
-          opacity: 0;
-        }
-        to {
-          margin-left: 0px;
-          opacity: 1;
-        }
-      }
 
       >image{
         width: 30px;
@@ -180,7 +168,7 @@ page{
           creater: self.userInfo
         }
 
-        self.oneWords.push(data)
+        self.oneWords.unshift(data)
         self.oneWord = ''
 
         request.post('/createOneWord', data)
@@ -240,11 +228,16 @@ page{
         request.post('/getOneWordsByGroupId', {userId, groupId: self.groupId, count})
         .then(res=>{
           count = res.data.amount + res.data.oneWords.length
-          for(let item of res.data.oneWords){
-            item.createAt = util.moment(item.create_at).fromNow()
-          }
 
-          self.oneWords = self.oneWords.concat(res.data.oneWords)
+          if(res.data.oneWords.length > 0){
+            for(let item of res.data.oneWords){
+              item.createAt = util.moment(item.create_at).fromNow()
+            }
+
+            res.data.oneWords.reverse()
+
+            self.oneWords = res.data.oneWords.concat(self.oneWords)
+          }
           
           self.$apply()
         })

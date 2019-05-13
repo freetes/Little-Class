@@ -19,7 +19,7 @@ page{
 
   export default class Index extends wepy.page {
     config = {
-      navigationBarTitleText: '灰度签到'
+      navigationBarTitleText: '算是一个彩蛋页叭'
     }
 
     data = {

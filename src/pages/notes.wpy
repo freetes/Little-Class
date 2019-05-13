@@ -3,7 +3,6 @@ page{
 }
 
 .container{
-
   swiper{
     display: flex;
     width: 100%;
@@ -237,10 +236,9 @@ page{
     computed = {
     }
 
-    methods = {
-      toggleNotes(){
-        this.showMyNotes = !this.showMyNotes
-        if(this.showMyNotes){
+    watch = {
+      showMyNotes(newValue){
+        if(newValue){
           wx.setNavigationBarTitle({
             title: '我的笔记'
           })
@@ -250,8 +248,23 @@ page{
             title: '全部笔记'
           })
         }
+      }
+    }
+
+    methods = {
+      toggleNotes(){
+        this.showMyNotes = !this.showMyNotes
       },
       goto(url){
+        if(this.userId == ''){
+          wx.showToast({
+            title: '请先登录',
+            icon: 'none',
+            duration: 1000
+          })
+          return 
+        }
+
         wx.navigateTo({url})
       },
       toggleInput(){
@@ -295,12 +308,18 @@ page{
 
         request.post('/getNotesByUserId', {userId})
         .then(res=>{
-          self.myNotes = res.data
+          if(res.data.length == 0){
+            self.showMyNotes = false
+          }
+          else{
+            self.myNotes = res.data
+          }
 
           self.$apply()
         })
       }
       else{
+        self.showMyNotes = false
       }
 
       request.post('/getAllNotes', {})

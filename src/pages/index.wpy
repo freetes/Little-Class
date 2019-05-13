@@ -12,7 +12,7 @@ page{
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    z-index: 20;
+    z-index: 30;
 
     >image{
       width: 20px;
@@ -47,7 +47,7 @@ page{
     justify-content: center;
     align-items: center;
     background-color: rgba(0, 0, 0, 0.7);
-    z-index: 30;
+    z-index: 40;
 
     >.modal-main{
       background-color: #fff;
@@ -165,7 +165,7 @@ page{
         >.group-title{
           font-size: 15px;
           color: black;
-          font-weight: normal;
+          font-weight: 500;
         }
       }
       >.group-bottom{
@@ -191,6 +191,7 @@ page{
     top: 0;
     width: 100%;
     height: 100%;
+    z-index: 20;
 
     >text.logo{
       font-size: 14px;
@@ -251,7 +252,8 @@ page{
           <text class="group-title">{{ item.name }}</text>
         </view>
         <view class="group-bottom">
-          <text>{{ item.formCount == 0?'无签到记录':'上次签到: '+item.lastEndAt }}</text>
+          <text class="green" wx:if="{{ item.checkStatus }}">签到进行中</text>
+          <text wx:else>{{ item.formCount == 0?'无签到记录':'上次签到: '+item.lastEndAt }}</text>
         </view>
       </view>
     </view>
@@ -267,7 +269,8 @@ page{
           <text class="group-title">{{ item.name }}</text>
         </view>
         <view class="group-bottom">
-          <text>{{ item.formCount == 0?'无签到记录':'上次签到: '+item.lastEndAt }}</text>
+          <text class="green" wx:if="{{ item.checkStatus }}">签到进行中</text>
+          <text wx:else>{{ item.formCount == 0?'无签到记录':'上次签到: '+item.lastEndAt }}</text>
         </view>
       </view>
     </view>
@@ -339,6 +342,15 @@ page{
       },
       async searchGroup(){
         let self = this
+
+        if(this.userId == ''){
+          wx.showToast({
+            title: '请先登录',
+            icon: 'none',
+            duration: 1000
+          })
+          return 
+        }
         
         request.post('/searchGroupByCode', {code: self.joinView.groupCode})
         .then(res=>{
@@ -360,7 +372,7 @@ page{
         })
       },
       gotoCreateGroup(){
-        if(this.user_id == ''){
+        if(this.userId == ''){
           wx.showToast({
             title: '请先登录',
             icon: 'none',
@@ -431,6 +443,7 @@ page{
             }
             
             if(item.lastEndAt){
+              item.checkStatus = util.moment().isBefore(item.lastEndAt)
               item.lastEndAt = util.moment(item.lastEndAt).fromNow()
             }
             // 分类
