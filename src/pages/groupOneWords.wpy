@@ -234,22 +234,21 @@ page{
       })
 
       // 定时器获取弹幕
-      let time = Date.now() - 1000
+      let count = 0
 
       self.oneWordsInterval = setInterval(() => {
-        time = Date.now() - 1000
-
-        request.post('/getOneWordsByGroupId', {userId, groupId: self.groupId, time: util.moment(time).toISOString()})
+        request.post('/getOneWordsByGroupId', {userId, groupId: self.groupId, count})
         .then(res=>{
-          for(let item of res.data){
+          count = res.data.amount + res.data.oneWords.length
+          for(let item of res.data.oneWords){
             item.createAt = util.moment(item.create_at).fromNow()
           }
 
-          self.oneWords = self.oneWords.concat(res.data)
+          self.oneWords = self.oneWords.concat(res.data.oneWords)
           
           self.$apply()
         })
-      }, 1000);
+      }, 2000);
     }
   }
 </script>
