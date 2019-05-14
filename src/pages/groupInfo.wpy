@@ -423,7 +423,7 @@ page{
       <text wx:if="{{ userLevel == -1 && groupInfo.status == 0 }}" bindtap="joinGroup">立即加入</text>
       <text class="disable" disabled="{{ true }}" wx:if="{{ userLevel == -1 && groupInfo.status == 1 }}">加入已关闭，无法加入</text>
       <!-- 拥有者 功能 -->
-      <text wx:if="{{ userLevel == 1 && canCreateCheck }}" bindtap="goto('/pages/createCheckForm?group_id={{groupId}}')">发起签到</text>
+      <text wx:if="{{ userLevel == 1 && canCreateCheck }}" bindtap="goto('/pages/createCheckForm?group_id={{groupId}}')">创建签到</text>
       <text wx:if="{{ userLevel == 1 }}" bindtap="goto('/pages/editGroupInfo?group_id={{groupId}}')">修改信息</text>
     </view>
   </view>

@@ -62,7 +62,7 @@ page{
       padding: 8px 20px;
 
       >.iconfont{
-        font-size: 24px;
+        font-size: 26px;
         margin-right: 10px;
       }
       >text{

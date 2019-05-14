@@ -3,7 +3,8 @@ page{
 }
 
 .container{
-  padding-bottom: 100px;
+  padding-bottom: 50px;
+
   .buttons{
     position: fixed;
     right: 20px;
@@ -11,15 +12,55 @@ page{
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: center;
+    align-items: flex-end;
     z-index: 30;
 
-    >image{
-      width: 20px;
-      height: 20px;
+    >view{
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      align-items: center;
+      margin-bottom: 10px;
+      animation: upto 0.5s ease;
+
+      >text{
+        font-size: 14px;
+        margin-right: 5px;
+      }
+
+      >.iconfont{
+        width: 40px;
+        height: 40px;
+        font-size: 24px;
+        line-height: 40px;
+        text-align: center;
+        color: #353535;
+        background-color: white;
+        border: 2px solid lightgray;
+        border-radius: 50%;
+      }
+
+      @keyframes upto {
+        from {
+          margin-right: -100px;
+          opacity: 0;
+        }
+        to {
+          margin-right: 0px;
+          opacity: 1;
+        }
+      }
+
+    }
+    >.iconfont{
+      width: 40px;
+      height: 40px;
+      font-size: 24px;
+      line-height: 40px;
+      text-align: center;
+      color: #353535;
       background-color: white;
-      padding: 10px 10px;
-      border: 1px solid black;
+      border: 2px solid lightgray;
       border-radius: 50%;
       animation: showBtns 0.5s ease;
 
@@ -236,9 +277,15 @@ page{
 <template>
   <view class="container">
     <view class="buttons">
-      <image wx:if="{{ showBtns }}" src="../static/icons/search_group.png" bindtap="showJoinView"></image>
-      <image wx:if="{{ showBtns }}" src="../static/icons/add.png" bindtap="gotoCreateGroup"></image>
-      <image src="../static/icons/more.png" bindtap="toggleBtns"></image>
+      <view wx:if="{{ showBtns }}" >
+        <text>查询群组</text>
+        <icon class="iconfont" bindtap="showJoinView">&#xeb10;</icon>
+      </view>
+      <view wx:if="{{ showBtns }}" >
+        <text>创建群组</text>
+        <icon class="iconfont" bindtap="gotoCreateGroup">&#xeaff;</icon>
+      </view>
+      <icon class="iconfont" bindtap="toggleBtns">&#xeb13;</icon>
     </view>
 
     <view bindtap="toggleMyGroups" class="module-title" wx:if="{{ !loading }}">

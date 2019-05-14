@@ -45,14 +45,14 @@ page{
         flex-direction: row;
         justify-content: flex-start;
         align-items: center;
-        font-size: 15px;
+        font-size: 14px;
         color: black;
 
         >image{
-          width: 24px;
-          height: 24px;
+          width: 28px;
+          height: 28px;
           border-radius: 50%;
-          margin-right: 5px;
+          margin-right: 10px;
         }
       }
 
@@ -61,11 +61,11 @@ page{
         flex-direction: row;
         justify-content: flex-end;
         align-items: center;
-        font-size: 12px;
+        font-size: 14px;
         color: gray;
 
         >text{
-          margin-left: 5px;
+          margin-left: 10px;
         }
       }
     }
@@ -155,12 +155,14 @@ page{
         align-items: center;
         border-bottom: 1px solid lightgray;
         padding: 10px 0;
+        color: #353535;
 
         >text{
           font-size: 14px;
-          color: #353535;
           line-height: 20px;
-          padding: 0 3px;
+        }
+        >text:last-child{
+          margin-left: 10px;
         }
       }
 
@@ -241,7 +243,7 @@ page{
             <text>{{ item.nickname || item.name }}</text>
           </view>
           <view class="right">
-            <text>成功：{{ item.checkCounts[0] }}</text>
+            <text class="green">成功：{{ item.checkCounts[0] }}</text>
             <text>未：{{ item.checkCounts[1] }}</text>
           </view>
         </view>
@@ -265,7 +267,7 @@ page{
             <text>{{ members[selectIndex].nickname || members[selectIndex].name }}</text>
           </view>
           <view class="content">
-            <text>成功：{{ members[selectIndex].checkCounts[0] }}</text>
+            <text class="green">成功：{{ members[selectIndex].checkCounts[0] }}</text>
             <text>未：{{ members[selectIndex].checkCounts[1] }}</text>
           </view>
 

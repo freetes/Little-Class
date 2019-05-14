@@ -230,10 +230,8 @@ page{
     }
     >.can-check{
       color: blue;
-;
       font-weight: bold;
       border: 1px solid blue;
-;
       box-shadow: 0 5px 5px gray;
     }
     >.cannot-check{
@@ -244,13 +242,11 @@ page{
     >.a{
       font-size: 14px;
       color: blue;
-;
       padding: 3px;
       text-align: center;
       line-height: 20px;
       margin-bottom: 10px;
       border-bottom: 1px solid blue;
-;
     }
   }
 

@@ -36,12 +36,13 @@ page{
       flex: 1 0 auto;
       width: 100%;
       line-height: 20px;
-      max-height: 200px;
-      font-size: 15px;
+      max-height: 160px;
+      font-size: 14px;
+      line-height: 20px;
       color: #353535;
       margin: 15px 0;
       display: -webkit-box;
-      -webkit-line-clamp: 10;
+      -webkit-line-clamp: 8;
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
@@ -54,8 +55,19 @@ page{
       color: #353535;
       display: flex;
       flex-direction: row;
-      justify-content: flex-end;
+      justify-content: space-between;
       align-items: flex-end;
+
+      >text{
+        line-height: 28px;
+      }
+
+      >view{
+
+        >icon{
+          font-size: 24px;
+        }
+      }
     }
   }
 
@@ -175,6 +187,10 @@ page{
           <text class="title">{{ item.title }}</text>
           <text class="content">{{ item.content }}</text>
           <view class="others">
+            <view>
+              <icon class="iconfont" wx:if="{{ item.filePath && item.filePath != '' }}">&#xeb8d;</icon>
+            </view>
+
             <text>浏览次数：{{ item.view_count }}</text>
           </view>
         </swiper-item>
@@ -187,6 +203,10 @@ page{
           <text class="title">{{ item.title }}</text>
           <text class="content">{{ item.content }}</text>
           <view class="others">
+            <view>
+              <icon class="iconfont" wx:if="{{ item.filePath && item.filePath != '' }}">&#xeb8d;</icon>
+            </view>
+
             <text>浏览次数：{{ item.view_count }}</text>
           </view>
         </swiper-item>
