@@ -71,7 +71,7 @@ export default class extends wepy.app {
     window: {
       backgroundTextStyle: 'dark',
       navigationBarBackgroundColor: '#ededed',
-      navigationBarTitleText: '灰度签到',
+      navigationBarTitleText: '群组签吧',
       navigationBarTextStyle: 'black',
       navigationStyle: 'default'
     },

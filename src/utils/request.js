@@ -1,6 +1,6 @@
 import wepy from 'wepy'
 
-const BASEURL = 'https://api.grayclass.site:2333/api'
+const BASEURL = 'https://api.grayclass.site/api'
 const TESTURL = 'https://localhost:2333/api'
 
 let request = {

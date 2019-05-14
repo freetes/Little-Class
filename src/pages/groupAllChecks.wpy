@@ -271,7 +271,7 @@ page{
             <text>未：{{ members[selectIndex].checkCounts[1] }}</text>
           </view>
 
-          <view class="history" wx:for="{{members[selectIndex].checkForms}}" bindtap="goto('/pages/checkFormInfo?group_id={{groupId}}&checkForm_id={{item._id}}')">
+          <view class="history" wx:for="{{members[selectIndex].checkForms}}">
             <view class="title">
               <text>{{ item.title }}</text>
             </view>
