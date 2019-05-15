@@ -65,10 +65,10 @@ page{
     .note-content{
       margin: 20px 10%;
       width: 80%;
-      font-size: 15px;
+      font-size: 16px;
       color: #353535;
       font-weight: normal;
-      line-height: 20px;
+      line-height: 24px;
     }
 
     >input{

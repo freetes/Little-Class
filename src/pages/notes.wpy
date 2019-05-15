@@ -36,13 +36,13 @@ page{
       flex: 1 0 auto;
       width: 100%;
       line-height: 20px;
-      max-height: 160px;
-      font-size: 14px;
-      line-height: 20px;
+      max-height: 154px;
+      font-size: 15px;
+      line-height: 22px;
       color: #353535;
       margin: 15px 0;
       display: -webkit-box;
-      -webkit-line-clamp: 8;
+      -webkit-line-clamp: 7;
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
