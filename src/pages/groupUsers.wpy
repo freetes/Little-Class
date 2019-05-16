@@ -117,7 +117,7 @@ page{
       padding: 5px 0%;
       background-color: white;
       font-size: 15px;
-      font-weight: 500;
+      font-weight: bold;
       color: brown;
     }
     >button::after{

@@ -70,7 +70,7 @@ page{
       >text{
         font-size: 14px;
         color: black;
-        font-weight: 500;
+        font-weight: bold;
       }
     }
   }
@@ -182,7 +182,7 @@ page{
 
       >.form-title{
         font-size: 18px;
-        font-weight: 500;
+        font-weight: bold;
         margin: 5px 0;
       }
 
@@ -248,7 +248,7 @@ page{
 
       >.notice-title{
         font-size: 18px;
-        font-weight: 500;
+        font-weight: bold;
         margin: 5px 0;
       }
 
@@ -287,7 +287,7 @@ page{
       margin-top: 15px;
       background-color: white;
       font-size: 15px;
-      font-weight: 500;
+      font-weight: bold;
       text-align: center;
     }
     >text:last-child{
@@ -454,20 +454,6 @@ page{
     }
 
     methods = {
-      inputChange(e){
-        let self = this
-        const keyArr = e.currentTarget.dataset.key.split('.')
-
-        if(keyArr.length == 1){
-          this[keyArr[0]] = e.detail.value
-        }
-        else if(keyArr.length == 2){
-          this[keyArr[0]][keyArr[1]] = e.detail.value
-        }
-        else if(keyArr.length == 3){
-          this[keyArr[0]][keyArr[1]][keyArr[2]] = e.detail.value
-        }
-      },
       joinGroup(){
         let self = this
 
@@ -510,31 +496,15 @@ page{
           self.onShow()
         })
       },
-      exitGroup(){
-        let self = this
-
-        // 请求参数
-        let data = {
-          groupId: self.groupId,
-          userId: self.userId,
-        }
-
-        request.post('/exitGroup', data)
-        .then(res=>{
+      goto(url){
+        if(this.userLevel == -1){
           wx.showToast({
-            title: '退出成功！',
-            icon: 'success',
+            title: '请先加入',
+            icon: 'none',
             duration: 1000
           })
-          setTimeout(() => {
-            wx.switchTab({url: '/pages/index'})
-          }, 1000);
-        })
-      },
-      toogleExitModal(){
-        this.showExitView = !this.showExitView
-      },
-      goto(url){
+          return 
+        }
         wx.navigateTo({url})
       },
     }

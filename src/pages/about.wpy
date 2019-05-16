@@ -21,7 +21,8 @@
   >.words-container{
     display: flex;
     width: 100%;
-    height: 500px;
+    min-height: 500px;
+    flex: 1 0 auto;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
@@ -38,7 +39,7 @@
       word-break: keep-all;
       white-space: nowrap;
       font-weight: bold;
-      animation: showIn 8s linear 0s infinite;
+      animation: showIn 10s linear 0s infinite;
 
       @keyframes showIn {
         from {
@@ -83,6 +84,7 @@
       <text>这个UI是真的好看耶✌️</text>
       <text style="margin-left: 20px;">签到确实解决了很多不方便，赞👍</text>
       <text style="margin-left: 40px;">笔记功能看起来高大上，用起来也好用鸭😊</text>
+      <text style="margin-left: 70px;">最赞的还是互动，聚会再也不会无聊啦～</text>
     </view>
 
     <view class="futures">
