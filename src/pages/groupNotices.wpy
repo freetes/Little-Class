@@ -214,8 +214,8 @@ page{
 <template>
   <view class="container">
 
-    <view class="btns" wx:if="{{ userLevel==1 }}">
-      <text bindtap="goto('/pages/createNotice?group_id={{groupId}}')">创建通知</text>
+    <view class="btns" bindtap="goto('/pages/createNotice?group_id={{groupId}}')" wx:if="{{ userLevel==1 }}">
+      <text>创建通知</text>
     </view>
 
     <view class="blank" wx:if="{{ notices.length==0 }}">

@@ -157,9 +157,9 @@ page{
       </view>
     </view>
 
-    <view class="btns">
-      <!-- 普通用户 功能 -->
-      <button hover-class="none" wx:if="{{ userInfo.userLevel == 0}}" bindtap="exitGroup">退出</button>
+    <!-- 普通用户 功能 -->
+    <view class="btns" bindtap="exitGroup" wx:if="{{ userInfo.userLevel == 0}}">
+      <button hover-class="none">退出</button>
     </view>
   </view>
 </template>

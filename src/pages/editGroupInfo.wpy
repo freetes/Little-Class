@@ -203,7 +203,6 @@ page{
     <text class="message">{{message}}</text>
 
     <view class="btns">
-      <!-- <button bindtap="">保存修改</button> -->
       <button disabled="{{ loading }}" loading="{{ loading }}" bindtap="disbandGroup">解散</button>
     </view>
   </view>
