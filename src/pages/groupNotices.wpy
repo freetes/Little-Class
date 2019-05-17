@@ -154,23 +154,22 @@ page{
 
       >.title{
         width: 100%;
-        font-size: 18px;
-        line-height: 30px;
-        height: 30px;
-        margin-top: 10px;
+        font-size: 20px;
+        padding: 15px 0;
         font-weight: bold;
       }
 
       >.content{
         width: 100%;
-        font-size: 15px;
+        font-size: 16px;
         padding: 10px 0;
         line-height: 20px;
       }
 
       >.footer{
         width: 100%;
-        font-size: 12px;
+        font-size: 14px;
+        line-height: 20px;
         color: gray;
 
         >.count{

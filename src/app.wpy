@@ -6,7 +6,7 @@ page{
   height: auto;
   min-height: 100%;
   background-color: #ededed;
-  webkit-overflow-scrolling: touch;
+  // webkit-overflow-scrolling: touch;
 }
 .container {
   position: absolute;

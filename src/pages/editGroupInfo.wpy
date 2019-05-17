@@ -164,7 +164,8 @@ page{
   >.message{
     align-self: center;
     font-size: 14px;
-    color: #8A8A8A;
+    color: green;
+    line-height: 20px;
   }
 }
 </style>
@@ -222,11 +223,14 @@ page{
       groupInfo: {},
       message: '',
       loading: false,
-      joinGroupArray: ['任何人都可以加入', '不允许加入'],
+      joinGroupArray: ['允许加入', '不允许加入'],
     }
 
     watch = {
       groupInfo (newValue, oldValue) {
+        if(!oldValue.name){
+          return
+        }
         let self = this
 
         if(self.groupInfo.name == ''){
