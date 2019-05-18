@@ -332,16 +332,12 @@ page{
       let self = this, groupId = option.group_id
 
       self.groupId = groupId
-    }
 
-    onShow(){
-      let self = this
-
-      request.post('/getUsersByGroupId', {groupId: self.groupId})
+      request.post('/getUsersByGroupId', {groupId})
       .then(res=>{
         for(let member of res.data){
           member.checkCounts = [0, 0]
-          request.post('/getUserChecks', {groupId: self.groupId, userId: member._id})
+          request.post('/getUserChecks', {groupId, userId: member._id})
           .then(res=>{
             // res.data.sort((a, b)=>b.checkStatus - a.checkStatus)
             for(let check of res.data){
@@ -362,6 +358,9 @@ page{
           })
         }
       })
+    }
+
+    onShow(){
     }
 
     onShareAppMessage() {

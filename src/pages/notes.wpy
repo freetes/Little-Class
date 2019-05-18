@@ -354,12 +354,12 @@ page{
       }
       else{
         self.showMyNotes = false
+        self.myNotes = []
       }
 
       request.post('/getAllNotes', {})
       .then(res=>{
         self.allNotes = res.data
-
         self.loading = false
 
         self.$apply()
