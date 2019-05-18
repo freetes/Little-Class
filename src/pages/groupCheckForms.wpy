@@ -490,6 +490,17 @@ page{
           return
         }
 
+        if(util.moment().isAfter(self.checkForm.end_at)){
+          wx.showToast({
+            title: '签到已过期',
+            icon: 'none',
+            duration: 1000,
+            mask: true
+          })
+
+          return 
+        }
+
         if(self.checkForm.code && self.checkCode != self.checkForm.code){
           wx.showToast({
             title: '签到码错误，请重试',
