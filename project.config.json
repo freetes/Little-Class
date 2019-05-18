@@ -35,7 +35,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 17,
+			"current": 13,
 			"list": [
 				{
 					"id": -1,
@@ -124,7 +124,7 @@
 					"id": 13,
 					"name": "groupCheckForms",
 					"pathName": "pages/groupCheckForms",
-					"query": "group_id=5cbc2e8799d12004df09cc3c",
+					"query": "group_id=5ccad900d2d29738dfc0b28e",
 					"scene": null
 				},
 				{

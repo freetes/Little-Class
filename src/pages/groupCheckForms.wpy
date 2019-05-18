@@ -345,6 +345,7 @@ page{
           <icon class="iconfont icon-jiantou_liebiaoxiangyou_o"></icon>
         </view>
       </view>
+
       <view class="blank" wx:if="{{checkForms.length == 0}}">
         <text>空</text>
       </view>
@@ -361,6 +362,12 @@ page{
         </view>
       </block>
     </view>
+
+    <!-- 地图展示签到位置
+    <view class="map-container">
+
+    </view>
+    -->
   </view>
 </template>
 
@@ -370,7 +377,9 @@ page{
   import util from '@/utils/util.js'
   import QQMapWX from '@/utils/qqmap-wx-jssdk.js'
 
-  var qqmap
+  var qqmap = new QQMapWX({
+    key: 'BNZBZ-4FQHF-XSYJZ-NRDA4-YJNTF-LXBYS'
+  })
 
   export default class Index extends wepy.page {
     config = {
@@ -386,6 +395,11 @@ page{
       groupInfo: {},
       checkCode: '',
       checkForms: [],
+      mapInfo: {
+        longitude: '',
+        latitude: '',
+        scale: 6,
+      },
       checkForm: undefined,
       canCheck: false,
       canCreateCheck: false
@@ -582,10 +596,6 @@ page{
 
     onLoad(option) {
       let self = this, userId = wx.getStorageSync('userId'), groupId = option.group_id
-
-      qqmap = new QQMapWX({
-        key: 'BNZBZ-4FQHF-XSYJZ-NRDA4-YJNTF-LXBYS'
-      })
 
       if(userId){
         self.userId = userId
