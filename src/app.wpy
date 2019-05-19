@@ -88,16 +88,16 @@ export default class extends wepy.app {
       list: [
         {
           pagePath: 'pages/index',
-          text: '首页',
+          text: '群组',
           iconPath: './static/icons/index.png',
           selectedIconPath: './static/icons/index-s.png',
         }, 
-        {
-          pagePath: 'pages/notes',
-          text: '笔记',
-          iconPath: './static/icons/oneWord.png',
-          selectedIconPath: './static/icons/oneWord-s.png',
-        }, 
+        // {
+        //   pagePath: 'pages/notes',
+        //   text: '笔记',
+        //   iconPath: './static/icons/oneWord.png',
+        //   selectedIconPath: './static/icons/oneWord-s.png',
+        // }, 
         {
           pagePath: 'pages/user',
           text: '我的',

@@ -102,10 +102,10 @@ page{
         <text class="iconfont" bindtap="clearFile">&#xeb97;</text>
       </view>
 
-      <view bindtap="toggleVisible">
-        <!-- <text>是否可见</text> -->
+      <!-- <view bindtap="toggleVisible">
+        <text>是否可见</text>
         <text class="iconfont">{{noteInfo.visible?'&#xebcd;':'&#xebcf;' }}</text>
-      </view>
+      </view> -->
     </view>
 
     <button class="button" disabled="{{ loading }}" loading="{{ loading }}" bindtap="createNote">确定</button>
@@ -118,7 +118,7 @@ page{
 
   export default class CreateNote extends wepy.page {
     config = {
-      navigationBarTitleText: '创建笔记',
+      navigationBarTitleText: '创建话题',
     }
 
     data = {

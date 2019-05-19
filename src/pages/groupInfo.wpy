@@ -60,7 +60,7 @@ page{
       flex-direction: column;
       justify-content: space-around;
       align-items: center;
-      width: 25%;
+      width: 20%;
       padding: 10px;
 
       >.iconfont{
@@ -70,7 +70,6 @@ page{
       >text{
         font-size: 14px;
         color: black;
-        font-weight: bold;
       }
     }
   }
@@ -188,7 +187,6 @@ page{
 
       >.form-status{
         font-size: 14px;
-        color: gray;
         margin-bottom: 5px;
       }
       
@@ -283,15 +281,15 @@ page{
 
     >text{
       line-height: 20px;
-      padding: 0 20px;
-      margin-top: 15px;
+      padding: 10px 20px;
+      margin-top: 5px;
       background-color: white;
       font-size: 15px;
       font-weight: bold;
       text-align: center;
     }
     >text:last-child{
-      margin-bottom: 15px;      
+      margin-bottom: 5px;      
     }
     >.disable{
       color: #8A8A8A;
@@ -346,6 +344,10 @@ page{
         <icon class="iconfont">&#xeb4c;</icon>
         <text>互动</text>
       </view>
+      <view bindtap="goto('/pages/groupNotes?group_id={{groupId}}')">
+        <icon class="iconfont">&#xeb50;</icon>
+        <text>话题</text>
+      </view>
       <view bindtap="goto('/pages/groupNotices?group_id={{groupId}}')">
         <icon class="iconfont">&#xeb7d;</icon>
         <text>通知</text>
@@ -354,14 +356,12 @@ page{
         <icon class="iconfont">&#xeb50;</icon>
         <text>成员</text>
       </view>
-      <!-- <view bindtap="goto('/pages/groupNotes?group_id={{groupId}}')">
-        <image src="../static/icons/ideas.png"></image>
-        <text>话题</text>
-      </view>
+      <!-- 
       <view>
         <image src="../static/icons/files.png"></image>
         <text>文件</text>
-      </view> -->
+      </view>
+      -->
     </view>
 
     <!-- 通知 信息 -->

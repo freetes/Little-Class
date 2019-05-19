@@ -220,7 +220,7 @@ page{
 
     <view class="blank" wx:if="{{ notices.length==0 }}">
       <text class="null">空</text>
-      <text>当前没有通知</text>
+      <text>此处没有通知...</text>
     </view>
 
     <!-- 通知 信息 -->
