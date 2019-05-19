@@ -101,7 +101,8 @@ page{
   >.message{
     align-self: center;
     font-size: 14px;
-    color: #8A8A8A;
+    color: green;
+    line-height: 20px;
   }
   >.btns{
     display: flex;
@@ -186,6 +187,10 @@ page{
     watch = {
       userInfo (newValue, oldValue) {
         let self = this
+
+        if(!oldValue.nickname){
+          return 
+        }
         
         request.post('/editUserGroupInfo', {
           userId: self.userId,

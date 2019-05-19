@@ -341,11 +341,11 @@ page{
         <text>签到</text>
       </view>
       <view bindtap="goto('/pages/groupOneWords?group_id={{groupId}}')">
-        <icon class="iconfont">&#xeb4c;</icon>
+        <icon class="iconfont">&#xeb4b;</icon>
         <text>互动</text>
       </view>
       <view bindtap="goto('/pages/groupNotes?group_id={{groupId}}')">
-        <icon class="iconfont">&#xeb50;</icon>
+        <icon class="iconfont">&#xeb4c;</icon>
         <text>话题</text>
       </view>
       <view bindtap="goto('/pages/groupNotices?group_id={{groupId}}')">
