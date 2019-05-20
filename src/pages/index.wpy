@@ -24,8 +24,12 @@ page{
       animation: upto 0.5s ease;
 
       >text{
-        font-size: 14px;
+        font-size: 28rpx;
         margin-right: 5px;
+        padding: 3px 5px;
+        line-height: 18px;
+        background-color: white;
+        color: black;
       }
 
       >.iconfont{
@@ -116,7 +120,7 @@ page{
       }
       >.modal-message{
         text-align: right;
-        font-size: 14px;
+        font-size: 26rpx;
         color: #555;
         width: 100%;
       }
@@ -146,7 +150,7 @@ page{
     z-index: 10;
 
     >text{
-      font-size: 13px;
+      font-size: 26rpx;
       line-height: 25px;
       color: gray;
     }
@@ -175,18 +179,18 @@ page{
       border-radius: 15px;
       background-color: white;
       margin-bottom: 10px;
-      animation: showIn 0.7s ease;
+      // animation: showIn 0.7s ease;
 
-      @keyframes showIn {
-        from {
-          margin-top: -40px;
-          opacity: 0;
-        }
-        to {
-          margin-top: 0px;
-          opacity: 1;
-        }
-      }
+      // @keyframes showIn {
+      //   from {
+      //     margin-top: -40px;
+      //     opacity: 0;
+      //   }
+      //   to {
+      //     margin-top: 0px;
+      //     opacity: 1;
+      //   }
+      // }
       
       >.group-top{
         display: flex;
@@ -194,29 +198,30 @@ page{
         justify-content: flex-start;
         align-items: center;
         width: 100%;
-        margin-bottom: 10px;
 
         >.group-avatar{
-          width: 30px;
-          height: 30px;
+          width: 36px;
+          height: 36px;
           margin-right: 10px;
           border-radius: 50%;
           background-color: lightgray;
+          flex: 0 0 auto;
         }
         >.group-title{
-          font-size: 16px;
+          font-size: 32rpx;
           color: black;
           font-weight: bold;
         }
       }
       >.group-bottom{
+        margin-top: 5px;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
         width: 100%;
-        font-size: 13px;
-        padding-left: 40px;
+        font-size: 26rpx;
+        padding-left: 46px;
         color: gray;
       }
     }
@@ -235,7 +240,7 @@ page{
     z-index: 20;
 
     >text.logo{
-      font-size: 14px;
+      font-size: 28rpx;
       font-weight: bold;
       color: #8A8A8A;
       border: 1px dashed #8A8A8A;
@@ -247,8 +252,7 @@ page{
       text-align: center;
     }
     >text{
-      font-size: 12px;
-      // font-weight: ;
+      font-size: 26rpx;
       color: #8A8A8A;
       margin-top: 5px;
       text-align: center;
@@ -298,9 +302,8 @@ page{
           <image class="group-avatar" src="{{item.filePath}}" mode="aspectFill" lazy-load></image>
           <text class="group-title">{{ item.name }}</text>
         </view>
-        <view class="group-bottom">
-          <text class="green" wx:if="{{ item.checkStatus }}">签到进行中</text>
-          <text wx:else>{{ item.formCount == 0?'无签到记录':'上次签到: '+item.lastEndAt }}</text>
+        <view class="group-bottom" wx:if="{{ item.checkStatus }}">
+          <text class="green">签到进行中</text>
         </view>
       </view>
     </view>
@@ -315,9 +318,8 @@ page{
           <image class="group-avatar" src="{{item.filePath}}" mode="aspectFill" lazy-load></image>
           <text class="group-title">{{ item.name }}</text>
         </view>
-        <view class="group-bottom">
-          <text class="green" wx:if="{{ item.checkStatus }}">签到进行中</text>
-          <text wx:else>{{ item.formCount == 0?'无签到记录':'上次签到: '+item.lastEndAt }}</text>
+        <view class="group-bottom" wx:if="{{ item.checkStatus }}">
+          <text class="green">签到进行中</text>
         </view>
       </view>
     </view>
