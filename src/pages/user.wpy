@@ -131,7 +131,7 @@ page{
         let self = this
 
         // 微信信息，头像、昵称
-        this.wxInfo = e.detail.userInfo
+        self.wxInfo = e.detail.userInfo
 
         // 保存缓存
         wx.setStorage({
@@ -156,7 +156,8 @@ page{
 
           request.post('/login', data)
           .then(res=>{
-            console.log(res)
+            self.wxInfo.nickName = res.data.name
+            self.$apply()
 
             // 保存用户唯一标识符 user._id
             wx.setStorage({
