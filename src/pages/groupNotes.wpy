@@ -40,9 +40,9 @@ page{
     >.title{
       flex: 0 0 auto;
       width: 100%;
-      font-size: 18px;
+      font-size: 36rpx;
       color: black;
-      font-weight: normal;
+      font-weight: bold;
       padding: 15px 0;
     }
     >.content{
@@ -50,12 +50,11 @@ page{
       width: 100%;
       line-height: 20px;
       max-height: 200px;
-      font-size: 15px;
-      color: #555;
-      font-weight: lighter;
+      font-size: 30rpx;
+      color: #353535;
       margin: 15px 0;
       display: -webkit-box;
-      -webkit-line-clamp: 10;
+      -webkit-line-clamp: 7;
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
@@ -65,12 +64,22 @@ page{
       width: 100%;
       text-align: right;
       font-size: 14px;
-      color: #555;
-      font-weight: lighter;
+      color: #353535;
       display: flex;
       flex-direction: row;
-      justify-content: flex-end;
+      justify-content: space-between;
       align-items: flex-end;
+
+      >text{
+        line-height: 28px;
+      }
+
+      >view{
+
+        >icon{
+          font-size: 24px;
+        }
+      }
     }
   }
 
@@ -86,7 +95,7 @@ page{
     height: 100%;
 
     >text.logo{
-      font-size: 14px;
+      font-size: 28rpx;
       font-weight: bold;
       color: #8A8A8A;
       border: 1px dashed #8A8A8A;
@@ -98,7 +107,7 @@ page{
       text-align: center;
     }
     >text{
-      font-size: 12px;
+      font-size: 28rpx;
       // font-weight: ;
       color: #8A8A8A;
       margin-top: 5px;
@@ -138,7 +147,7 @@ page{
       color: black;
 
       >text.date{
-        font-size: 36px;
+        font-size: 60rpx;
         letter-spacing: 5px;
       }
     }
@@ -189,6 +198,10 @@ page{
           <text class="title">{{ item.title }}</text>
           <text class="content">{{ item.content }}</text>
           <view class="others">
+            <view>
+              <icon class="iconfont" wx:if="{{ item.filePath && item.filePath != '' }}">&#xeb8d;</icon>
+            </view>
+
             <text>浏览次数：{{ item.view_count }}</text>
           </view>
         </swiper-item>

@@ -35,7 +35,7 @@
       margin-bottom: 15px;
       border-radius: 15px;
       line-height: 20px;
-      font-size: 16px;
+      font-size: 32rpx;
       word-break: keep-all;
       white-space: nowrap;
       font-weight: bold;
@@ -83,7 +83,7 @@
     <view class="words-container">
       <text>这个UI是真的好看耶✌️</text>
       <text style="margin-left: 20px;">签到确实解决了很多不方便，赞👍</text>
-      <text style="margin-left: 40px;">笔记功能看起来高大上，用起来也好用鸭😊</text>
+      <text style="margin-left: 40px;">话题功能看起来很高大上，用起来也好用鸭😊</text>
       <text style="margin-left: 70px;">最赞的还是互动，聚会再也不会无聊啦～</text>
     </view>
 

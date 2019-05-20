@@ -46,7 +46,7 @@ page{
 
     >text{
       color: #8a8a8a;
-      font-size: 12px;
+      font-size: 26rpx;
     }
 
     >.input-container{
@@ -60,14 +60,14 @@ page{
       >text{
         flex: 0 1 auto;
         color: black;
-        font-size: 15px;
+        font-size: 30rpx;
         padding-right: 20px;
       }
       >input, >picker{
         flex: 1 0 auto;
         color: black;
         font-weight: bold;
-        font-size: 15px;
+        font-size: 30rpx;
         text-align: right;
       }
       >icon{
@@ -81,7 +81,7 @@ page{
     text-align: center;
     line-height: 30px;
     padding: 10px 0;
-    font-size: 15px;
+    font-size: 30rpx;
     font-weight: bold;
     color: black;
     background-color: white;

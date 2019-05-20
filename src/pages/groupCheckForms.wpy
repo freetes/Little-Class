@@ -24,11 +24,11 @@ page{
       margin-bottom: 10px;
 
       >text{
-        font-size: 14px;
+        font-size: 28rpx;
         color: #8A8A8A;
       }
       >.right{
-        font-size: 14px;
+        font-size: 28rpx;
         color: #8A8A8A;
         font-weight: normal;
         display: flex;
@@ -48,22 +48,22 @@ page{
       justify-content: flex-start;
       align-items: flex-start;
       width: 100%;
-      font-size: 14px;
+      font-size: 28rpx;
 
 
       >.form-title{
-        font-size: 18px;
+        font-size: 36rpx;
         font-weight: bold;
       }
 
       >.form-status{
         margin: 5px 0;
-        font-size: 14px;
+        font-size: 28rpx;
       }
 
       >.form-time{
         color: gray;
-        font-size: 12px;
+        font-size: 24rpx;
       }
     }
 
@@ -76,7 +76,7 @@ page{
       margin-top: 10px;
 
       >.title{
-        font-size: 14px;
+        font-size: 28rpx;
         color: black;
 
         >text.assist{
@@ -100,7 +100,7 @@ page{
           align-items: center;
           width: 100%;
           margin: 5px 0;
-          font-size: 14px;
+          font-size: 28rpx;
 
           >.count{
             margin-right: 10px;
@@ -113,7 +113,7 @@ page{
             margin-right: 10px;
           }
           >.name{
-            font-size: 14px;
+            font-size: 28rpx;
           }
         }
       }
@@ -138,11 +138,11 @@ page{
       margin-bottom: 10px;
 
       >text{
-        font-size: 14px;
+        font-size: 28rpx;
         color: #8A8A8A;
       }
       >.right{
-        font-size: 14px;
+        font-size: 28rpx;
         color: #8A8A8A;
         font-weight: normal;
         display: flex;
@@ -165,7 +165,7 @@ page{
       margin: 10px 0;
 
       >view.title{
-        font-size: 15px;
+        font-size: 30rpx;
         color: black;
 
         >text.assist{
@@ -185,7 +185,7 @@ page{
         align-items: center;
         width: 100%;
         margin: 5px 0;
-        font-size: 12px;
+        font-size: 26rpx;
         color: gray;
       }
     }
@@ -205,7 +205,7 @@ page{
     background-color: white;
 
     >input{
-      font-size: 15px;
+      font-size: 30rpx;
       padding: 5px 0;
       width: 100px;
       height: 30px;
@@ -218,7 +218,7 @@ page{
     }
 
     >.button{
-      font-size: 14px;
+      font-size: 28rpx;
       padding: 4px;
       width: 110px;
       height: 30px;
@@ -240,7 +240,7 @@ page{
     }
 
     >.a{
-      font-size: 14px;
+      font-size: 28rpx;
       color: blue;
       padding: 3px;
       text-align: center;
@@ -261,7 +261,7 @@ page{
   height: 100px;
 
   >text{
-    font-size: 14px;
+    font-size: 28rpx;
     font-weight: bold;
     color: #8A8A8A;
     border: 1px dashed #8A8A8A;

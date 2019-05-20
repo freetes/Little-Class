@@ -15,25 +15,21 @@ page{
     padding: 0 5%;
     color: black;
 
-    >.image{
-      width: 50px;
-      height: 50px;
-    }
     >.title{
       box-sizing: border-box;
-      font-size: 22px;
+      font-size: 40rpx;
       font-weight: bold;
       color: black;
     }
     >.id{
       color: black;
       margin-top: 5px;
-      font-size: 14px;
+      font-size: 26rpx;
     }
     >.description{
       margin: 5px 0;
       width: 100%;
-      font-size: 13px;
+      font-size: 26rpx;
       color: black;
       display: -webkit-box;
       -webkit-box-orient: vertical;
@@ -64,11 +60,11 @@ page{
       padding: 10px;
 
       >.iconfont{
-        font-size: 30px;
+        font-size: 60rpx;
         color: black;
       }
       >text{
-        font-size: 14px;
+        font-size: 28rpx;
         color: black;
       }
     }
@@ -94,7 +90,7 @@ page{
       width: 100%;
 
       >text{
-        font-size: 14px;
+        font-size: 26rpx;
         color: gray;
       }
       >.assist{
@@ -102,13 +98,13 @@ page{
         flex-direction: row;
         justify-content: flex-end;
         align-items: center;
-        font-size: 12px;
+        font-size: 26rpx;
         color: gray;
         font-weight: normal;
         line-height: 20px;
 
         >.iconfont{
-          font-size: 24px;
+          font-size: 44rpx;
         }
       }
     }
@@ -152,7 +148,7 @@ page{
       width: 100%;
 
       >text{
-        font-size: 14px;
+        font-size: 26rpx;
         color: gray;
       }
       >.assist{
@@ -160,13 +156,12 @@ page{
         flex-direction: row;
         justify-content: flex-end;
         align-items: center;
-        font-size: 12px;
+        font-size: 26rpx;
         color: gray;
         font-weight: normal;
 
         >.iconfont{
-          font-size: 26px;
-          line-height: 20px;
+          font-size: 44rpx;
         }
       }
     }
@@ -177,22 +172,23 @@ page{
       justify-content: flex-start;
       align-items: flex-start;
       width: 100%;
-      font-size: 14px;
+      font-size: 28rpx;
 
       >.form-title{
-        font-size: 18px;
+        font-size: 36rpx;
         font-weight: bold;
-        margin: 5px 0;
+        margin: 8px 0;
       }
 
       >.form-status{
-        font-size: 14px;
-        margin-bottom: 5px;
+        font-size: 28rpx;
+        margin-bottom: 8px;
+        color: #353535;
       }
       
       >.form-time{
         color: gray;
-        font-size: 13px;
+        font-size: 26rpx;
       }
     }
   }
@@ -217,7 +213,7 @@ page{
       width: 100%;
 
       >text{
-        font-size: 14px;
+        font-size: 26rpx;
         color: gray;
       }
       >.assist{
@@ -225,13 +221,12 @@ page{
         flex-direction: row;
         justify-content: flex-end;
         align-items: center;
-        font-size: 12px;
+        font-size: 26rpx;
         color: gray;
         font-weight: normal;
 
         >.iconfont{
-          font-size: 26px;
-          line-height: 20px;
+          font-size: 44rpx;
         }
       }
     }
@@ -242,18 +237,18 @@ page{
       justify-content: flex-start;
       align-items: flex-start;
       width: 100%;
-      font-size: 14px;
+      font-size: 28rpx;
 
       >.notice-title{
-        font-size: 18px;
+        font-size: 36rpx;
         font-weight: bold;
-        margin: 5px 0;
+        margin: 8px 0;
       }
 
       >.notice-content{
-        font-size: 14px;
-        margin-bottom: 5px;
-        color: gray;
+        font-size: 28rpx;
+        margin-bottom: 8px;
+        color: #353535;
         display: -webkit-box;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 2;
@@ -262,7 +257,7 @@ page{
 
       >.notice-time{
         color: gray;
-        font-size: 12px;
+        font-size: 26rpx;
       }
     }
   }
@@ -284,7 +279,7 @@ page{
       padding: 10px 20px;
       margin-top: 5px;
       background-color: white;
-      font-size: 15px;
+      font-size: 30rpx;
       font-weight: bold;
       text-align: center;
     }

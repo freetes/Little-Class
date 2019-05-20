@@ -59,7 +59,7 @@ page{
       justify-content: flex-start;
       align-items: center;
       width: 100%;
-      padding: 8px 20px;
+      padding: 10px 20px;
 
       >.iconfont{
         font-size: 26px;

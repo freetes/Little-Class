@@ -20,13 +20,13 @@ page{
 
     >text{
       color: #8a8a8a;
-      font-size: 12px;
+      font-size: 26rpx;
     }
     >input{
       width: 100%;
       padding: 10px 0;
       border-bottom: 1px solid #8A8A8A;
-      font-size: 15px;
+      font-size: 30rpx;
       font-weight: bold;
       color: black;
     }
@@ -34,7 +34,7 @@ page{
       width: 100%;
       padding: 10px 0 !important;
       height: 300px;
-      font-size: 15px;
+      font-size: 30rpx;
       color: black;
     }
   }
@@ -42,7 +42,7 @@ page{
     margin: 10px 7%;
     width: 86%;
     border-bottom: 1px solid #8A8A8A;
-    font-size: 15px;
+    font-size: 30rpx;
     color: black;
   }
   >.others{
@@ -52,7 +52,7 @@ page{
     align-items: center;
     margin: 10px 7%;
     width: 86%;
-    font-size: 14px;
+    font-size: 30rpx;
 
     .iconfont{
       font-size: 28px;
@@ -70,7 +70,7 @@ page{
       }
 
       >text{
-        font-size: 14px;
+        font-size: 30rpx;
       }
     }
   }
@@ -80,7 +80,7 @@ page{
     text-align: center;
     line-height: 30px;
     padding: 10px 0;
-    font-size: 15px;
+    font-size: 30rpx;
     font-weight: bold;
     color: black;
     border-radius: 10px;
@@ -172,7 +172,7 @@ page{
 
         if(self.noteInfo.filePath){
           const uploadTask = wx.uploadFile({
-            url: 'https://api.grayclass.site:2333/api/createNote',
+            url: 'https://api.grayclass.site/api/createNote',
             filePath: self.noteInfo.filePath,
             name: 'file',
             formData: data,

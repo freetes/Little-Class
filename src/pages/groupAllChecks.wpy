@@ -22,11 +22,11 @@ page{
       margin-bottom: 10px;
 
       >text{
-        font-size: 14px;
+        font-size: 28rpx;
         color: #8A8A8A;
       }
       >text.assist{
-        font-size: 12px;
+        font-size: 24rpx;
         color: #8A8A8A;
         font-weight: normal;
       }
@@ -45,7 +45,7 @@ page{
         flex-direction: row;
         justify-content: flex-start;
         align-items: center;
-        font-size: 14px;
+        font-size: 28rpx;
         color: black;
 
         >image{
@@ -61,7 +61,7 @@ page{
         flex-direction: row;
         justify-content: flex-end;
         align-items: center;
-        font-size: 14px;
+        font-size: 28rpx;
         color: gray;
 
         >text{
@@ -118,7 +118,7 @@ page{
         align-items: center;
 
         >text{
-          font-size: 14px;
+          font-size: 28rpx;
           color: gray;
           line-height: 20px;
         }
@@ -158,7 +158,7 @@ page{
         color: #353535;
 
         >text{
-          font-size: 14px;
+          font-size: 28rpx;
           line-height: 20px;
         }
         >text:last-child{
@@ -175,7 +175,7 @@ page{
         margin: 10px 0;
 
         >view.title{
-          font-size: 15px;
+          font-size: 30rpx;
           color: black;
 
           >text.assist{
@@ -195,7 +195,7 @@ page{
           align-items: center;
           width: 100%;
           margin: 5px 0;
-          font-size: 12px;
+          font-size: 26rpx;
           color: gray;
         }
       }
