@@ -35,7 +35,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 13,
+			"current": 18,
 			"list": [
 				{
 					"id": -1,
@@ -151,6 +151,13 @@
 					"name": "noteInfo",
 					"pathName": "pages/checkFormInfo",
 					"query": "group_id=5ccad900d2d29738dfc0b28e&checkForm_id=5cd78e1c4472f86f35250e00"
+				},
+				{
+					"id": -1,
+					"name": "grayClock",
+					"pathName": "pages/grayClock",
+					"query": "",
+					"scene": null
 				}
 			]
 		}
