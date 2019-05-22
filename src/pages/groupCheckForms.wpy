@@ -50,10 +50,11 @@ page{
       width: 100%;
       font-size: 28rpx;
 
-
       >.form-title{
-        font-size: 36rpx;
+        font-size: 40rpx;
         font-weight: bold;
+        color: black;
+        line-height: 30px;
       }
 
       >.form-status{
@@ -355,7 +356,7 @@ page{
             <text>{{ item.title }}</text>
           </view>
           <view class="status">
-            <text wx:if="{{ userLevel == 1 }}">签到成功人数：{{ item.successCount }}</text>
+            <text wx:if="{{ userLevel == 1 }}">签到比例：{{ item.successCount + '/' + checkForm.members.length }}</text>
             <text class="{{ item.checkStatus == 1?'green':'' }}" wx:else>{{item.checkStatus == 1?'签到成功':'未签到'}}</text>
             <text>{{ item.duration }}</text>
           </view>
@@ -395,11 +396,6 @@ page{
       groupInfo: {},
       checkCode: '',
       checkForms: [],
-      mapInfo: {
-        longitude: '',
-        latitude: '',
-        scale: 6,
-      },
       checkForm: undefined,
       canCheck: false,
       canCreateCheck: false
