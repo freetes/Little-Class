@@ -228,7 +228,7 @@ page{
 
   export default class Index extends wepy.page {
     config = {
-      navigationBarTitleText: '群组话题',
+      navigationBarTitleText: '话题',
       enablePullDownRefresh: true
     }
 

@@ -360,7 +360,7 @@ page{
 
   export default class Index extends wepy.page {
     config = {
-      navigationBarTitleText: '我的群组',
+      navigationBarTitleText: '群组签吧',
       navigationBarBackgroundColor: '#ededed',
       enablePullDownRefresh: true
     }

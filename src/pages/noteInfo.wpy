@@ -295,7 +295,7 @@ page{
 
   export default class NoteInfo extends wepy.page {
     config = {
-      navigationBarTitleText: '笔记详情',
+      navigationBarTitleText: '话题详情',
       navigationBarBackgroundColor: '#fafafa',
       enablePullDownRefresh: true
     }

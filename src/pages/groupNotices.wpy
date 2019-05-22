@@ -268,7 +268,7 @@ page{
 
   export default class Index extends wepy.page {
     config = {
-      navigationBarTitleText: '通知信息',
+      navigationBarTitleText: '通知',
     }
 
     data = {

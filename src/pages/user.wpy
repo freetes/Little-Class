@@ -111,7 +111,7 @@ page{
 
   export default class Index extends wepy.page {
     config = {
-      navigationBarTitleText: '我的'
+      navigationBarTitleText: '群组签吧'
     }
 
     data = {
