@@ -22,7 +22,7 @@ page{
       font-weight: bold;
       color: black;
       font-size: 40rpx;
-      line-height: 20px;
+      line-height: 24px;
     }
     
   }
@@ -40,18 +40,18 @@ page{
     width: 90%;
     background-color: white;
     border-radius: 15px;
-    // animation: showIn 0.8s ease;
+    animation: showIn 0.8s ease;
 
-    // @keyframes showIn {
-    //   from {
-    //     margin-top: 40px;
-    //     opacity: 0;
-    //   }
-    //   to {
-    //     margin-top: 10px;
-    //     opacity: 1;
-    //   }
-    // }
+    @keyframes showIn {
+      from {
+        margin-top: 40px;
+        opacity: 0;
+      }
+      to {
+        margin-top: 10px;
+        opacity: 1;
+      }
+    }
 
     >.btn-container{
       display: flex;
@@ -129,6 +129,11 @@ page{
     methods = {
       login(e){
         let self = this
+
+        // 已登录
+        if(self.openid){
+          return
+        }
 
         // 微信信息，头像、昵称
         self.wxInfo = e.detail.userInfo

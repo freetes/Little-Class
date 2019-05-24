@@ -180,18 +180,18 @@ page{
       border-radius: 10px;
       background-color: white;
       margin-bottom: 15px;
-      // animation: showIn 0.7s ease;
+      animation: showIn 0.7s ease;
 
-      // @keyframes showIn {
-      //   from {
-      //     margin-top: -40px;
-      //     opacity: 0;
-      //   }
-      //   to {
-      //     margin-top: 0px;
-      //     opacity: 1;
-      //   }
-      // }
+      @keyframes showIn {
+        from {
+          margin-top: -40px;
+          opacity: 0;
+        }
+        to {
+          margin-top: 0px;
+          opacity: 1;
+        }
+      }
       
       >.group-top{
         display: flex;

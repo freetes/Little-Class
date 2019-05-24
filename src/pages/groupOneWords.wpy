@@ -168,8 +168,8 @@ page{
           creater: self.userInfo
         }
 
-        self.oneWords.unshift(data)
         self.oneWord = ''
+        self.oneWords.unshift(data)
 
         request.post('/createOneWord', data)
         .then(res=>{

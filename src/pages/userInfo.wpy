@@ -22,7 +22,7 @@ page{
       font-weight: bold;
       color: black;
       font-size: 40rpx;
-      line-height: 20px;
+      line-height: 24px;
     }
   }
   >.inputs{

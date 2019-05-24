@@ -133,7 +133,7 @@ page{
         if(self.groupInfo.filePath){
           console.log('here')
           const uploadTask = wx.uploadFile({
-            url: 'https://api.grayclass.site:2333/api/createGroup',
+            url: 'https://api.grayclass.site/api/createGroup',
             filePath: self.groupInfo.filePath,
             name: 'file',
             formData: data,
