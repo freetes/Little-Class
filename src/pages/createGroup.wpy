@@ -24,6 +24,7 @@ page{
       border-radius: 50%;
       background-color: lightgray;
       margin: 10px 0;
+      margin-bottom: 30px;
       align-self: center;
     }
     >text{
@@ -84,8 +85,8 @@ page{
       <image class="avatar" bindtap="chooseImage" mode="aspectFill" src="{{ groupInfo.filePath }}"></image>
 
       <text>基本信息</text>
-      <input placeholder="名称" maxlength="20" data-key="groupInfo.name" value="{{ groupInfo.name }}" bindchange="inputChange" />
-      <textarea maxlength="100" data-key="groupInfo.description" value="{{ groupInfo.description }}" bindinput="inputChange" auto-height placeholder="描述" />
+      <input placeholder="群组名称" maxlength="20" data-key="groupInfo.name" value="{{ groupInfo.name }}" bindchange="inputChange" />
+      <textarea maxlength="100" data-key="groupInfo.description" value="{{ groupInfo.description }}" bindinput="inputChange" auto-height placeholder="群组描述" />
     </view>
 
     <button class="button" disabled="{{ loading }}" loading="{{ loading }}" bindtap="createGroup">确定创建</button>
@@ -131,7 +132,6 @@ page{
         }
 
         if(self.groupInfo.filePath){
-          console.log('here')
           const uploadTask = wx.uploadFile({
             url: 'https://api.grayclass.site/api/createGroup',
             filePath: self.groupInfo.filePath,
@@ -144,8 +144,8 @@ page{
                 duration: 1000
               })
               setTimeout(() => {
-                wx.navigateBack({
-                  delta: 1
+                wx.switchTab({
+                  url: '/pages/index'
                 })
               }, 1000);
             }

@@ -43,7 +43,7 @@ page{
     methods = {
       goBack(){
         wx.switchTab({
-          url: '/pages/oneWord'
+          url: '/pages/index'
         })
       },
     }

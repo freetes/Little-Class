@@ -303,7 +303,6 @@ page{
     data = {
       userId: '',
       noteId: '',
-      editNote: false,
       showCreateCommit: false,
 
       feelings: ['😄', '😕', '👍', '👎', '🎉', '👀'],
@@ -410,65 +409,6 @@ page{
       feelingChange(e){
         this.comment.feelingIndex = e.detail.value
         this.comment.feeling = this.feelings[e.detail.value]
-      },
-      editNote(){
-        let self = this
-
-        if(self.noteInfo.content == ''){
-          return wx.showToast({
-            title: '内容不能为空！',
-            icon: 'none',
-            duration: 1000
-          })
-        }
-
-        let data = {
-          noteId: self.nodeId,
-          userId: self.userId,
-          title: self.noteInfo.title,
-          filePath: self.noteInfo.filePath,
-          content: self.noteInfo.content,
-          visible: JSON.stringify(self.noteInfo.visible),
-          tags: JSON.stringify(self.noteInfo.tags),
-        }
-
-
-        if(self.noteInfo.filePath){
-          const uploadTask = wx.uploadFile({
-            url: 'https://api.grayclass.site:2333/api/editNote',
-            filePath: self.noteInfo.filePath,
-            name: 'file',
-            formData: data,
-            success(res) {
-              console.log(res)
-              const data = res.data
-
-              wx.showToast({
-                title: '新增成功～',
-                icon: 'success',
-                duration: 1000
-              })
-              setTimeout(() => {
-                wx.switchTab({
-                  url: '/pages/notes'
-                })
-              }, 1000);
-            }
-          })
-
-          // 后期细化再说
-          // uploadTask.onProgressUpdate((res) => {
-          //   console.log('上传进度', res.progress)
-          //   console.log('已经上传的数据长度', res.totalBytesSent)
-          //   console.log('预期需要上传的数据总长度', res.totalBytesExpectedToSend)
-          // })
-        }
-        else{
-          request.post('/editNote', data)
-          .then(res=>{
-            
-          })
-        }
       },
       chooseImage(){
         let self = this

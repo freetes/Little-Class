@@ -204,7 +204,7 @@ page{
         <view wx:for="{{ checkForm.success }}" bindtap="changeStauts({{item.index}}, 0)" wx:key="user_id">
           <text class="count">{{ index + 1}}.</text>
           <image class="avatar" src="{{ item.wxInfo.avatarUrl }}"></image>
-          <text class="name">{{ item.name }}</text>
+          <text class="name">{{ item.nickname || item.name }}</text>
         </view>
       </view>
 
@@ -216,7 +216,7 @@ page{
       <view class="status">
         <view wx:for="{{ checkForm.none }}" bindtap="changeStauts({{item.index}}, 1)" wx:key="user_id">
           <image class="avatar" src="{{ item.wxInfo.avatarUrl }}"></image>
-          <text class="name">{{ item.name }}</text>
+          <text class="name">{{ item.nickname || item.name }}</text>
         </view>
       </view>
     </view>
@@ -249,7 +249,7 @@ page{
 
     methods = {
       goto(url){
-        wx.navigateTo({url})
+        wx.redirectTo({url})
       },
       changeStauts(index, status){
         let self = this

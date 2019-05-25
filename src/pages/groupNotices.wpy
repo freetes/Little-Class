@@ -210,6 +210,24 @@ page{
     }
   }
 
+  >.loading{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 30;
+
+    >image{
+      width: 80px;
+      height: 80px;
+    }
+  }
+
 }
 </style>
 <template>
@@ -222,6 +240,7 @@ page{
     <view class="blank" wx:if="{{ notices.length==0 }}">
       <text class="null">空</text>
       <text>此处没有通知...</text>
+      <text>创建一个试试吧</text>
     </view>
 
     <!-- 通知 信息 -->
@@ -229,7 +248,7 @@ page{
       <view class="title">
         <text>所有通知</text>
       </view>
-      <view class="notice-container" bindlongpress="deleteNotice('{{ index }}')" bindtap="showNotice('{{ index }}')" wx:if="{{ notices.length!=0 }}" wx:for="{{ notices }}" wx:key="{{ item._id }}">
+      <view class="notice-container" bindlongpress="deleteNotice('{{ index }}')" bindtap="showNotice('{{ index }}')" wx:if="{{ notices.length!=0 && !loading }}" wx:for="{{ notices }}" wx:key="{{ item._id }}">
         <view class="top">
           <text class="title">{{ item.title }}</text>
         </view>
@@ -258,6 +277,11 @@ page{
         </view>
       </view>
     </view>
+
+    <!-- loading -->
+    <view class="loading" wx:if="{{ loading }}">
+      <image src="../static/imgs/loading.svg"></image>
+    </view>
   </view>
 </template>
 
@@ -277,7 +301,8 @@ page{
       notices: [],
       message: '',
       userLevel: 0,
-      selectIndex: -1
+      selectIndex: -1,
+      loading: true
     }
 
     methods = {
@@ -345,6 +370,13 @@ page{
       let self = this, userId = wx.getStorageSync('userId')
 
       self.userId = userId
+
+      request.post('/getUserLevel', {groupId: self.groupId, userId})
+      .then(res=>{
+        self.userLevel = res.data
+        
+        self.$apply()
+      })
       
       request.post('/getNoticesByGroupId', {groupId: self.groupId})
       .then(res=>{
@@ -352,13 +384,7 @@ page{
           item.createAt = util.moment(item.create_at).fromNow()
         }
         self.notices = res.data
-        
-        self.$apply()
-      })
-
-      request.post('/getUserLevel', {groupId: self.groupId, userId})
-      .then(res=>{
-        self.userLevel = res.data
+        self.loading = false
         
         self.$apply()
       })
