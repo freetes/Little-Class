@@ -22,7 +22,7 @@ page{
       width: 100%;
       color: #8A8A8A;
       font-size: 14px;
-      margin: 10px 0;
+      margin-bottom: 10px;
     }
     >.notice-container{
       display: flex;
@@ -55,7 +55,7 @@ page{
         width: 100%;
         font-size: 14px;
         line-height: 18px;
-        margin: 10px 0;
+        margin: 5px 0;
         color: gray;
         display: -webkit-box;
         -webkit-box-orient: vertical;
@@ -81,7 +81,7 @@ page{
     justify-content: center;
     align-items: center;
     width: 90%;
-    margin: 5px 5%;
+    margin: 15px 5%;
     background-color: white;
     border-radius: 10px;
 
@@ -237,7 +237,8 @@ page{
       <text>创建通知</text>
     </view>
 
-    <view class="blank" wx:if="{{ notices.length==0 }}">
+    <!-- NULL -->
+    <view class="blank" wx:if="{{ notices.length==0 && !loading }}">
       <text class="null">空</text>
       <text>此处没有通知...</text>
       <text>创建一个试试吧</text>
@@ -293,6 +294,7 @@ page{
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '通知',
+      navigationBarBackgroundColor: '#fafafa',
     }
 
     data = {

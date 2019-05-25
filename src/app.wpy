@@ -84,7 +84,7 @@ export default class extends wepy.app {
       color: '#8a8a8a',
       selectedColor: '#000000',
       borderStyle: 'white',
-      backgroundColor: '#fafafa',
+      backgroundColor: '#ffffff',
       list: [
         {
           pagePath: 'pages/index',

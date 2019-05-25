@@ -169,6 +169,7 @@ page{
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '群组信息',
+      navigationBarBackgroundColor: '#fafafa',
     }
 
     data = {

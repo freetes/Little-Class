@@ -103,15 +103,15 @@ page{
       align-items: flex-start;
       padding: 10px 10px;
       padding-bottom: 0;
-      animation: showModal 0.8s ease;
+      animation: showModal 1s ease;
 
       @keyframes showModal {
         from {
-          transform: scale(0.8, 0.8);
+          margin-top: -100%;
           opacity: 0;
         }
         to {
-          transform: scale(1, 1);
+          margin-top: 0px;
           opacity: 1;
         }
       }
@@ -345,7 +345,7 @@ page{
     <view wx:if="{{ joinView.showJoinView }}" bindtap="hideJoinView" class="modal-container">
       <view class="modal-main" catchtap>
         <text class="modal-title">搜索群组</text>
-        <input data-key="joinView.groupCode" bindinput="inputChange" value="{{ joinView.groupCode }}" type="number" focus="{{ joinView.showJoinView }}" maxlength="5" />
+        <input data-key="joinView.groupCode" bindinput="inputChange" value="{{ joinView.groupCode }}" type="number" focus="{{ joinView.showJoinView }}" maxlength="7" />
         <text wx:hidden="{{ joinView.message!='' }}" class="modal-message">{{ joinView.message }}</text>
         <button bindtap="searchGroup">搜索</button>
       </view>
@@ -406,13 +406,13 @@ page{
         .then(res=>{
           // 无记录
           if(res.data.length == 0 || res.data[0].status == -2){
-            self.joinView.message = '未找到'
+            self.joinView.message = '404: Can not find this groupId.'
             self.$apply()
 
             setTimeout(() => {
               self.joinView.message = ''
               self.$apply()
-            }, 1500);
+            }, 2000);
           }
           else{
             wx.navigateTo({

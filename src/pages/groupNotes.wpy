@@ -227,6 +227,7 @@ page{
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '话题',
+      navigationBarBackgroundColor: '#fafafa',
       enablePullDownRefresh: true
     }
 
