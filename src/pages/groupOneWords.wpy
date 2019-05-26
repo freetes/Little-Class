@@ -116,11 +116,13 @@ page{
       <text bindtap="createOneWord">发送</text>
     </view>
 
+    <!-- NULL -->
     <view class="blank" wx:if="{{ oneWords.length==0 }}">
       <text class="null">空</text>
       <text>此处没有弹幕...</text>
       <text>先发制人，输入第一条弹幕吧～</text>
     </view>
+
     <!-- 弹幕 信息 -->
     <view class="oneWords-container" wx:else>
       <view class="oneWord-container" wx:for="{{ oneWords }}" wx:key="{{ item._id }}">
@@ -128,6 +130,14 @@ page{
         <text class="content">{{ item.content }}</text>
       </view>
     </view>
+
+    
+    <view class="blank" wx:if="{{ oneWords.length==0 }}">
+      <text class="null">空</text>
+      <text>此处没有弹幕...</text>
+      <text>先发制人，输入第一条弹幕吧～</text>
+    </view>
+    
   </view>
 </template>
 
