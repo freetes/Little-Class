@@ -191,7 +191,6 @@ page{
     >text{
       font-size: 14px;
       color: #8A8A8A;
-      padding: 5px 5px;
       height: 20px;
       line-height: 20px;
       text-align: center;
@@ -241,7 +240,7 @@ page{
     <view class="blank" wx:if="{{ notices.length==0 && !loading }}">
       <text class="null">空</text>
       <text>此处没有通知...</text>
-      <text>创建一个试试吧</text>
+      <text>点击按钮创建一个试试吧</text>
     </view>
 
     <!-- 通知 信息 -->
