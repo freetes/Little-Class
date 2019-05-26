@@ -76,7 +76,7 @@ page{
       width: 90%;
       padding: 10px 0;
       border-bottom: 1px solid #8A8A8A;
-      font-size: 30rpx;
+      font-size: 32rpx;
       font-weight: bold;
       color: black;
     }
@@ -488,7 +488,7 @@ page{
       request.post('/getNoteById', {noteId: self.noteId})
       .then(res=>{
         if(res.data.filePath){
-          res.data.filePath = 'https://api.grayclass.site:2333' + res.data.filePath
+          res.data.filePath = 'https://api.grayclass.site' + res.data.filePath
         }
         res.data.create_at = util.moment(new Date(res.data.create_at)).format('YYYY/M/D hh:mm:ss')
         self.noteInfo = res.data

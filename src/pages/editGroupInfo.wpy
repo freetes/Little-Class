@@ -207,7 +207,7 @@ page{
 
         if(self.groupInfo.filePath && self.groupInfo.filePath.indexOf('grayclass')<0){
           const uploadTask = wx.uploadFile({
-            url: 'https://api.grayclass.site:2333/api/setGroupInfo',
+            url: 'https://api.grayclass.site/api/setGroupInfo',
             filePath: self.groupInfo.filePath,
             name: 'file',
             formData: data,
@@ -257,7 +257,7 @@ page{
 
         if(self.groupInfo.filePath && self.groupInfo.filePath.indexOf('grayclass')<0){
           const uploadTask = wx.uploadFile({
-            url: 'https://api.grayclass.site:2333/api/setGroupInfo',
+            url: 'https://api.grayclass.site/api/setGroupInfo',
             filePath: self.groupInfo.filePath,
             name: 'file',
             formData: data,
@@ -366,7 +366,7 @@ page{
       request.post('/getGroupInfoById', {groupId: self.groupId})
       .then(res=>{
         if(res.data.filePath){
-          res.data.filePath = 'https://api.grayclass.site:2333' + res.data.filePath
+          res.data.filePath = 'https://api.grayclass.site' + res.data.filePath
         }
 
         self.groupInfo = res.data

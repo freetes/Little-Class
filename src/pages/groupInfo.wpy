@@ -519,7 +519,7 @@ page{
       request.post('/getGroupInfoById', {groupId})
       .then(res=>{
         if(res.data.filePath){
-          res.data.filePath = 'https://api.grayclass.site:2333/' + res.data.filePath
+          res.data.filePath = 'https://api.grayclass.site/' + res.data.filePath
         }
         else{
           res.data.filePath = '../static/icons/users.png'

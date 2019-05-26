@@ -86,13 +86,13 @@ page{
       >text{
         flex: 0 1 auto;
         color: black;
-        font-size: 30rpx;
+        font-size: 32rpx;
         padding-right: 20px;
       }
       >input, >picker{
         flex: 1 0 auto;
         color: black;
-        font-size: 30rpx;
+        font-size: 32rpx;
         font-weight: bold;
         text-align: right;
       }

@@ -103,11 +103,11 @@ page{
       align-items: flex-start;
       padding: 10px 10px;
       padding-bottom: 0;
-      animation: showModal 1s ease;
+      animation: showModal 0.6s ease;
 
       @keyframes showModal {
         from {
-          margin-top: -100%;
+          margin-top: -100px;
           opacity: 0;
         }
         to {
@@ -117,6 +117,7 @@ page{
       }
 
       >.modal-title{
+        font-size: 28rpx;
         border-bottom: 1px solid light#8A8A8A;
       }
       >.modal-message{
@@ -132,10 +133,8 @@ page{
         border: 1px solid #8A8A8A;
       }
       >button{
+        font-size: 32rpx;
         background-color: white;
-      }
-      >button::after{
-        border: none;
       }
     }
   }
@@ -179,7 +178,7 @@ page{
       padding: 15px;
       border-radius: 10px;
       background-color: white;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
       animation: showIn 0.7s ease;
 
       @keyframes showIn {
@@ -282,7 +281,7 @@ page{
 <template>
   <view class="container">
     <view class="buttons">
-      <view wx:if="{{ showBtns }}" >
+      <view wx:if="{{ showBtns }}">
         <text>查询群组</text>
         <icon class="iconfont" bindtap="showJoinView">&#xeb10;</icon>
       </view>
@@ -406,7 +405,7 @@ page{
         .then(res=>{
           // 无记录
           if(res.data.length == 0 || res.data[0].status == -2){
-            self.joinView.message = '404: Can not find this groupId.'
+            self.joinView.message = '该群组不存在'
             self.$apply()
 
             setTimeout(() => {
@@ -486,7 +485,7 @@ page{
           for(let item of res.data){
             // 解析图片文件
             if(item.filePath && item.filePath != ''){
-              item.filePath = 'https://api.grayclass.site:2333' + item.filePath
+              item.filePath = 'https://api.grayclass.site' + item.filePath
             }
             else{
               item.filePath = '../static/icons/users.png'
