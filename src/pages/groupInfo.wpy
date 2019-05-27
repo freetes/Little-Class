@@ -321,7 +321,7 @@ page{
     <view class="groupInfo-container">
       <!-- <image class="image" wx:if="{{ groupInfo.filePath }}" mode="aspectFill" src="{{ groupInfo.filePath }}"></image> -->
       <text class="title">{{ groupInfo.name }}</text>
-      <text class="id">ID: {{ groupInfo.code }}</text>
+      <text class="id" selectable>ID: {{ groupInfo.code }}</text>
       <!-- <view class="creater">
         <image mode="widthFix" src="{{ groupInfo.creater.wxInfo.avatarUrl }}"></image>
         <text>{{ groupInfo.creater.name }}</text>

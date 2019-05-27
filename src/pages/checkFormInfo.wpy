@@ -187,7 +187,7 @@ page{
       <view class="code-container">
         <view class="code" wx:if="{{ checkForm.code }}">
           <text>签到码：</text>
-          <text class="number">{{ checkForm.code }}</text>
+          <text class="number" selectable>{{ checkForm.code }}</text>
         </view>
         <text class="goto" bindtap="goto('/pages/groupCheckForms?group_id={{groupId}}')" wx:if="{{ canCheck }}">前去签到</text>
       </view>

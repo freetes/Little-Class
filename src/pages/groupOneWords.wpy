@@ -149,12 +149,12 @@ page{
     <view class="oneWords-container">
       <view class="oneWord-container" wx:for="{{ oneWords }}" wx:key="{{ item._id }}">
         <image mode="widthFix" src="{{ item.creater.wxInfo.avatarUrl }}"></image>
-        <text class="content">{{ item.content }}</text>
+        <text class="content" selectable>{{ item.content }}</text>
       </view>
     </view>
 
     <view class="prompt">
-      <text>电脑访问网页端，体验大屏弹幕：http://www.grayclass.site</text>
+      <text selectable>电脑访问网页端，体验大屏弹幕：http://www.grayclass.site</text>
     </view>
 
     </block>
