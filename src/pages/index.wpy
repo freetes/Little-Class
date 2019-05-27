@@ -281,13 +281,13 @@ page{
 <template>
   <view class="container">
     <view class="buttons">
-      <view wx:if="{{ showBtns }}">
+      <view wx:if="{{ showBtns }}" bindtap="showJoinView">
         <text>查询群组</text>
-        <icon class="iconfont" bindtap="showJoinView">&#xeb10;</icon>
+        <icon class="iconfont">&#xeb10;</icon>
       </view>
-      <view wx:if="{{ showBtns }}" >
+      <view wx:if="{{ showBtns }}" bindtap="gotoCreateGroup">
         <text>创建群组</text>
-        <icon class="iconfont" bindtap="gotoCreateGroup">&#xeaff;</icon>
+        <icon class="iconfont">&#xeaff;</icon>
       </view>
       <icon class="iconfont" bindtap="toggleBtns">&#xeb13;</icon>
     </view>
