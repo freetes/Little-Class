@@ -219,7 +219,7 @@ page{
     }
 
     >.button{
-      font-size: 28rpx;
+      font-size: 30rpx;
       padding: 4px;
       width: 110px;
       height: 30px;
