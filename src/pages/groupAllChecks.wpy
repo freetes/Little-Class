@@ -61,7 +61,7 @@ page{
         flex-direction: row;
         justify-content: flex-end;
         align-items: center;
-        font-size: 32rpx;
+        font-size: 28rpx;
         color: gray;
 
         >text{

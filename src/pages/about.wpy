@@ -56,15 +56,29 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: flex-start;
+    align-items: center;
     width: 100%;
     padding-bottom: 10px;
+
+    >view{
+      width: 100%;
+      text-align: center;
+      font-size: 26rpx;
+      color: gray;
+      padding-bottom: 10px;
+
+      >.bold{
+        font-weight: bold;
+        color: black;
+        padding: 0 2px;
+      }
+    }
 
     >text{
       width: 100%;
       text-align: center;
       font-weight: bold;
-      font-size: 14px;
+      font-size: 26rpx;
     }
   }
 }
@@ -88,6 +102,17 @@
     </view>
 
     <view class="futures">
+      <view>
+        <text>总计</text>
+        <text class="bold">{{ counts.groupCount }}</text>
+        <text>个群组，</text>
+        <text class="bold">{{ counts.checkCount }}</text>
+        <text>次签到，</text>
+        <text class="bold">{{ counts.oneWordCount }}</text>
+        <text>条互动，</text>
+        <text class="bold">{{ counts.noteCount }}</text>
+        <text>个话题</text>
+      </view>
       <text>made with ❤️</text>
     </view>
   </view>
@@ -108,20 +133,33 @@
         'https://api.grayclass.site/image/post1.png',
         'https://api.grayclass.site/image/post2.png',
         'https://api.grayclass.site/image/post3.jpg'
-        ]
+      ],
+      counts: {
+        groupCount: 0,
+        checkCount: 0,
+        oneWordCount: 0,
+        noteCount: 0
+      }
     }
 
     methods = {
       previewImage(url){
-        console.log(url)
+        let self = this
+
         wx.previewImage({
-          urls: [url]
+          urls: self.imgUrls,
+          current: url
         })
       },
     }
 
-    onLoad() {
+    onShow() {
+      let self = this
 
+      request.get('/getAllDataCount')
+      .then(res=>{
+        self.counts = res.data
+      })
     }
   }
 </script>
