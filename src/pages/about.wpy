@@ -113,7 +113,7 @@
         <text class="bold">{{ counts.noteCount }}</text>
         <text>个话题</text>
       </view>
-      <text>made with ❤️</text>
+      <!-- <text>made with ❤️</text> -->
     </view>
   </view>
 </template>
