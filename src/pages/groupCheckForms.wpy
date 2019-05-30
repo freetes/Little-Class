@@ -549,7 +549,7 @@ page{
                 from: data.position,
                 to: self.checkForm.position,
                 success: function(res) {
-                  if(res.result.elements[0].distance > self.checkForm.distance + 50){
+                  if(res.result.elements[0].distance > self.checkForm.distance + 30){
                     wx.showToast({
                       title: '签到失败，不在签到范围',
                       icon: 'none',
