@@ -118,15 +118,17 @@ page{
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    padding: 0 10%;
+    margin: 0 10%;
     padding-top: 30px;
     padding-bottom: 100px;
-    width: 100%;
-    background-color: #ededed;
+    width: 80%;
+    border-top: 1px solid lightgray;
 
     >text.title{
-      color: #333;
-      font-size: 28rpx;
+      color: black;
+      font-size: 30rpx;
+      font-weight: bold;
+      margin: 10px 0;
     }
 
     >.comment-container{
@@ -137,12 +139,12 @@ page{
       margin: 10px 0;
       width: 100%;
       color: black;
-      font-size: 26rpx;
+      font-size: 32rpx;
 
       >.comment{
         width: 100%;
         padding-left: 34px;
-        font-size: 28rpx;
+        font-size: 30rpx;
         margin-top: 5px;
       }
       >.user-info{
@@ -159,12 +161,13 @@ page{
           margin-right: 10px;
         }
         >.user-name{
-          font-size: 26rpx;
+          font-size: 30rpx;
           margin-right: 5px;
-          line-height: 24px;
+          color: gray;
+          font-weight: bold;
         }
         >.user-feeling{
-          font-size: 26rpx;
+          font-size: 28rpx;
           line-height: 24px;
         }
       }
@@ -259,7 +262,7 @@ page{
     </view>
 
     <view class="comments-container" wx:if="{{comments.length > 0}}">
-      <text>感受：</text>
+      <text class="title">感受：</text>
       <view class="comment-container" wx:for="{{ comments }}" bindlongpress="deleteComment('{{item.user_id}}', '{{item._id}}')">
         <view class="user-info">
           <image src="{{ item.avatarUrl }}"></image>
