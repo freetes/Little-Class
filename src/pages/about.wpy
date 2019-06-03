@@ -156,12 +156,13 @@
       },
     }
 
-    onShow() {
+    onLoad() {
       let self = this
 
       request.get('/getAllDataCount')
       .then(res=>{
         self.counts = res.data
+        self.$apply()
       })
     }
   }
