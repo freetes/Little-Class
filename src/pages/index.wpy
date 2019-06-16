@@ -504,6 +504,13 @@ page{
             }
           }
 
+          if(res.data.length == 0){
+            self.showBtns = true
+          }
+          else{
+            self.showBtns = false
+          }
+
           self.myGroups = myGroups
           self.groups = groups
           self.loading = false
