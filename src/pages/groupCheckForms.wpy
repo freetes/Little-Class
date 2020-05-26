@@ -385,7 +385,7 @@ page{
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '签到',
-      navigationBarBackgroundColor: 'white',
+      navigationBarBackgroundColor: '#FFFFFF',
       enablePullDownRefresh: true
     }
 

@@ -1,12 +1,12 @@
 import wepy from 'wepy'
 
 const BASEURL = 'https://api.grayclass.site/api'
-const TESTURL = 'https://localhost:2333/api'
+const TESTURL = 'http://localhost:2333/api'
 
 let request = {
   get: async (url, data)=>{
     let res = await wepy.request({
-      url: BASEURL + url,
+      url: TESTURL + url,
       method: 'GET',
       data: data,
     })
@@ -18,7 +18,7 @@ let request = {
   },
   post: async (url, data)=>{
     let res = await wepy.request({
-      url: BASEURL + url,
+      url: TESTURL + url,
       method: 'POST',
       data: data,
     })
